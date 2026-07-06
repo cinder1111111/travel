@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>旅平險保費試算系統</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Noto Sans TC & Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    
+    <style>
+        :root {
+            --primary-color: #1e40af; /* 企業湛藍主色 */
+            --border-radius: 12px;
+            --card-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+            --footer-color: #0f172a;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+        }
+
+        .custom-rounded {
+            border-radius: var(--border-radius);
+        }
+
+        .custom-shadow {
+            box-shadow: var(--card-shadow);
+        }
+
+        .bg-primary {
+            background-color: var(--primary-color);
+        }
+
+        .text-primary {
+            color: var(--primary-color);
+        }
+
+        .border-primary {
+            border-color: var(--primary-color);
+        }
+
+        .focus-ring:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.12);
+        }
+
+        /* 隱藏原生 Number Input 調整箭頭 */
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        
+        #maintenance-screen {
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- 頁首導覽 -->
+    <header class="bg-white border-b border-slate-200 py-3 px-4 sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-2">
+            <div class="flex items-center space-x-2">
+                <span class="material-symbols-outlined text-primary text-2xl font-bold">shield_with_heart</span>
+                <h1 id="site-title" class="text-base font-black tracking-tight text-slate-800">旅平險保費試算系統</h1>
+            </div>
+            <div class="flex items-center gap-3 text-right">
+                <span id="version-tag" class="hidden sm:inline-block bg-slate-100 text-slate-600 text-[10px] px-2 py-0.5 rounded">Ver 3.0.0</span>
+                <span id="effective-date" class="text-[10px] font-bold text-slate-400">裝載中...</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- 系統公告卡片區 (由試算表控制動態顯示/隱藏) -->
+    <div class="max-w-7xl mx-auto w-full px-4 mt-3" id="announcement-container" style="display: none;">
+        <div class="bg-blue-50 border border-blue-100 custom-rounded p-3 flex items-start space-x-2.5">
+            <span class="material-symbols-outlined text-blue-600 text-lg">campaign</span>
+            <div>
+                <p id="announcement-text" class="text-xs text-blue-700 leading-normal font-medium"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 系統維護畫面 -->
+    <div id="maintenance-screen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 text-center">
+        <div class="w-14 h-14 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-3">
+            <span class="material-symbols-outlined text-3xl">construction</span>
+        </div>
+        <h2 class="text-base font-bold text-slate-800">目前系統維護中，請稍後再試。</h2>
+        <p class="text-xs text-slate-400 mt-1">我們正在進行必要的系統更新與費率維護，造成不便敬請見諒。</p>
+    </div>
+
+    <!-- 全域載入狀態 -->
+    <div id="loading-spinner" class="fixed inset-0 bg-white/95 z-50 flex flex-col items-center justify-center p-6 text-center">
+        <div class="w-8 h-8 border-3 border-slate-200 border-t-primary rounded-full animate-spin"></div>
+        <p class="text-xs text-slate-500 mt-3 font-medium">正在自 Google Sheets 取得最新保費費率...</p>
+    </div>
+
+    <!-- 主內容區 -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 py-4 pb-28 lg:pb-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+            
+            <!-- 左側試算表單 (佔 7 欄) -->
+            <div class="lg:col-span-7 space-y-4">
+                <div class="bg-white p-4 custom-rounded custom-shadow border border-slate-200/60 space-y-4">
+                    
+                    <!-- (1) 旅遊地區 (iOS 風格分段按鈕) -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase" id="lbl-travel-area">1. 選擇旅遊地區</label>
+                        <div class="bg-slate-100 p-1 rounded-xl flex border border-slate-200/40">
+                            <button type="button" id="btn-area-overseas" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center flex items-center justify-center gap-1.5 bg-white text-slate-800 shadow-sm" onclick="AppController.setArea('overseas')">
+                                <span class="material-symbols-outlined text-xs">flight</span>
+                                <span>海外地區</span>
+                            </button>
+                            <button type="button" id="btn-area-domestic" class="flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center flex items-center justify-center gap-1.5 text-slate-500 hover:text-slate-800" onclick="AppController.setArea('domestic')">
+                                <span class="material-symbols-outlined text-xs">home_pin</span>
+                                <span>國內地區</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 保單起訖與旅遊天數整合卡片 (黃金正方形設計) -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase">2. 設定保單起訖與天數</label>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/60 space-y-3">
+                            <div class="grid grid-cols-2 gap-3">
+                                <!-- 保單起日 (左半邊) -->
+                                <div class="space-y-1.5 border-r border-slate-200/60 pr-3">
+                                    <span class="text-[10px] text-slate-400 font-bold block uppercase tracking-wide">保單起點</span>
+                                    <input type="date" id="start-date" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 focus-ring" onchange="AppController.handleTimeChange()">
+                                    <select id="start-hour" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 focus-ring" onchange="AppController.handleTimeChange()">
+                                        <!-- 1-24 時 -->
+                                    </select>
+                                </div>
+                                <!-- 保單訖日 (右半邊) -->
+                                <div class="space-y-1.5 pl-1">
+                                    <span class="text-[10px] text-rose-400 font-bold block uppercase tracking-wide">保單訖點</span>
+                                    <input type="date" id="end-date" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 focus-ring" onchange="AppController.handleTimeChange()">
+                                    <select id="end-hour" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-1.5 text-xs text-slate-700 focus-ring" onchange="AppController.handleTimeChange()">
+                                        <!-- 1-24 時 -->
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- 旅遊天數 (正下方，形成正方形黃金結構) -->
+                            <div class="pt-2.5 border-t border-slate-200/60 flex items-center justify-between text-xs">
+                                <span class="text-slate-500 font-bold text-[11px] flex items-center gap-1">
+                                    <span class="material-symbols-outlined text-xs text-slate-400">calendar_today</span> 
+                                    系統判定旅遊天數：
+                                </span>
+                                <span class="font-black text-xs text-slate-800 bg-white px-3 py-1 rounded-md border border-slate-200" id="calculated-days-badge">0 天</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 海外突發疾病 (僅海外特有) -->
+                    <div class="space-y-1.5" id="disease-container">
+                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase">3. 海外突發疾病保障範圍</label>
+                        <div class="bg-slate-100 p-1 rounded-xl flex border border-slate-200/40">
+                            <button type="button" id="btn-disease-yes" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition-all text-center bg-white text-slate-800 shadow-sm" onclick="AppController.setDiseaseOption('含法定傳染病')">
+                                含法定傳染病
+                            </button>
+                            <button type="button" id="btn-disease-no" class="flex-1 py-1.5 text-xs font-bold rounded-lg transition-all text-center text-slate-500 hover:text-slate-800" onclick="AppController.setDiseaseOption('不含法定傳染病')">
+                                不含法定傳染病
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 投保方案 (由 Google Sheet 動態載入) -->
+                    <div class="space-y-1.5">
+                        <label class="block text-xs font-bold text-slate-500 tracking-wider uppercase">4. 選擇投保方案</label>
+                        <select id="select-product" class="w-full bg-white border-2 border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 focus-ring" onchange="AppController.handleProductChange()">
+                            <!-- 動態載入 -->
+                        </select>
+                    </div>
+
+                    <!-- 保額設定群組 (依照 Google Sheet 選項自動控制) -->
+                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/60 space-y-3">
+                        <span class="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">5. 細部保障額度設定</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-2.5">
+                            <!-- 15歲以上身故保額 -->
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-600 block">15歲以上身故保額</label>
+                                <select id="select-adult-death" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs text-slate-700 focus-ring" onchange="AppController.calculate()">
+                                    <!-- 動態載入 -->
+                                </select>
+                            </div>
+                            <!-- 未滿15歲保額 -->
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-600 block">未滿15歲保額</label>
+                                <select id="select-child-death" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs text-slate-700 focus-ring" onchange="AppController.calculate()">
+                                    <!-- 動態載入 -->
+                                </select>
+                            </div>
+                            <!-- 傷害醫療 -->
+                            <div class="space-y-1">
+                                <label class="text-[10px] font-bold text-slate-600 block">傷害醫療給付保額</label>
+                                <select id="select-medical" class="w-full bg-white border border-slate-200 rounded-lg px-2 py-2 text-xs text-slate-700 focus-ring" onchange="AppController.calculate()">
+                                    <!-- 動態載入 -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 人數設定區塊 (大人/小孩 Stepper 調整器，無輸入框) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <!-- 大人人數 -->
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/60 flex items-center justify-between">
+                            <div class="space-y-0.5">
+                                <span class="text-xs font-bold text-slate-700 block" id="lbl-adult">大人人數</span>
+                                <span class="text-[10px] text-slate-400 block">(15歲以上)</span>
+                                <span class="text-[10px] text-primary font-bold block" id="adult-premium-tag">每人 $0</span>
+                            </div>
+                            <div class="flex items-center bg-white border border-slate-200 rounded-lg p-1 space-x-1">
+                                <button type="button" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-base font-bold text-slate-500 active:scale-95" onclick="AppController.adjustCount('adult', -1)">－</button>
+                                <input type="number" id="adult-count" value="1" readonly class="w-8 text-center text-xs font-bold bg-transparent text-slate-800 focus:outline-none pointer-events-none">
+                                <button type="button" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-base font-bold text-slate-500 active:scale-95" onclick="AppController.adjustCount('adult', 1)">＋</button>
+                            </div>
+                        </div>
+
+                        <!-- 小孩人數 -->
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200/60 flex items-center justify-between">
+                            <div class="space-y-0.5">
+                                <span class="text-xs font-bold text-slate-700 block" id="lbl-child">小孩人數</span>
+                                <span class="text-[10px] text-slate-400 block">(未滿15歲)</span>
+                                <span class="text-[10px] text-primary font-bold block" id="child-premium-tag">每人 $0</span>
+                            </div>
+                            <div class="flex items-center bg-white border border-slate-200 rounded-lg p-1 space-x-1">
+                                <button type="button" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-base font-bold text-slate-500 active:scale-95" onclick="AppController.adjustCount('child', -1)">－</button>
+                                <input type="number" id="child-count" value="0" readonly class="w-8 text-center text-xs font-bold bg-transparent text-slate-800 focus:outline-none pointer-events-none">
+                                <button type="button" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-base font-bold text-slate-500 active:scale-95" onclick="AppController.adjustCount('child', 1)">＋</button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 承保內容與項目表 (Card 呈現) -->
+                <div class="bg-white p-4 custom-rounded custom-shadow border border-slate-200/60 space-y-3" id="coverage-section">
+                    <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-b pb-2 border-slate-100" id="lbl-coverage">
+                        <span class="material-symbols-outlined text-primary text-sm">analytics</span> 
+                        目前方案承保內容
+                    </h3>
+                    <div id="coverage-list" class="divide-y divide-slate-100">
+                        <!-- 動態載入 -->
+                    </div>
+                </div>
+
+                <!-- 注意事項 -->
+                <div class="bg-white p-4 custom-rounded custom-shadow border border-slate-200/60 space-y-3" id="notice-section">
+                    <h3 class="text-xs font-bold text-slate-800 flex items-center gap-1.5 border-b pb-2 border-slate-100" id="lbl-notice">
+                        <span class="material-symbols-outlined text-rose-500 text-sm">info</span> 
+                        投保注意事項
+                    </h3>
+                    <ol id="notice-list" class="list-decimal pl-4 text-xs text-slate-500 space-y-2 leading-relaxed">
+                        <!-- 動態載入 -->
+                    </ol>
+                </div>
+
+            </div>
+
+            <!-- 桌機版專屬 - 右側 Summary Card (佔 5 欄) -->
+            <div class="hidden lg:block lg:col-span-5 sticky top-20">
+                <div class="bg-slate-900 text-white p-5 custom-rounded custom-shadow border border-slate-800 space-y-5">
+                    <div class="border-b border-slate-800 pb-3">
+                        <h3 class="text-xs font-black tracking-wider text-slate-400">保費試算摘要</h3>
+                        <span class="text-[9px] bg-slate-800 text-slate-300 px-2 py-0.5 rounded mt-1 inline-block">2026 最新官方費率</span>
+                    </div>
+
+                    <div class="space-y-3 text-xs">
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">旅遊區域</span>
+                            <span id="summary-area" class="font-bold">海外地區</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">計費天數</span>
+                            <span id="summary-days" class="font-extrabold text-sm text-yellow-400">0 天</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-slate-400">所選方案</span>
+                            <span id="summary-product" class="font-bold">-</span>
+                        </div>
+                        <div class="flex justify-between items-center" id="summary-disease-row">
+                            <span class="text-slate-400">保障疾病</span>
+                            <span id="summary-disease" class="font-bold">-</span>
+                        </div>
+                        <hr class="border-slate-800">
+                        <div class="flex justify-between items-center text-slate-300">
+                            <span id="summary-adult-lbl">大人 (1人)：</span>
+                            <span id="summary-adult-cost" class="font-mono font-bold">$0</span>
+                        </div>
+                        <div class="flex justify-between items-center text-slate-300">
+                            <span id="summary-child-lbl">小孩 (0人)：</span>
+                            <span id="summary-child-cost" class="font-mono font-bold">$0</span>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-slate-800 text-center space-y-2">
+                        <span class="text-slate-400 text-[10px] font-bold tracking-widest uppercase" id="lbl-total-premium">應收總保費</span>
+                        <div class="flex items-baseline justify-center space-x-0.5">
+                            <span class="text-xs font-bold text-slate-400">NT$</span>
+                            <span class="text-2xl font-black text-emerald-400 tracking-tight" id="desktop-total-premium">0</span>
+                        </div>
+                        
+                        <!-- 桌機版複製 LINE 報價按鈕 -->
+                        <button type="button" onclick="AppController.copyLineQuote()" class="w-full mt-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-lg text-xs transition-colors flex items-center justify-center gap-1">
+                            <span class="material-symbols-outlined text-sm">content_copy</span>
+                            <span>複製 LINE 格式報價</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 手機版專屬底部 Sticky Footer (在 lg 斷點以上隱藏) -->
+    <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 px-4 py-3 flex items-center justify-between z-40 shadow-[0_-8px_30px_rgb(0,0,0,0.06)]">
+        <div class="flex flex-col">
+            <span class="text-[9px] text-slate-400 font-bold uppercase tracking-wider">應收保費總計</span>
+            <div class="flex items-baseline space-x-0.5">
+                <span class="text-[10px] font-bold text-slate-500">NT$</span>
+                <span class="text-xl font-black text-primary" id="mobile-total-premium">0</span>
+            </div>
+        </div>
+        <div class="flex items-center gap-2">
+            <span id="mobile-days-badge" class="text-[9px] font-extrabold text-white bg-primary px-2 py-0.5 rounded-md">0 天</span>
+            <span id="mobile-product-badge" class="hidden"></span>
+            
+            <!-- 手機版複製 LINE 報價按鈕 -->
+            <button type="button" onclick="AppController.copyLineQuote()" class="bg-indigo-600 text-white font-bold text-xs px-3 py-2 rounded-lg active:scale-95 flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">content_copy</span>
+                <span>複製報價</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 底部版權宣告 -->
+    <footer id="main-footer" class="bg-slate-900 border-t border-slate-800 text-slate-500 py-4 text-center text-[9px] leading-relaxed mt-auto">
+        <div class="max-w-7xl mx-auto px-4 space-y-1">
+            <p>© 2026 旅平險保費試算系統. All Rights Reserved.</p>
+            <p>本系統費率與承保條款資料由您的雲端 Google Sheets 即時同步，實際投保條件以官方規章為準。</p>
+        </div>
+    </footer>
+
+    <script type="module">
+        
+        // =========================================================================
+        // 🚨 系統核心配置：已完整套入您建立的 Google Apps Script 雲端 API 部署連結
+        // =========================================================================
+        const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCudyI5uo1lDZXVsUfTxZrfzeLrLLzUh70N38HWLcAsn75-22G44cZ5ijzmyH86MJx/exec"; 
+
+        // 💾 瀏覽器 5 分鐘快取控制層 (Cache Layer)
+        class CacheManager {
+            static get KEY() { return "TRAVEL_INSURANCE_DATA_LIVE"; }
+            static get EXPIRY_KEY() { return "TRAVEL_INSURANCE_EXPIRY_LIVE"; }
+            static get CACHE_TIME_MS() { return 5 * 60 * 1000; } // 5分鐘自動過期
+
+            static save(data) {
+                try {
+                    localStorage.setItem(this.KEY, JSON.stringify(data));
+                    localStorage.setItem(this.EXPIRY_KEY, (Date.now() + this.CACHE_TIME_MS).toString());
+                } catch (e) {
+                    console.error("寫入快取出錯:", e);
+                }
+            }
+
+            static load() {
+                try {
+                    const data = localStorage.getItem(this.KEY);
+                    const expiry = localStorage.getItem(this.EXPIRY_KEY);
+                    if (data && expiry && Date.now() < parseInt(expiry)) {
+                        return JSON.parse(data);
+                    }
+                } catch (e) {
+                    console.error("讀取快取出錯:", e);
+                }
+                return null;
+            }
+        }
+
+        // 🌐 雲端連線服務層 (Service Layer)
+        class SheetAPI {
+            static async fetchAllData() {
+                if (!GOOGLE_APPS_SCRIPT_URL) {
+                    throw new Error("請先設定有效的 GOOGLE_APPS_SCRIPT_URL！");
+                }
+
+                // 檢查是否有 5 分鐘內的快取
+                const cached = CacheManager.load();
+                if (cached) {
+                    console.log("從本機快取載入資料 (未滿 5 分鐘)...");
+                    return cached;
+                }
+
+                try {
+                    console.log("正在從雲端 API 取得最新資料...");
+                    const response = await fetch(GOOGLE_APPS_SCRIPT_URL, {
+                        method: 'GET',
+                        mode: 'cors'
+                    });
+                    if (!response.ok) throw new Error("API 回應異常或連線中斷");
+                    const json = await response.json();
+                    
+                    if (json && json.control && json.products && json.rates) {
+                        CacheManager.save(json);
+                        return json;
+                    } else {
+                        throw new Error("API 資料欄位不符合規範");
+                    }
+                } catch (err) {
+                    console.error("讀取雲端試算表失敗:", err);
+                    throw err;
+                }
+            }
+        }
+
+        // 📊 雲端資料庫過濾與查詢服務
+        class InsuranceService {
+            constructor(data) {
+                this.db = data;
+            }
+
+            getControl() { return this.db.control || {}; }
+            getUI() { return this.db.ui || {}; }
+            getTexts() { return this.db.texts || {}; }
+
+            getProducts(area, diseaseOption) {
+                return (this.db.products || [])
+                    .filter(p => {
+                        const isEnabled = p.Enable === true || p.Enable === "TRUE" || p.Enable === "true" || p.Enable === 1;
+                        const areaMatch = p.Area === area;
+                        const diseaseMatch = area === 'domestic' || p.DiseaseOption === diseaseOption;
+                        return isEnabled && areaMatch && diseaseMatch;
+                    })
+                    .sort((a, b) => (parseInt(a.Sort) || 0) - (parseInt(b.Sort) || 0));
+            }
+
+            getProductOptions(productId) {
+                return (this.db.productOptions || [])
+                    .filter(o => {
+                        const isEnabled = o.Enable === true || o.Enable === "TRUE" || o.Enable === "true" || o.Enable === 1;
+                        return isEnabled && o.ProductID === productId;
+                    })
+                    .sort((a, b) => (parseInt(a.Sort) || 0) - (parseInt(b.Sort) || 0));
+            }
+
+            findPremium(productId, days, adultDeath, childDeath, medical) {
+                const targetDays = parseInt(days);
+                const rate = (this.db.rates || []).find(r => 
+                    r.ProductID === productId &&
+                    parseInt(r.Days) === targetDays &&
+                    r.AdultDeath === adultDeath &&
+                    r.ChildDeath === childDeath &&
+                    r.Medical === medical
+                );
+                return rate ? { adult: parseInt(rate.AdultPremium), child: parseInt(rate.ChildPremium) } : { adult: 0, child: 0 };
+            }
+
+            getCoverages(productId) {
+                return (this.db.coverages || [])
+                    .filter(c => c.ProductID === productId)
+                    .sort((a, b) => (parseInt(a.Sort) || 0) - (parseInt(b.Sort) || 0));
+            }
+
+            getNotes(productId) {
+                return (this.db.notes || [])
+                    .filter(n => !n.ProductID || n.ProductID === productId)
+                    .sort((a, b) => (parseInt(a.Sort) || 0) - (parseInt(b.Sort) || 0));
+            }
+        }
+
+        // 🎨 UI 畫面渲染引擎 (UI Rendering Engine)
+        class UIRenderer {
+            static injectStyles(ui) {
+                if (!ui) return;
+                const root = document.documentElement;
+                if (ui.PrimaryColor) root.style.setProperty('--primary-color', ui.PrimaryColor);
+                if (ui.BorderRadius) root.style.setProperty('--border-radius', ui.BorderRadius);
+                if (ui.CardShadow) root.style.setProperty('--card-shadow', ui.CardShadow);
+                if (ui.FooterColor) root.style.setProperty('--footer-color', ui.FooterColor);
+                if (ui.FontFamily) {
+                    root.style.setProperty('--font-family', ui.FontFamily);
+                    document.body.style.fontFamily = `'${ui.FontFamily}', sans-serif`;
+                }
+            }
+
+            static applyTexts(texts) {
+                if (!texts) return;
+                if (texts.TravelArea) document.getElementById('lbl-travel-area').textContent = `1. ${texts.TravelArea}`;
+                if (texts.Adult) document.getElementById('lbl-adult').textContent = texts.Adult;
+                if (texts.Child) document.getElementById('lbl-child').textContent = texts.Child;
+                if (texts.TotalPremium) document.getElementById('lbl-total-premium').textContent = texts.TotalPremium;
+                if (texts.Coverage) document.getElementById('lbl-coverage').innerHTML = `<span class="material-symbols-outlined text-primary text-sm">analytics</span> ${texts.Coverage}`;
+                if (texts.Notice) document.getElementById('lbl-notice').innerHTML = `<span class="material-symbols-outlined text-rose-500 text-sm">info</span> ${texts.Notice}`;
+            }
+
+            static renderProductsDropdown(products) {
+                const select = document.getElementById('select-product');
+                select.innerHTML = '';
+                if (products.length === 0) {
+                    const opt = document.createElement('option');
+                    opt.textContent = "此條件下暫無方案";
+                    select.appendChild(opt);
+                    return;
+                }
+                products.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.ProductID;
+                    opt.textContent = p.ProductName;
+                    select.appendChild(opt);
+                });
+            }
+
+            static renderOptions(id, values) {
+                const select = document.getElementById(id);
+                select.innerHTML = '';
+                values.forEach(v => {
+                    const opt = document.createElement('option');
+                    opt.value = v;
+                    opt.textContent = v;
+                    select.appendChild(opt);
+                });
+            }
+
+            static renderCoverages(coverages) {
+                const list = document.getElementById('coverage-list');
+                list.innerHTML = '';
+                if (coverages.length === 0) {
+                    list.innerHTML = `<div class="py-4 text-xs text-slate-400 text-center">本方案無特訂承保內容揭露</div>`;
+                    return;
+                }
+                coverages.forEach(c => {
+                    const item = document.createElement('div');
+                    item.className = "py-2.5 flex justify-between items-center text-xs";
+                    item.innerHTML = `
+                        <span class="font-bold text-slate-700">${c.Item}</span>
+                        <div class="text-right space-y-0.5">
+                            <span class="block font-medium text-slate-500">大人：${c.AdultValue || '-'}</span>
+                            <span class="block text-slate-400 text-[10px]">小孩：${c.ChildValue || '-'}</span>
+                        </div>
+                    `;
+                    list.appendChild(item);
+                });
+            }
+
+            static renderNotes(notes) {
+                const list = document.getElementById('notice-list');
+                const section = document.getElementById('notice-section');
+                list.innerHTML = '';
+                if (notes.length === 0) {
+                    section.style.display = 'none';
+                    return;
+                }
+                section.style.display = 'block';
+                notes.forEach(n => {
+                    const li = document.createElement('li');
+                    li.textContent = n.Content;
+                    list.appendChild(li);
+                });
+            }
+        }
+
+        // 🚀 核心應用控制器 (App Controller)
+        class AppController {
+            static async init() {
+                try {
+                    this.populateHours();
+                    this.initDefaultDates();
+
+                    // 1. 取得 API 資料
+                    const rawData = await SheetAPI.fetchAllData();
+                    this.service = new InsuranceService(rawData);
+
+                    // 2. 套用雲端風格、UI、控制宣告
+                    UIRenderer.injectStyles(this.service.getUI());
+                    UIRenderer.applyTexts(this.service.getTexts());
+
+                    const ctrl = this.service.getControl();
+                    if (ctrl.SiteTitle) {
+                        document.title = ctrl.SiteTitle;
+                        document.getElementById('site-title').textContent = ctrl.SiteTitle;
+                    }
+                    if (ctrl.EffectiveDate) {
+                        document.getElementById('effective-date').textContent = ctrl.EffectiveDate;
+                    }
+                    if (ctrl.Version) {
+                        document.getElementById('version-tag').textContent = ctrl.Version;
+                    }
+                    if (ctrl.Announcement) {
+                        document.getElementById('announcement-container').style.display = 'block';
+                        document.getElementById('announcement-text').textContent = ctrl.Announcement;
+                    }
+
+                    // 初始化前台預設狀態
+                    this.state = {
+                        area: 'overseas', 
+                        diseaseOption: '含法定傳染病',
+                        days: 0,
+                        adultCount: 1,
+                        childCount: 0,
+                        adultPremium: 0,
+                        childPremium: 0
+                    };
+
+                    this.syncAreaUI();
+                    this.syncDiseaseUI();
+                    
+                    this.calculateDays();
+                    this.updateProducts();
+
+                    document.getElementById('loading-spinner').style.display = 'none';
+
+                } catch (error) {
+                    console.error("系統初始化或連線失敗:", error);
+                    document.getElementById('loading-spinner').style.display = 'none';
+                    document.getElementById('maintenance-screen').style.display = 'flex';
+                }
+            }
+
+            // 1~24 時填入下拉選單
+            static populateHours() {
+                const s = document.getElementById('start-hour');
+                const e = document.getElementById('end-hour');
+                s.innerHTML = ''; e.innerHTML = '';
+                for (let i = 1; i <= 24; i++) {
+                    const o1 = document.createElement('option');
+                    o1.value = i; o1.textContent = `${i} 時`;
+                    if (i === 10) o1.selected = true; // 預設 10 點
+                    s.appendChild(o1);
+
+                    const o2 = document.createElement('option');
+                    o2.value = i; o2.textContent = `${i} 時`;
+                    if (i === 10) o2.selected = true; // 預設 10 點
+                    e.appendChild(o2);
+                }
+            }
+
+            // 預設起訖日期設定
+            static initDefaultDates() {
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                const threeDaysLater = new Date(tomorrow);
+                threeDaysLater.setDate(threeDaysLater.getDate() + 3);
+
+                document.getElementById('start-date').value = this.formatDate(tomorrow);
+                document.getElementById('end-date').value = this.formatDate(threeDaysLater);
+            }
+
+            static formatDate(d) {
+                const y = d.getFullYear();
+                const m = String(d.getMonth() + 1).padStart(2, '0');
+                const date = String(d.getDate()).padStart(2, '0');
+                return `${y}-${m}-${date}`;
+            }
+
+            // 變更國內/海外旅遊地區
+            static setArea(area) {
+                this.state.area = area;
+                this.syncAreaUI();
+                
+                const diseaseBox = document.getElementById('disease-container');
+                const summaryDiseaseRow = document.getElementById('summary-disease-row');
+                
+                if (area === 'domestic') {
+                    diseaseBox.style.display = 'none';
+                    if (summaryDiseaseRow) summaryDiseaseRow.style.display = 'none';
+                } else {
+                    diseaseBox.style.display = 'block';
+                    if (summaryDiseaseRow) summaryDiseaseRow.style.display = 'flex';
+                }
+
+                this.updateProducts();
+            }
+
+            static syncAreaUI() {
+                const btnOvs = document.getElementById('btn-area-overseas');
+                const btnDom = document.getElementById('btn-area-domestic');
+                if (this.state.area === 'overseas') {
+                    btnOvs.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center flex items-center justify-center gap-1.5 bg-white text-slate-800 shadow-sm border border-slate-200/50";
+                    btnDom.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-700";
+                    document.getElementById('summary-area').textContent = "海外旅遊 ✈️";
+                } else {
+                    btnDom.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center flex items-center justify-center gap-1.5 bg-white text-slate-800 shadow-sm border border-slate-200/50";
+                    btnOvs.className = "flex-1 py-2 text-xs font-bold rounded-lg transition-all text-center flex items-center justify-center gap-1.5 text-slate-400 hover:text-slate-700";
+                    document.getElementById('summary-area').textContent = "國內旅遊 🇹🇼";
+                }
+            }
+
+            // 變更疾病保障範圍
+            static setDiseaseOption(opt) {
+                this.state.diseaseOption = opt;
+                this.syncDiseaseUI();
+                this.updateProducts();
+            }
+
+            static syncDiseaseUI() {
+                const btnY = document.getElementById('btn-disease-yes');
+                const btnN = document.getElementById('btn-disease-no');
+                if (this.state.diseaseOption === '含法定傳染病') {
+                    btnY.className = "flex-1 py-1.5 text-xs font-bold rounded-lg transition-all text-center bg-white text-slate-800 shadow-sm border border-slate-200/50";
+                    btnN.className = "flex-1 py-1.5 text-xs font-bold rounded-lg transition-all text-center text-slate-400 hover:text-slate-700";
+                    document.getElementById('summary-disease').textContent = "含法定傳染病 🦠";
+                } else {
+                    btnN.className = "flex-1 py-1.5 text-xs font-bold rounded-lg transition-all text-center bg-white text-slate-800 shadow-sm border border-slate-200/50";
+                    btnY.className = "flex-1 py-1.5 text-xs font-bold rounded-lg transition-all text-center text-slate-400 hover:text-slate-700";
+                    document.getElementById('summary-disease').textContent = "不含法定傳染病 🚫";
+                }
+            }
+
+            // 任何時間、日期變更，皆會即時重新計算天數
+            static handleTimeChange() {
+                this.calculateDays();
+                this.calculate();
+            }
+
+            // 精確計算天數 (不足 24 小時以 1 日計，符合保險法規)
+            static calculateDays() {
+                const startDateStr = document.getElementById('start-date').value;
+                const endDateStr = document.getElementById('end-date').value;
+                const startHr = parseInt(document.getElementById('start-hour').value);
+                const endHr = parseInt(document.getElementById('end-hour').value);
+
+                if (!startDateStr || !endDateStr) {
+                    this.state.days = 0;
+                    this.syncDaysUI();
+                    return;
+                }
+
+                const d1 = new Date(startDateStr);
+                const d2 = new Date(endDateStr);
+
+                d1.setHours(startHr, 0, 0, 0);
+                d2.setHours(endHr, 0, 0, 0);
+
+                const diffMs = d2.getTime() - d1.getTime();
+                if (diffMs <= 0) {
+                    this.state.days = 0;
+                    this.syncDaysUI();
+                    return;
+                }
+
+                const diffHours = diffMs / (1000 * 60 * 60);
+                const calculated = Math.ceil(diffHours / 24);
+                
+                this.state.days = calculated;
+                this.syncDaysUI();
+            }
+
+            static syncDaysUI() {
+                const days = this.state.days;
+                document.getElementById('calculated-days-badge').textContent = `${days} 天`;
+                document.getElementById('summary-days').textContent = `${days} 天`;
+                document.getElementById('mobile-days-badge').textContent = `${days} 天`;
+            }
+
+            static updateProducts() {
+                const filtered = this.service.getProducts(this.state.area, this.state.diseaseOption);
+                UIRenderer.renderProductsDropdown(filtered);
+                this.handleProductChange();
+            }
+
+            // 方案切換與保額下拉連動
+            static handleProductChange() {
+                const select = document.getElementById('select-product');
+                const productId = select.value;
+
+                if (!productId || productId === "此條件下暫無方案") {
+                    this.clearProductDetails();
+                    return;
+                }
+
+                const currentProduct = (this.service.db.products || []).find(p => p.ProductID === productId);
+                const pName = currentProduct ? currentProduct.ProductName : "-";
+                
+                const summaryProd = document.getElementById('summary-product');
+                if (summaryProd) summaryProd.textContent = pName;
+                
+                const mobBadge = document.getElementById('mobile-product-badge');
+                if (mobBadge) mobBadge.textContent = pName;
+
+                // 抓取此方案擁有的所有額度配置
+                const opts = this.service.getProductOptions(productId);
+                
+                const adultDeaths = [...new Set(opts.map(o => o.AdultDeath))];
+                const childDeaths = [...new Set(opts.map(o => o.ChildDeath))];
+                const medicals = [...new Set(opts.map(o => o.Medical))];
+
+                UIRenderer.renderOptions('select-adult-death', adultDeaths);
+                UIRenderer.renderOptions('select-child-death', childDeaths);
+                UIRenderer.renderOptions('select-medical', medicals);
+
+                // 更新保障項目、注意事項與保費
+                const coverages = this.service.getCoverages(productId);
+                UIRenderer.renderCoverages(coverages);
+
+                const notes = this.service.getNotes(productId);
+                UIRenderer.renderNotes(notes);
+
+                this.calculate();
+            }
+
+            static clearProductDetails() {
+                const summaryProd = document.getElementById('summary-product');
+                if (summaryProd) summaryProd.textContent = "-";
+                
+                const mobBadge = document.getElementById('mobile-product-badge');
+                if (mobBadge) mobBadge.textContent = "未選擇";
+                
+                document.getElementById('select-adult-death').innerHTML = '';
+                document.getElementById('select-child-death').innerHTML = '';
+                document.getElementById('select-medical').innerHTML = '';
+                document.getElementById('coverage-list').innerHTML = `<div class="py-4 text-xs text-slate-400 text-center">請先選擇有效投保方案</div>`;
+                document.getElementById('notice-section').style.display = 'none';
+                this.calculate();
+            }
+
+            // 人數調整 Stepper
+            static adjustCount(role, val) {
+                const input = document.getElementById(`${role}-count`);
+                let count = parseInt(input.value) || 0;
+                count = Math.max(role === 'adult' ? 1 : 0, count + val); 
+                input.value = count;
+
+                if (role === 'adult') this.state.adultCount = count;
+                if (role === 'child') this.state.childCount = count;
+
+                this.calculate();
+            }
+
+            // 精算保費
+            static calculate() {
+                const productId = document.getElementById('select-product').value;
+                const adultDeath = document.getElementById('select-adult-death').value;
+                const childDeath = document.getElementById('select-child-death').value;
+                const medical = document.getElementById('select-medical').value;
+                const days = this.state.days;
+
+                let adultUnitPremium = 0;
+                let childUnitPremium = 0;
+
+                if (productId && days > 0 && adultDeath && childDeath && medical) {
+                    const result = this.service.findPremium(productId, days, adultDeath, childDeath, medical);
+                    adultUnitPremium = result.adult;
+                    childUnitPremium = result.child;
+                }
+
+                this.state.adultPremium = adultUnitPremium;
+                this.state.childPremium = childUnitPremium;
+
+                document.getElementById('adult-premium-tag').textContent = `每人 $${adultUnitPremium.toLocaleString()}`;
+                document.getElementById('child-premium-tag').textContent = `每人 $${childUnitPremium.toLocaleString()}`;
+
+                const total = (adultUnitPremium * this.state.adultCount) + (childUnitPremium * this.state.childCount);
+
+                document.getElementById('desktop-total-premium').textContent = total.toLocaleString();
+                document.getElementById('mobile-total-premium').textContent = total.toLocaleString();
+
+                document.getElementById('summary-adult-lbl').textContent = `大人 (${this.state.adultCount}人 x $${adultUnitPremium.toLocaleString()})：`;
+                document.getElementById('summary-adult-cost').textContent = `$${(adultUnitPremium * this.state.adultCount).toLocaleString()}`;
+                document.getElementById('summary-child-lbl').textContent = `小孩 (${this.state.childCount}人 x $${childUnitPremium.toLocaleString()})：`;
+                document.getElementById('summary-child-cost').textContent = `$${(childUnitPremium * this.state.childCount).toLocaleString()}`;
+            }
+
+            // 複製 LINE 行銷格式報價單
+            static copyLineQuote() {
+                const productName = document.getElementById('summary-product').textContent;
+                const days = this.state.days;
+                const totalPremium = document.getElementById('desktop-total-premium').textContent;
+                const area = this.state.area === 'overseas' ? '海外旅遊 ✈️' : '國內旅遊 🇹🇼';
+                const disease = this.state.area === 'overseas' ? this.state.diseaseOption : '不適用';
+
+                const adultDeath = document.getElementById('select-adult-death').value || '-';
+                const childDeath = document.getElementById('select-child-death').value || '-';
+                const medical = document.getElementById('select-medical').value || '-';
+
+                if (days <= 0 || productName === '-' || totalPremium === '0') {
+                    this.showLocalToast("⚠️ 請先設定有效的保單日期與方案再行複製！");
+                    return;
+                }
+
+                let quote = `【✈️ 旅平險專屬保費報價單】\n`;
+                quote += `━━━━━━━━━━━━━━━━━━\n`;
+                quote += `🔹 旅遊地區：${area}\n`;
+                quote += `🔹 旅遊天數：${days} 天\n`;
+                quote += `🔹 投保方案：${productName}\n`;
+                if (this.state.area === 'overseas') {
+                    quote += `🔹 突發疾病：${disease}\n`;
+                }
+                quote += `━━━━━━━━━━━━━━━━━━\n`;
+                quote += `👥 投保陣容與保額明細：\n`;
+                quote += `👨 大人 (${this.state.adultCount} 人)：身故 ${adultDeath} / 醫療 ${medical}\n`;
+                if (this.state.childCount > 0) {
+                    quote += `👧 小孩 (${this.state.childCount} 人)：身故 ${childDeath} / 醫療 ${medical}\n`;
+                }
+                quote += `━━━━━━━━━━━━━━━━━━\n`;
+                quote += `💰 預估應收總保費：NT$ ${totalPremium} 元\n`;
+                quote += `\n* 祝您出遊愉快，防護安心滿分！有任何疑問隨時與我聯繫。`;
+
+                const tempTextarea = document.createElement('textarea');
+                tempTextarea.value = quote;
+                document.body.appendChild(tempTextarea);
+                tempTextarea.select();
+                try {
+                    document.execCommand('copy');
+                    this.showLocalToast("🎉 報價文案已成功複製到剪貼簿！可直接至 LINE 貼上傳送！");
+                } catch (err) {
+                    this.showLocalToast("複製失敗，請用手動選取複製。");
+                }
+                document.body.removeChild(tempTextarea);
+            }
+
+            // 自製輕量級浮動 Toast 提示
+            static showLocalToast(msg) {
+                const toast = document.createElement('div');
+                toast.className = "fixed bottom-24 left-1/2 -translate-x-1/2 z-50 bg-slate-900/95 text-white px-5 py-3 rounded-xl text-xs font-bold shadow-lg flex items-center gap-2 max-w-[90%] text-center transition-all animate-bounce";
+                toast.innerHTML = `<span class="material-symbols-outlined text-indigo-400 text-sm">chat_bubble</span><span>${msg}</span>`;
+                document.body.appendChild(toast);
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+        }
+
+        // 綁定全域控制器
+        window.AppController = AppController;
+
+        // 當 DOM 載入完畢，立即啟動系統
+        window.addEventListener('DOMContentLoaded', () => {
+            AppController.init();
+        });
+
+    </script>
+</body>
+</html>

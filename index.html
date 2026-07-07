@@ -12,6 +12,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Flatpickr (極速一鍵選取日曆) CSS & JS & 繁體中文語系 -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/zh-tw.js"></script>
   
   <style>
     :root {
@@ -33,14 +37,25 @@
       background-color: var(--primary-color);
       border-radius: var(--border-radius);
     }
-    /* Hide scrollbar for Chrome, Safari and Opera */
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
+    /* 隱藏原生 Chrome/Safari 等瀏覽器 input[type=number] 的小箭頭 */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
     }
-    /* Hide scrollbar for IE, Edge and Firefox */
-    .no-scrollbar {
-      -ms-overflow-style: none;  /* IE and Edge */
-      scrollbar-width: none;  /* Firefox */
+    input[type=number] {
+      -moz-appearance: textfield; /* Firefox */
+    }
+    /* Flatpickr 樣式自訂 - 完美契合主色 */
+    .flatpickr-day.selected, .flatpickr-day.selected:hover {
+      background: var(--primary-color) !important;
+      border-color: var(--primary-color) !important;
+    }
+    .flatpickr-months .flatpickr-month {
+      color: #0f172a !important;
+    }
+    .flatpickr-current-month .flatpickr-monthDropdown-months {
+      font-weight: 700 !important;
     }
   </style>
 </head>
@@ -99,14 +114,8 @@
           <!-- 左半邊：保險生效日 -->
           <div class="space-y-2">
             <label class="block text-sm font-semibold text-gray-900">保險生效日</label>
-            <div class="relative h-11">
-              <!-- 強制 YYYY/MM/DD 的視覺顯示層 -->
-              <div id="startDateDisplay" class="absolute inset-0 flex items-center px-3 border border-gray-200 rounded-lg text-sm font-medium bg-white pointer-events-none z-0">
-                載入中...
-              </div>
-              <!-- 點擊原生 Date Picker 的透明輸入框 -->
-              <input type="date" id="startDate" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10" onchange="AppController.onPeriodChange()">
-            </div>
+            <!-- 採用 Flatpickr 取代原生 Date Picker -->
+            <input type="text" id="startDate" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
             <select id="startHour" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onPeriodChange()">
               <!-- 1 ~ 24 時 -->
             </select>
@@ -114,22 +123,16 @@
           <!-- 右半邊：保險結束日 -->
           <div class="space-y-2">
             <label class="block text-sm font-semibold text-gray-900">保險結束日</label>
-            <div class="relative h-11">
-              <!-- 強制 YYYY/MM/DD 的視覺顯示層 -->
-              <div id="endDateDisplay" class="absolute inset-0 flex items-center px-3 border border-gray-200 rounded-lg text-sm font-medium bg-white pointer-events-none z-0">
-                載入中...
-              </div>
-              <!-- 點擊原生 Date Picker 的透明輸入框 -->
-              <input type="date" id="endDate" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10" onchange="AppController.onPeriodChange()">
-            </div>
+            <!-- 採用 Flatpickr 取代原生 Date Picker -->
+            <input type="text" id="endDate" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
             <select id="endHour" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onPeriodChange()">
               <!-- 1 ~ 24 時 -->
             </select>
           </div>
-          <!-- 下方橫條：旅遊天數 (含警示框設計) -->
+          <!-- 下方橫條：旅遊天數 (支援防禦型紅框警告) -->
           <div id="daysCardContainer" class="col-span-2 bg-blue-50/50 border border-blue-100 p-3 rounded-lg flex flex-col gap-1 transition-all duration-200">
             <div class="flex justify-between items-center">
-              <span class="text-xs font-bold text-blue-800" id="lblDaysTitle">旅遊天數</span>
+              <span class="text-xs font-bold text-blue-800">旅遊天數</span>
               <div class="flex items-center gap-1">
                 <span id="txtDays" class="text-base font-black text-blue-900">1</span>
                 <span class="text-xs text-blue-800">天</span>
@@ -167,17 +170,18 @@
         </div>
       </div>
 
-      <!-- 5. 整合投保人數與保障額度 (依照圖片 2 版面整合) -->
+      <!-- 5. 整合投保人數與保障額度 (依照圖片 2 版面整合 + 人數改為可輸入框) -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card space-y-6">
         
-        <!-- A. 投保人數區 (圖片 2 上半部) -->
+        <!-- A. 投保人數區 (圖片 2 上半部 + 人數 Stepper 輸入框化) -->
         <div class="grid grid-cols-2 gap-4 border-b border-gray-100 pb-5">
           <!-- 左欄：15歲以上人數 (大人) -->
           <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
             <span class="text-xs font-bold text-slate-500 mb-1" id="lblAdult">15歲以上人數</span>
-            <div class="flex items-center gap-3 my-1.5">
+            <div class="flex items-center gap-2 my-1.5">
               <button class="w-8 h-8 bg-white text-gray-600 border border-gray-200 rounded-full font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', -1)">-</button>
-              <span id="txtAdultCount" class="w-6 text-center font-bold text-base text-gray-900">1</span>
+              <!-- 改為 input 輸入框，隱藏原生箭頭，文字置中，支援手動修改 -->
+              <input type="number" id="txtAdultCount" class="w-12 h-8 text-center font-bold text-base text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="1" min="0" oninput="AppController.onCountInputChange('adult')" onblur="AppController.onCountInputBlur('adult')">
               <button class="w-8 h-8 bg-white text-gray-600 border border-gray-200 rounded-full font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', 1)">+</button>
             </div>
             <div class="text-[11px] text-gray-400 mt-0.5">每人保費: <span id="txtAdultUnitPrice" class="font-bold text-blue-700">$-</span></div>
@@ -186,9 +190,10 @@
           <!-- 右欄：未滿15歲人數 (小孩) -->
           <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
             <span class="text-xs font-bold text-slate-500 mb-1" id="lblChild">未滿15歲人數</span>
-            <div class="flex items-center gap-3 my-1.5">
+            <div class="flex items-center gap-2 my-1.5">
               <button class="w-8 h-8 bg-white text-gray-600 border border-gray-200 rounded-full font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', -1)">-</button>
-              <span id="txtChildCount" class="w-6 text-center font-bold text-base text-gray-900">0</span>
+              <!-- 改為 input 輸入框，隱藏原生箭頭，文字置中，支援手動修改 -->
+              <input type="number" id="txtChildCount" class="w-12 h-8 text-center font-bold text-base text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="0" min="0" oninput="AppController.onCountInputChange('child')" onblur="AppController.onCountInputBlur('child')">
               <button class="w-8 h-8 bg-white text-gray-600 border border-gray-200 rounded-full font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', 1)">+</button>
             </div>
             <div class="text-[11px] text-gray-400 mt-0.5">每人保費: <span id="txtChildUnitPrice" class="font-bold text-blue-700">$-</span></div>
@@ -354,13 +359,17 @@
       childCount: 0
     };
 
+    // Flatpickr 控制物件
+    let startPickerInstance = null;
+    let endPickerInstance = null;
+
     // 系統初始化入口
     window.onload = async function() {
       // 1. 生成 1~24 小時的下拉選單
       initHourSelectors();
       
-      // 2. 設定預設日期 (今日 vs 明日)
-      initDefaultDates();
+      // 2. 初始化 Flatpickr 與預設日期
+      initCalendarAndDates();
 
       // 3. 讀取並套用雲端資料庫
       await loadDatabase();
@@ -388,8 +397,8 @@
       endSel.value = 10;
     }
 
-    // 設定起訖日預設值 & 格式層同步
-    function initDefaultDates() {
+    // 初始化 Flatpickr 與預設日期設定
+    function initCalendarAndDates() {
       const today = new Date();
       const tomorrow = new Date();
       tomorrow.setDate(today.getDate() + 1);
@@ -398,28 +407,38 @@
         const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
-        return `${year}-${month}-${day}`;
+        return `${year}/${month}/${day}`; // 強制以斜線輸出
       };
 
       const todayStr = toDateString(today);
       const tomorrowStr = toDateString(tomorrow);
 
-      document.getElementById("startDate").value = todayStr;
-      document.getElementById("endDate").value = tomorrowStr;
-      
-      updateDateDisplay('start', todayStr);
-      updateDateDisplay('end', tomorrowStr);
-
       clientState.startDate = todayStr;
       clientState.endDate = tomorrowStr;
-    }
 
-    // 更新透明 Date Picker 的格式化顯示層 (強制 YYYY/MM/DD)
-    function updateDateDisplay(type, rawDate) {
-      if (!rawDate) return;
-      const formatted = rawDate.replace(/-/g, '/');
-      const targetId = type === 'start' ? 'startDateDisplay' : 'endDateDisplay';
-      document.getElementById(targetId).textContent = formatted;
+      // 生效日日曆初始化
+      startPickerInstance = flatpickr("#startDate", {
+        locale: "zh_tw",
+        dateFormat: "Y/m/d",
+        defaultDate: todayStr,
+        disableMobile: "true", // 防止行動裝置喚起原生的 Done 滾輪
+        onChange: function(selectedDates, dateStr) {
+          clientState.startDate = dateStr;
+          AppController.onPeriodChange();
+        }
+      });
+
+      // 結束日日曆初始化
+      endPickerInstance = flatpickr("#endDate", {
+        locale: "zh_tw",
+        dateFormat: "Y/m/d",
+        defaultDate: tomorrowStr,
+        disableMobile: "true",
+        onChange: function(selectedDates, dateStr) {
+          clientState.endDate = dateStr;
+          AppController.onPeriodChange();
+        }
+      });
     }
 
     // 載入資料庫：優先使用快取，過期則重新呼叫 API
@@ -688,15 +707,6 @@
 
       // 當起迄日或時間改變
       static onPeriodChange() {
-        const startVal = document.getElementById("startDate").value;
-        const endVal = document.getElementById("endDate").value;
-
-        // 同步 iPhone 專用格式化文字 display 層
-        updateDateDisplay('start', startVal);
-        updateDateDisplay('end', endVal);
-
-        clientState.startDate = startVal;
-        clientState.endDate = endVal;
         clientState.startHour = parseInt(document.getElementById("startHour").value);
         clientState.endHour = parseInt(document.getElementById("endHour").value);
 
@@ -720,9 +730,10 @@
           return;
         }
 
-        // 宣告精確的 Local 時間物件
-        const startDateTime = new Date(`${startVal}T${String(startH).padStart(2, '0')}:00:00`);
-        const endDateTime = new Date(`${endVal}T${String(endH).padStart(2, '0')}:00:00`);
+        // 將斜線格式的字串 YYYY/MM/DD 在生成 Date 前暫時格式化為橫線以保持 ISO 相容性
+        const formatISO = (s) => s.replace(/\//g, '-');
+        const startDateTime = new Date(`${formatISO(startVal)}T${String(startH).padStart(2, '0')}:00:00`);
+        const endDateTime = new Date(`${formatISO(endVal)}T${String(endH).padStart(2, '0')}:00:00`);
 
         let errorMsg = "";
 
@@ -842,18 +853,57 @@
         this.updateSummaryPeople();
       }
 
-      // 人數調整器 (Stepper)
+      // 人數調整器 (Stepper 點擊按鈕調校)
       static adjustCount(type, delta) {
+        const inputEl = document.getElementById(type === 'adult' ? "txtAdultCount" : "txtChildCount");
+        let currentVal = parseInt(inputEl.value) || 0;
+        let newVal = currentVal + delta;
+        if (newVal < 0) newVal = 0;
+        
+        inputEl.value = newVal;
+
         if (type === 'adult') {
-          let count = clientState.adultCount + delta;
-          if (count < 0) count = 0; // 最少 0
-          clientState.adultCount = count;
-          document.getElementById("txtAdultCount").textContent = count;
+          clientState.adultCount = newVal;
         } else {
-          let count = clientState.childCount + delta;
-          if (count < 0) count = 0;
-          clientState.childCount = count;
-          document.getElementById("txtChildCount").textContent = count;
+          clientState.childCount = newVal;
+        }
+        this.calculatePremium();
+      }
+
+      // 人數手動輸入框鍵入更新
+      static onCountInputChange(type) {
+        const inputEl = document.getElementById(type === 'adult' ? "txtAdultCount" : "txtChildCount");
+        let val = inputEl.value;
+
+        // 當使用者在打字留空或不合規時，暫時對應為 0 進行運算
+        let numVal = parseInt(val);
+        if (isNaN(numVal) || numVal < 0) {
+          numVal = 0;
+        }
+
+        if (type === 'adult') {
+          clientState.adultCount = numVal;
+        } else {
+          clientState.childCount = numVal;
+        }
+        this.calculatePremium();
+      }
+
+      // 人數手動輸入框點開/離開防呆還原
+      static onCountInputBlur(type) {
+        const inputEl = document.getElementById(type === 'adult' ? "txtAdultCount" : "txtChildCount");
+        let val = parseInt(inputEl.value);
+        
+        // 若點擊其他地方仍為空白、負數或無效值，強制歸 0 還原視覺
+        if (isNaN(val) || val < 0) {
+          val = 0;
+        }
+        inputEl.value = val;
+
+        if (type === 'adult') {
+          clientState.adultCount = val;
+        } else {
+          clientState.childCount = val;
         }
         this.calculatePremium();
       }
@@ -934,8 +984,8 @@
         const prodName = curProd ? curProd.ProductName : '-';
         const totalText = document.getElementById("desktopTotalPremium").textContent;
 
-        const startDt = `${clientState.startDate.replace(/-/g, '/')} ${clientState.startHour}:00`;
-        const endDt = `${clientState.endDate.replace(/-/g, '/')} ${clientState.endHour}:00`;
+        const startDt = `${clientState.startDate} ${clientState.startHour}:00`;
+        const endDt = `${clientState.endDate} ${clientState.endHour}:00`;
 
         const quoteText = `【旅平險專業試算報價】
 ━━━━━━━━━━━━━━━

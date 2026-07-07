@@ -59,28 +59,28 @@
     }
   </style>
 </head>
-<body class="text-gray-800 antialiased min-h-screen flex flex-col pb-24 lg:pb-0">
+<body class="text-gray-800 antialiased min-h-screen flex flex-col pb-28 lg:pb-0">
 
-  <!-- 系統公告卡片 (依試算表動態控制) -->
-  <div id="announcementBanner" class="hidden bg-amber-50 border-b border-amber-200 py-3 px-4 text-center text-amber-900 text-xs md:text-sm font-medium flex items-center justify-center gap-2">
-    <i data-lucide="megaphone" class="w-4 h-4 text-amber-600 flex-shrink-0"></i>
+  <!-- 系統公告卡片 (依試算表動態控制) - 字體同步加大 -->
+  <div id="announcementBanner" class="hidden bg-amber-50 border-b border-amber-200 py-3.5 px-4 text-center text-amber-900 text-sm md:text-base font-bold flex items-center justify-center gap-2">
+    <i data-lucide="megaphone" class="w-5 h-5 text-amber-600 flex-shrink-0"></i>
     <span id="announcementText"></span>
   </div>
 
-  <!-- 頂部導覽列 -->
-  <header class="bg-white border-b border-gray-100 py-4 px-6 sticky top-0 z-40 shadow-sm">
+  <!-- 頂部導覽列 - 視覺與字體微調加大 -->
+  <header class="bg-white border-b border-gray-100 py-4.5 px-6 sticky top-0 z-40 shadow-sm">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-      <div class="flex items-center gap-2">
-        <i data-lucide="shield-check" class="w-6 h-6 text-blue-700"></i>
-        <h1 id="siteTitle" class="text-lg md:text-xl font-bold text-gray-900">旅平險保費試算</h1>
+      <div class="flex items-center gap-2.5">
+        <i data-lucide="shield-check" class="w-7 h-7 text-blue-700"></i>
+        <h1 id="siteTitle" class="text-xl md:text-2xl font-bold text-gray-900">旅平險保費試算</h1>
       </div>
       <div class="text-right">
-        <span id="effectiveDate" class="text-xs text-gray-400 bg-gray-50 px-2.5 py-1 rounded-full font-medium">適用載入中...</span>
+        <span id="effectiveDate" class="text-xs md:text-sm text-gray-400 bg-gray-50 px-3 py-1.5 rounded-full font-medium">適用載入中...</span>
       </div>
     </div>
   </header>
 
-  <!-- 系統維護畫面 (預設隱藏，API出錯時顯示) -->
+  <!-- 系統維護畫面 -->
   <div id="maintenanceScreen" class="hidden fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 text-center">
     <div class="w-16 h-16 bg-red-50 text-red-600 rounded-full flex items-center justify-center mb-4">
       <i data-lucide="alert-triangle" class="w-8 h-8"></i>
@@ -89,147 +89,170 @@
     <p class="text-gray-500 max-w-md">我們正在更新費率與系統設定，請稍後再試。造成不便敬請見諒。</p>
   </div>
 
-  <!-- 主內容區域 -->
-  <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+  <!-- 主內容區域：卡片外框全面對齊間距 (統一 space-y-4) -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6 lg:p-8 grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
     
-    <!-- 左側：輸入表單 (佔 7 格) -->
-    <div class="lg:col-span-7 space-y-5">
+    <!-- 左側：輸入表單 (佔 7 格，統一間距 space-y-4) -->
+    <div class="lg:col-span-7 space-y-4">
       
       <!-- 1. 旅遊地區 -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
-        <label id="lblTravelArea" class="block text-sm font-semibold text-gray-900 mb-3">旅遊地區</label>
+        <label id="lblTravelArea" class="block text-base md:text-lg font-bold text-gray-900 mb-3">旅遊地區</label>
         <div class="grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-lg">
-          <button id="btnAreaOvs" class="py-2.5 text-sm font-bold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setArea('overseas')">
+          <button id="btnAreaOvs" class="py-3 text-base font-extrabold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setArea('overseas')">
             海外旅遊
           </button>
-          <button id="btnAreaDom" class="py-2.5 text-sm font-bold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setArea('domestic')">
+          <button id="btnAreaDom" class="py-3 text-base font-extrabold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setArea('domestic')">
             國內旅遊
           </button>
         </div>
       </div>
 
-      <!-- 2. 保險期間 (黃金正方形佈局) -->
+      <!-- 2. 保險期間 (黃金正方形佈局：完美對齊與 custom chevron 下拉外觀) -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
         <div class="grid grid-cols-2 gap-4">
           <!-- 左半邊：保險生效日 -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-gray-900">保險生效日</label>
-            <!-- 採用 Flatpickr 取代原生 Date Picker -->
-            <input type="text" id="startDate" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
-            <select id="startHour" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onPeriodChange()">
-              <!-- 1 ~ 24 時 -->
-            </select>
+            <label class="block text-base font-bold text-gray-900">保險生效日</label>
+            <input type="text" id="startDate" class="w-full h-12 px-4 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
+            <!-- 加上 relative 與 appearance-none，並以 Lucide 箭頭點綴，達到像素級完美對齊 -->
+            <div class="relative">
+              <select id="startHour" class="w-full h-12 pl-4 pr-10 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onPeriodChange()">
+                <!-- 1 ~ 24 時 -->
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-gray-500">
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+              </div>
+            </div>
           </div>
           <!-- 右半邊：保險結束日 -->
           <div class="space-y-2">
-            <label class="block text-sm font-semibold text-gray-900">保險結束日</label>
-            <!-- 採用 Flatpickr 取代原生 Date Picker -->
-            <input type="text" id="endDate" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
-            <select id="endHour" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onPeriodChange()">
-              <!-- 1 ~ 24 時 -->
-            </select>
+            <label class="block text-base font-bold text-gray-900">保險結束日</label>
+            <input type="text" id="endDate" class="w-full h-12 px-4 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
+            <!-- 加上 relative 與 appearance-none，並以 Lucide 箭頭點綴，達到像素級完美對齊 -->
+            <div class="relative">
+              <select id="endHour" class="w-full h-12 pl-4 pr-10 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onPeriodChange()">
+                <!-- 1 ~ 24 時 -->
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-gray-500">
+                <i data-lucide="chevron-down" class="w-5 h-5"></i>
+              </div>
+            </div>
           </div>
-          <!-- 下方橫條：旅遊天數 (支援防禦型紅框警告) -->
-          <div id="daysCardContainer" class="col-span-2 bg-blue-50/50 border border-blue-100 p-3 rounded-lg flex flex-col gap-1 transition-all duration-200">
+          <!-- 下方橫條：旅遊天數 -->
+          <div id="daysCardContainer" class="col-span-2 bg-blue-50/50 border border-blue-100 p-3.5 rounded-lg flex flex-col gap-1 transition-all duration-200">
             <div class="flex justify-between items-center">
-              <span class="text-xs font-bold text-blue-800">旅遊天數</span>
+              <span class="text-sm font-extrabold text-blue-800">旅遊天數</span>
               <div class="flex items-center gap-1">
-                <span id="txtDays" class="text-base font-black text-blue-900">1</span>
-                <span class="text-xs text-blue-800">天</span>
+                <span id="txtDays" class="text-lg font-extrabold text-blue-900">1</span>
+                <span class="text-xs md:text-sm text-blue-800 font-bold">天</span>
               </div>
             </div>
             <!-- 動態警告訊息容器 -->
-            <div id="daysWarningContainer" class="hidden text-xs font-bold text-red-600 flex items-center gap-1.5 mt-1"></div>
+            <div id="daysWarningContainer" class="hidden text-xs md:text-sm font-bold text-red-600 flex items-center gap-1.5 mt-1"></div>
           </div>
         </div>
       </div>
 
       <!-- 3. 海外突發疾病 (海外專用) -->
       <div id="diseaseSection" class="bg-white p-5 rounded-xl border border-gray-100 custom-card transition-all">
-        <label class="block text-sm font-semibold text-gray-900 mb-3">海外突發疾病</label>
+        <label class="block text-base md:text-lg font-bold text-gray-900 mb-3">海外突發疾病</label>
         <div class="grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-lg">
-          <button id="btnDiseaseWith" class="py-2 text-xs font-bold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setDisease(true)">
+          <button id="btnDiseaseWith" class="py-2.5 text-sm font-extrabold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setDisease(true)">
             含法定傳染病
           </button>
-          <button id="btnDiseaseWithout" class="py-2 text-xs font-bold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setDisease(false)">
+          <button id="btnDiseaseWithout" class="py-2.5 text-sm font-extrabold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setDisease(false)">
             不含法定傳染病
           </button>
         </div>
       </div>
 
-      <!-- 4. 投保方案 (改為下拉選項) -->
+      <!-- 4. 投保方案 -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
-        <label class="block text-sm font-semibold text-gray-900 mb-3">投保方案</label>
+        <label class="block text-base md:text-lg font-bold text-gray-900 mb-3">投保方案</label>
         <div class="relative">
-          <select id="selProduct" class="w-full px-3 py-3 border border-gray-200 rounded-lg text-sm bg-white font-bold text-gray-950 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none" onchange="AppController.onProductSelectChange()">
+          <select id="selProduct" class="w-full px-4 py-3.5 border border-gray-200 rounded-lg text-base bg-white font-extrabold text-gray-950 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none" onchange="AppController.onProductSelectChange()">
             <!-- 動態載入商品下拉選項 -->
           </select>
-          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
-            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+          <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-gray-500">
+            <i data-lucide="chevron-down" class="w-5 h-5"></i>
           </div>
         </div>
       </div>
 
-      <!-- 5. 整合投保人數與保障額度 (依照圖片 2 版面整合 + 人數改為可輸入框) -->
-      <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card space-y-6">
+      <!-- 5. 整合投保人數與保障額度 (依照圖片 2 版面整合 + 人數調整框) -->
+      <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card space-y-5">
         
-        <!-- A. 投保人數區 (圖片 2 上半部 + 人數 Stepper 輸入框化) -->
+        <!-- A. 投保人數區 (圖片 2 上半部) -->
         <div class="grid grid-cols-2 gap-4 border-b border-gray-100 pb-5">
           <!-- 左欄：15歲以上人數 (大人) -->
           <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 mb-1" id="lblAdult">15歲以上人數</span>
-            <div class="flex items-center gap-2 my-1.5">
-              <button class="w-8 h-8 bg-white text-gray-600 border border-gray-200 rounded-full font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', -1)">-</button>
-              <!-- 改為 input 輸入框，隱藏原生箭頭，文字置中，支援手動修改 -->
-              <input type="number" id="txtAdultCount" class="w-12 h-8 text-center font-bold text-base text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="1" min="0" oninput="AppController.onCountInputChange('adult')" onblur="AppController.onCountInputBlur('adult')">
-              <button class="w-8 h-8 bg-white text-gray-600 border border-gray-200 rounded-full font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', 1)">+</button>
+            <span class="text-sm font-extrabold text-slate-500 mb-1" id="lblAdult">15歲以上人數</span>
+            <div class="flex items-center gap-2.5 my-2">
+              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', -1)">-</button>
+              <input type="number" id="txtAdultCount" class="w-14 h-10 text-center font-black text-lg text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="1" min="0" oninput="AppController.onCountInputChange('adult')" onblur="AppController.onCountInputBlur('adult')">
+              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', 1)">+</button>
             </div>
-            <div class="text-[11px] text-gray-400 mt-0.5">每人保費: <span id="txtAdultUnitPrice" class="font-bold text-blue-700">$-</span></div>
+            <div class="text-xs font-bold text-gray-400 mt-0.5">每人保費: <span id="txtAdultUnitPrice" class="font-bold text-blue-700">$-</span></div>
           </div>
 
           <!-- 右欄：未滿15歲人數 (小孩) -->
           <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-            <span class="text-xs font-bold text-slate-500 mb-1" id="lblChild">未滿15歲人數</span>
-            <div class="flex items-center gap-2 my-1.5">
-              <button class="w-8 h-8 bg-white text-gray-600 border border-gray-200 rounded-full font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', -1)">-</button>
-              <!-- 改為 input 輸入框，隱藏原生箭頭，文字置中，支援手動修改 -->
-              <input type="number" id="txtChildCount" class="w-12 h-8 text-center font-bold text-base text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="0" min="0" oninput="AppController.onCountInputChange('child')" onblur="AppController.onCountInputBlur('child')">
-              <button class="w-8 h-8 bg-white text-gray-600 border border-gray-200 rounded-full font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', 1)">+</button>
+            <span class="text-sm font-extrabold text-slate-500 mb-1" id="lblChild">未滿15歲人數</span>
+            <div class="flex items-center gap-2.5 my-2">
+              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', -1)">-</button>
+              <input type="number" id="txtChildCount" class="w-14 h-10 text-center font-black text-lg text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="0" min="0" oninput="AppController.onCountInputChange('child')" onblur="AppController.onCountInputBlur('child')">
+              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', 1)">+</button>
             </div>
-            <div class="text-[11px] text-gray-400 mt-0.5">每人保費: <span id="txtChildUnitPrice" class="font-bold text-blue-700">$-</span></div>
+            <div class="text-xs font-bold text-gray-400 mt-0.5">每人保費: <span id="txtChildUnitPrice" class="font-bold text-blue-700">$-</span></div>
           </div>
         </div>
 
         <!-- B. 保障額度設定區 (圖片 2 下半部) -->
         <div class="space-y-4">
-          <div class="text-sm font-semibold text-gray-900 flex items-center gap-1.5">
-            <i data-lucide="shield-alert" class="w-4 h-4 text-blue-700"></i>
+          <div class="text-base font-bold text-gray-900 flex items-center gap-1.5">
+            <i data-lucide="shield-alert" class="w-5 h-5 text-blue-700"></i>
             <span>保障額度</span>
           </div>
           
           <div class="grid grid-cols-2 gap-4">
             <!-- 左欄：15歲以上身故保額 -->
             <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1.5">15歲以上身故保額</label>
-              <select id="selAdultDeath" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-white font-medium focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onLimitChange()">
-                <!-- 動態 -->
-              </select>
+              <label class="block text-xs font-extrabold text-gray-500 mb-1.5">15歲以上身故保額</label>
+              <div class="relative">
+                <select id="selAdultDeath" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 rounded-lg text-base bg-white font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onLimitChange()">
+                  <!-- 動態 -->
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                  <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </div>
+              </div>
             </div>
-            <!-- 右欄：未滿15歲失能保額 (配合圖片 2 變更名稱) -->
+            <!-- 右欄：未滿15歲失能保額 -->
             <div>
-              <label class="block text-[11px] font-bold text-gray-500 mb-1.5">未滿15歲失能保額</label>
-              <select id="selChildDeath" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-white font-medium focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onLimitChange()">
-                <!-- 動態 -->
-              </select>
+              <label class="block text-xs font-extrabold text-gray-500 mb-1.5">未滿15歲失能保額</label>
+              <div class="relative">
+                <select id="selChildDeath" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 rounded-lg text-base bg-white font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onLimitChange()">
+                  <!-- 動態 -->
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                  <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- 橫跨整排：傷害醫療保額 -->
+          <!-- 傷害醫療保額 -->
           <div>
-            <label class="block text-[11px] font-bold text-gray-500 mb-1.5">傷害醫療保額</label>
-            <select id="selMedical" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm bg-white font-medium focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onLimitChange()">
-              <!-- 動態 -->
-            </select>
+            <label class="block text-xs font-extrabold text-gray-500 mb-1.5">傷害醫療保額</label>
+            <div class="relative">
+              <select id="selMedical" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 rounded-lg text-base bg-white font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onLimitChange()">
+                <!-- 動態 -->
+              </select>
+              <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-gray-500">
+                <i data-lucide="chevron-down" class="w-4 h-4"></i>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -237,35 +260,35 @@
 
     </div>
 
-    <!-- 右側：摘要卡片、保障內容、注意事項 (佔 5 格) -->
-    <div class="lg:col-span-5 space-y-5">
+    <!-- 右側：摘要卡片、保障內容、注意事項 (佔 5 格，統一間距 space-y-4) -->
+    <div class="lg:col-span-5 space-y-4">
       
-      <!-- 桌機版固定右側總保費卡 (RWD會在手機版隱藏) -->
+      <!-- 桌機版固定右側總保費卡 -->
       <div class="hidden lg:block bg-white p-6 rounded-xl border border-gray-100 custom-card sticky top-24 z-30">
-        <h3 class="text-xs font-bold text-gray-400 tracking-wider uppercase mb-2">試算結果摘要</h3>
+        <h3 class="text-sm font-extrabold text-gray-400 tracking-wider uppercase mb-2">試算結果摘要</h3>
         <div class="flex justify-between items-baseline mb-4">
-          <span class="text-sm font-medium text-gray-500">應收總保費</span>
+          <span class="text-base font-bold text-gray-500">應收總保費</span>
           <div>
-            <span class="text-xs font-bold text-blue-700">NT$</span>
-            <span id="desktopTotalPremium" class="text-3xl font-black text-blue-900">0</span>
+            <span class="text-sm font-bold text-blue-700">NT$</span>
+            <span id="desktopTotalPremium" class="text-4xl md:text-5xl font-black text-blue-900">0</span>
           </div>
         </div>
-        <div class="space-y-2.5 text-xs text-gray-500 border-t border-gray-100 pt-4 mb-5">
+        <div class="space-y-3 text-sm text-gray-500 border-t border-gray-100 pt-4 mb-5">
           <div class="flex justify-between">
             <span>旅遊天數:</span>
-            <span class="font-bold text-gray-800"><span id="summaryDays">1</span> 天</span>
+            <span class="font-extrabold text-gray-900"><span id="summaryDays">1</span> 天</span>
           </div>
           <div class="flex justify-between">
             <span>所選方案:</span>
-            <span class="font-bold text-gray-800" id="summaryProduct">-</span>
+            <span class="font-extrabold text-gray-900" id="summaryProduct">-</span>
           </div>
           <div class="flex justify-between">
             <span>投保人數:</span>
-            <span class="font-bold text-gray-800"><span id="summaryAdults">1</span>大 / <span id="summaryChildren">0</span>小</span>
+            <span class="font-extrabold text-gray-900"><span id="summaryAdults">1</span>大 / <span id="summaryChildren">0</span>小</span>
           </div>
         </div>
-        <button onclick="AppController.copyLineQuote()" class="w-full py-3 px-4 btn-primary text-white font-bold text-sm shadow-md hover:brightness-105 active:scale-[0.98] transition flex items-center justify-center gap-2">
-          <i data-lucide="copy" class="w-4 h-4"></i>
+        <button onclick="AppController.copyLineQuote()" class="w-full py-4 px-6 btn-primary text-white font-black text-base shadow-md hover:brightness-105 active:scale-[0.98] transition flex items-center justify-center gap-2">
+          <i data-lucide="copy" class="w-5 h-5"></i>
           複製 LINE 格式報價
         </button>
       </div>
@@ -274,7 +297,7 @@
       <div id="coverageSection" class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
         <div class="flex items-center gap-2 border-b border-gray-100 pb-3 mb-4">
           <i data-lucide="shield" class="w-5 h-5 text-blue-700"></i>
-          <h3 id="lblCoverage" class="text-sm font-bold text-gray-900">方案承保內容</h3>
+          <h3 id="lblCoverage" class="text-base font-black text-gray-900">方案承保內容</h3>
         </div>
         <div id="coverageList" class="space-y-3">
           <!-- 動態渲染保障項目 -->
@@ -285,9 +308,9 @@
       <div id="noticeSection" class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
         <div class="flex items-center gap-2 border-b border-gray-100 pb-3 mb-4">
           <i data-lucide="info" class="w-5 h-5 text-amber-500"></i>
-          <h3 id="lblNotice" class="text-sm font-bold text-gray-900">注意事項</h3>
+          <h3 id="lblNotice" class="text-base font-black text-gray-900">注意事項</h3>
         </div>
-        <ul id="noticeList" class="space-y-2 list-disc list-inside text-xs text-gray-500 leading-relaxed">
+        <ul id="noticeList" class="space-y-2 list-disc list-inside text-sm text-gray-500 leading-relaxed font-medium">
           <!-- 動態渲染注意事項 -->
         </ul>
       </div>
@@ -295,22 +318,22 @@
     </div>
   </main>
 
-  <!-- 手機版 Sticky Footer (手機版專用) -->
-  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white p-4 flex items-center justify-between border-t border-slate-800 z-40 shadow-lg">
+  <!-- 手機版 Sticky Footer -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white py-5 px-6 flex items-center justify-between border-t border-slate-800 z-40 shadow-xl">
     <div>
-      <span class="block text-[10px] text-slate-400 font-bold tracking-wider" id="mobileTotalPremiumLabel">應收總保費</span>
+      <span class="block text-xs text-slate-300 font-bold tracking-wider" id="mobileTotalPremiumLabel">應收總保費</span>
       <div class="flex items-baseline gap-1 mt-0.5">
-        <span class="text-[10px] text-slate-300 font-semibold">NT$</span>
-        <span id="mobileTotalPremium" class="text-2xl font-black text-blue-400">0</span>
+        <span class="text-xs text-slate-400 font-bold">NT$</span>
+        <span id="mobileTotalPremium" class="text-3xl font-extrabold text-blue-400">0</span>
       </div>
     </div>
-    <div class="flex items-center gap-2">
-      <div class="text-right text-[10px] text-slate-400 font-semibold mr-1">
+    <div class="flex items-center gap-3">
+      <div class="text-right text-xs text-slate-300 font-extrabold mr-1">
         <div><span id="mobileSummaryDays">1</span> 天</div>
         <div><span id="mobileSummaryAdults">1</span>大 / <span id="mobileSummaryChildren">0</span>小</div>
       </div>
-      <button onclick="AppController.copyLineQuote()" class="bg-blue-600 text-white font-bold text-xs py-2.5 px-3.5 rounded-lg shadow active:scale-95 transition flex items-center gap-1.5">
-        <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+      <button onclick="AppController.copyLineQuote()" class="bg-blue-600 text-white font-black text-sm py-3.5 px-5 rounded-lg shadow active:scale-95 transition flex items-center gap-1.5">
+        <i data-lucide="copy" class="w-4 h-4"></i>
         複製報價
       </button>
     </div>
@@ -550,12 +573,12 @@
         const diseaseSec = document.getElementById("diseaseSection");
 
         if (clientState.area === 'overseas') {
-          btnOvs.className = "py-2.5 text-sm font-bold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
-          btnDom.className = "py-2.5 text-sm font-bold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
+          btnOvs.className = "py-3 text-base font-extrabold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
+          btnDom.className = "py-3 text-base font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
           diseaseSec.classList.remove("hidden");
         } else {
-          btnOvs.className = "py-2.5 text-sm font-bold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
-          btnDom.className = "py-2.5 text-sm font-bold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
+          btnOvs.className = "py-3 text-base font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
+          btnDom.className = "py-3 text-base font-extrabold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
           diseaseSec.classList.add("hidden");
         }
 
@@ -576,11 +599,11 @@
         const btnWithout = document.getElementById("btnDiseaseWithout");
 
         if (clientState.diseaseOption) {
-          btnWith.className = "py-2 text-xs font-bold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
-          btnWithout.className = "py-2 text-xs font-bold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
+          btnWith.className = "py-2.5 text-sm font-extrabold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
+          btnWithout.className = "py-2.5 text-sm font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
         } else {
-          btnWith.className = "py-2 text-xs font-bold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
-          btnWithout.className = "py-2 text-xs font-bold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
+          btnWith.className = "py-2.5 text-sm font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
+          btnWithout.className = "py-2.5 text-sm font-extrabold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
         }
       }
 
@@ -714,7 +737,7 @@
         this.calculatePremium();
       }
 
-      // 核心天數運算：採 Unix Epoch 時間戳差並使用 Math.ceil 無條件進位 (解決倒退 Bug 並防禦限額)
+      // 核心天數運算：採 Unix Epoch 時間戳差並使用 Math.ceil 無條件進位
       static calculateDays() {
         const startVal = clientState.startDate;
         const endVal = clientState.endDate;
@@ -761,8 +784,8 @@
         // 警示 UI 切換渲染
         if (errorMsg) {
           // 改為明顯粗紅框、粉紅底
-          daysCard.className = "col-span-2 bg-red-50 border-2 border-red-500 p-3 rounded-lg flex flex-col gap-1 transition-all duration-200 shadow-sm";
-          warningContainer.className = "text-xs font-black text-red-600 flex items-center gap-1 mt-1";
+          daysCard.className = "col-span-2 bg-red-50 border-2 border-red-500 p-3.5 rounded-lg flex flex-col gap-1 transition-all duration-200 shadow-sm";
+          warningContainer.className = "text-xs md:text-sm font-black text-red-600 flex items-center gap-1 mt-1";
           warningContainer.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 text-red-600 flex-shrink-0"></i><span>${errorMsg}</span>`;
           warningContainer.classList.remove("hidden");
           lucide.createIcons();
@@ -772,7 +795,7 @@
           this.updateDaysUI(true);
         } else {
           // 還原預設藍綠色排版
-          daysCard.className = "col-span-2 bg-blue-50/50 border border-blue-100 p-3 rounded-lg flex flex-col gap-1 transition-all duration-200";
+          daysCard.className = "col-span-2 bg-blue-50/50 border border-blue-100 p-3.5 rounded-lg flex flex-col gap-1 transition-all duration-200";
           warningContainer.classList.add("hidden");
           warningContainer.innerHTML = "";
 
@@ -796,7 +819,7 @@
         this.calculatePremium();
       }
 
-      // 計算總保費 (阻斷天數超限)
+      // 計算總保費
       static calculatePremium() {
         const prodId = clientState.selectedProductId;
         const days = clientState.days;
@@ -825,7 +848,7 @@
             document.getElementById("txtAdultUnitPrice").textContent = `NT$ ${adultPrice.toLocaleString()}`;
             document.getElementById("txtChildUnitPrice").textContent = `NT$ ${childPrice.toLocaleString()}`;
           } else {
-            // 查無資料，可能因為無對應的天數費率
+            // 查無資料
             document.getElementById("txtAdultUnitPrice").textContent = "查無費率";
             document.getElementById("txtChildUnitPrice").textContent = "查無費率";
           }
@@ -837,7 +860,7 @@
         // 計算總保費
         const total = (adultPrice * clientState.adultCount) + (childPrice * clientState.childCount);
 
-        // 更新 UI 數據 (若有錯改顯示 --)
+        // 更新 UI 數據
         const displayTotal = days > 0 ? total.toLocaleString() : "--";
         document.getElementById("desktopTotalPremium").textContent = displayTotal;
         document.getElementById("mobileTotalPremium").textContent = displayTotal;
@@ -853,7 +876,7 @@
         this.updateSummaryPeople();
       }
 
-      // 人數調整器 (Stepper 點擊按鈕調校)
+      // 人數調整器 (Stepper)
       static adjustCount(type, delta) {
         const inputEl = document.getElementById(type === 'adult' ? "txtAdultCount" : "txtChildCount");
         let currentVal = parseInt(inputEl.value) || 0;
@@ -875,7 +898,6 @@
         const inputEl = document.getElementById(type === 'adult' ? "txtAdultCount" : "txtChildCount");
         let val = inputEl.value;
 
-        // 當使用者在打字留空或不合規時，暫時對應為 0 進行運算
         let numVal = parseInt(val);
         if (isNaN(numVal) || numVal < 0) {
           numVal = 0;
@@ -894,7 +916,6 @@
         const inputEl = document.getElementById(type === 'adult' ? "txtAdultCount" : "txtChildCount");
         let val = parseInt(inputEl.value);
         
-        // 若點擊其他地方仍為空白、負數或無效值，強制歸 0 還原視覺
         if (isNaN(val) || val < 0) {
           val = 0;
         }
@@ -936,12 +957,12 @@
             document.getElementById("coverageSection").classList.remove("hidden");
             items.forEach(c => {
               const itemDiv = document.createElement("div");
-              itemDiv.className = "flex justify-between items-start py-2 border-b border-gray-50 text-xs";
+              itemDiv.className = "flex justify-between items-start py-2.5 border-b border-gray-50 text-sm";
               itemDiv.innerHTML = `
                 <span class="font-semibold text-gray-700 max-w-[50%]">${c.Item}</span>
                 <div class="text-right">
-                  <span class="block text-blue-900 font-bold">15歲以上: ${c.AdultValue || '無'}</span>
-                  <span class="block text-gray-400 font-medium mt-0.5">未滿15歲: ${c.ChildValue || '無'}</span>
+                  <span class="block text-blue-900 font-extrabold text-sm">15歲以上: ${c.AdultValue || '無'}</span>
+                  <span class="block text-gray-500 font-bold text-xs mt-0.5">未滿15歲: ${c.ChildValue || '無'}</span>
                 </div>
               `;
               covList.appendChild(itemDiv);

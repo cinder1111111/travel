@@ -99,7 +99,14 @@
           <!-- 左半邊：保險生效日 -->
           <div class="space-y-2">
             <label class="block text-sm font-semibold text-gray-900">保險生效日</label>
-            <input type="date" id="startDate" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onPeriodChange()">
+            <div class="relative h-11">
+              <!-- 強制 YYYY/MM/DD 的視覺顯示層 -->
+              <div id="startDateDisplay" class="absolute inset-0 flex items-center px-3 border border-gray-200 rounded-lg text-sm font-medium bg-white pointer-events-none z-0">
+                載入中...
+              </div>
+              <!-- 點擊原生 Date Picker 的透明輸入框 -->
+              <input type="date" id="startDate" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10" onchange="AppController.onPeriodChange()">
+            </div>
             <select id="startHour" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onPeriodChange()">
               <!-- 1 ~ 24 時 -->
             </select>
@@ -107,18 +114,29 @@
           <!-- 右半邊：保險結束日 -->
           <div class="space-y-2">
             <label class="block text-sm font-semibold text-gray-900">保險結束日</label>
-            <input type="date" id="endDate" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onPeriodChange()">
+            <div class="relative h-11">
+              <!-- 強制 YYYY/MM/DD 的視覺顯示層 -->
+              <div id="endDateDisplay" class="absolute inset-0 flex items-center px-3 border border-gray-200 rounded-lg text-sm font-medium bg-white pointer-events-none z-0">
+                載入中...
+              </div>
+              <!-- 點擊原生 Date Picker 的透明輸入框 -->
+              <input type="date" id="endDate" class="absolute inset-0 opacity-0 w-full h-full cursor-pointer z-10" onchange="AppController.onPeriodChange()">
+            </div>
             <select id="endHour" class="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-medium bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition" onchange="AppController.onPeriodChange()">
               <!-- 1 ~ 24 時 -->
             </select>
           </div>
-          <!-- 下方橫條：旅遊天數 -->
-          <div class="col-span-2 bg-blue-50/50 border border-blue-100 p-3 rounded-lg flex justify-between items-center">
-            <span class="text-xs font-bold text-blue-800">旅遊天數</span>
-            <div class="flex items-center gap-1">
-              <span id="txtDays" class="text-base font-black text-blue-900">1</span>
-              <span class="text-xs text-blue-800">天</span>
+          <!-- 下方橫條：旅遊天數 (含警示框設計) -->
+          <div id="daysCardContainer" class="col-span-2 bg-blue-50/50 border border-blue-100 p-3 rounded-lg flex flex-col gap-1 transition-all duration-200">
+            <div class="flex justify-between items-center">
+              <span class="text-xs font-bold text-blue-800" id="lblDaysTitle">旅遊天數</span>
+              <div class="flex items-center gap-1">
+                <span id="txtDays" class="text-base font-black text-blue-900">1</span>
+                <span class="text-xs text-blue-800">天</span>
+              </div>
             </div>
+            <!-- 動態警告訊息容器 -->
+            <div id="daysWarningContainer" class="hidden text-xs font-bold text-red-600 flex items-center gap-1.5 mt-1"></div>
           </div>
         </div>
       </div>
@@ -370,7 +388,7 @@
       endSel.value = 10;
     }
 
-    // 設定起訖日預設值
+    // 設定起訖日預設值 & 格式層同步
     function initDefaultDates() {
       const today = new Date();
       const tomorrow = new Date();
@@ -383,11 +401,25 @@
         return `${year}-${month}-${day}`;
       };
 
-      document.getElementById("startDate").value = toDateString(today);
-      document.getElementById("endDate").value = toDateString(tomorrow);
+      const todayStr = toDateString(today);
+      const tomorrowStr = toDateString(tomorrow);
+
+      document.getElementById("startDate").value = todayStr;
+      document.getElementById("endDate").value = tomorrowStr;
       
-      clientState.startDate = toDateString(today);
-      clientState.endDate = toDateString(tomorrow);
+      updateDateDisplay('start', todayStr);
+      updateDateDisplay('end', tomorrowStr);
+
+      clientState.startDate = todayStr;
+      clientState.endDate = tomorrowStr;
+    }
+
+    // 更新透明 Date Picker 的格式化顯示層 (強制 YYYY/MM/DD)
+    function updateDateDisplay(type, rawDate) {
+      if (!rawDate) return;
+      const formatted = rawDate.replace(/-/g, '/');
+      const targetId = type === 'start' ? 'startDateDisplay' : 'endDateDisplay';
+      document.getElementById(targetId).textContent = formatted;
     }
 
     // 載入資料庫：優先使用快取，過期則重新呼叫 API
@@ -488,6 +520,8 @@
       static setArea(area) {
         clientState.area = area;
         this.syncAreaUI();
+        // 當切換區域時，立刻重新計算並檢測投保天數限制
+        this.calculateDays();
       }
 
       // 同步區域按鈕與對應輸入區狀態
@@ -654,50 +688,92 @@
 
       // 當起迄日或時間改變
       static onPeriodChange() {
-        clientState.startDate = document.getElementById("startDate").value;
+        const startVal = document.getElementById("startDate").value;
+        const endVal = document.getElementById("endDate").value;
+
+        // 同步 iPhone 專用格式化文字 display 層
+        updateDateDisplay('start', startVal);
+        updateDateDisplay('end', endVal);
+
+        clientState.startDate = startVal;
+        clientState.endDate = endVal;
         clientState.startHour = parseInt(document.getElementById("startHour").value);
-        clientState.endDate = document.getElementById("endDate").value;
         clientState.endHour = parseInt(document.getElementById("endHour").value);
 
         this.calculateDays();
         this.calculatePremium();
       }
 
-      // 計算保險天數 (未滿 24 小時以一天計算)
+      // 核心天數運算：採 Unix Epoch 時間戳差並使用 Math.ceil 無條件進位 (解決倒退 Bug 並防禦限額)
       static calculateDays() {
-        const start = new Date(clientState.startDate);
-        const end = new Date(clientState.endDate);
+        const startVal = clientState.startDate;
+        const endVal = clientState.endDate;
+        const startH = clientState.startHour;
+        const endH = clientState.endHour;
 
-        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+        const daysCard = document.getElementById("daysCardContainer");
+        const warningContainer = document.getElementById("daysWarningContainer");
+
+        if (!startVal || !endVal) {
           clientState.days = 1;
           this.updateDaysUI();
           return;
         }
 
-        const diffTime = end.getTime() - start.getTime();
-        let diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+        // 宣告精確的 Local 時間物件
+        const startDateTime = new Date(`${startVal}T${String(startH).padStart(2, '0')}:00:00`);
+        const endDateTime = new Date(`${endVal}T${String(endH).padStart(2, '0')}:00:00`);
 
-        // 計算小時補正
-        const hourDiff = clientState.endHour - clientState.startHour;
-        if (hourDiff > 0) {
-          diffDays += 1;
-        } else if (hourDiff === 0 && diffTime > 0) {
-          // 時間一模一樣，天數等於基本日差
-        } else if (hourDiff < 0) {
-          // 起時大於迄時，例如 10:00 到隔天 09:00，依然算滿一天
-          diffDays += 1;
+        let errorMsg = "";
+
+        if (startDateTime > endDateTime) {
+          // 生效日晚於結束日
+          errorMsg = "保險生效日不可晚於結束日！";
+        } else {
+          // 計算總時差並採無條件進位
+          const diffMs = endDateTime.getTime() - startDateTime.getTime();
+          const diffHours = diffMs / (1000 * 60 * 60);
+          let calculatedDays = Math.ceil(diffHours / 24);
+
+          if (calculatedDays <= 0) calculatedDays = 1;
+
+          // 國內 / 海外天數限額驗證
+          if (clientState.area === 'domestic' && calculatedDays > 14) {
+            errorMsg = `國內旅遊投保天數最多 14 天！(目前 ${calculatedDays} 天)`;
+          } else if (clientState.area === 'overseas' && calculatedDays > 180) {
+            errorMsg = `海外旅遊投保天數最多 180 天！(目前 ${calculatedDays} 天)`;
+          }
+
+          clientState.days = calculatedDays;
         }
 
-        if (diffDays <= 0) diffDays = 1;
+        // 警示 UI 切換渲染
+        if (errorMsg) {
+          // 改為明顯粗紅框、粉紅底
+          daysCard.className = "col-span-2 bg-red-50 border-2 border-red-500 p-3 rounded-lg flex flex-col gap-1 transition-all duration-200 shadow-sm";
+          warningContainer.className = "text-xs font-black text-red-600 flex items-center gap-1 mt-1";
+          warningContainer.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 text-red-600 flex-shrink-0"></i><span>${errorMsg}</span>`;
+          warningContainer.classList.remove("hidden");
+          lucide.createIcons();
 
-        clientState.days = diffDays;
-        this.updateDaysUI();
+          // 天數鎖定
+          clientState.days = 0; 
+          this.updateDaysUI(true);
+        } else {
+          // 還原預設藍綠色排版
+          daysCard.className = "col-span-2 bg-blue-50/50 border border-blue-100 p-3 rounded-lg flex flex-col gap-1 transition-all duration-200";
+          warningContainer.classList.add("hidden");
+          warningContainer.innerHTML = "";
+
+          this.updateDaysUI(false);
+        }
       }
 
-      static updateDaysUI() {
-        document.getElementById("txtDays").textContent = clientState.days;
-        document.getElementById("summaryDays").textContent = clientState.days;
-        document.getElementById("mobileSummaryDays").textContent = clientState.days;
+      static updateDaysUI(isError = false) {
+        const daysVal = isError ? "--" : clientState.days;
+        document.getElementById("txtDays").textContent = daysVal;
+        document.getElementById("summaryDays").textContent = daysVal;
+        document.getElementById("mobileSummaryDays").textContent = daysVal;
       }
 
       // 當額度選項變更時
@@ -709,7 +785,7 @@
         this.calculatePremium();
       }
 
-      // 計算大人與小孩保費
+      // 計算總保費 (阻斷天數超限)
       static calculatePremium() {
         const prodId = clientState.selectedProductId;
         const days = clientState.days;
@@ -720,7 +796,8 @@
         let adultPrice = 0;
         let childPrice = 0;
 
-        if (prodId) {
+        // 若有天數或日期設定錯誤，停止查費
+        if (days > 0 && prodId) {
           // 搜尋合適費率
           const rateRecord = globalDB.rates.find(r => 
             r.ProductID === prodId &&
@@ -749,9 +826,10 @@
         // 計算總保費
         const total = (adultPrice * clientState.adultCount) + (childPrice * clientState.childCount);
 
-        // 更新 UI 數據
-        document.getElementById("desktopTotalPremium").textContent = total.toLocaleString();
-        document.getElementById("mobileTotalPremium").textContent = total.toLocaleString();
+        // 更新 UI 數據 (若有錯改顯示 --)
+        const displayTotal = days > 0 ? total.toLocaleString() : "--";
+        document.getElementById("desktopTotalPremium").textContent = displayTotal;
+        document.getElementById("mobileTotalPremium").textContent = displayTotal;
 
         const curProd = globalDB.products.find(p => p.ProductID === prodId);
         const prodName = curProd ? curProd.ProductName : '-';
@@ -846,13 +924,18 @@
 
       // 一鍵複製 LINE 報價單
       static copyLineQuote() {
+        if (clientState.days <= 0) {
+          showToast("❌ 投保天數設定錯誤，無法複製報價單！");
+          return;
+        }
+
         const prodId = clientState.selectedProductId;
         const curProd = globalDB.products.find(p => p.ProductID === prodId);
         const prodName = curProd ? curProd.ProductName : '-';
         const totalText = document.getElementById("desktopTotalPremium").textContent;
 
-        const startDt = `${clientState.startDate} ${clientState.startHour}:00`;
-        const endDt = `${clientState.endDate} ${clientState.endHour}:00`;
+        const startDt = `${clientState.startDate.replace(/-/g, '/')} ${clientState.startHour}:00`;
+        const endDt = `${clientState.endDate.replace(/-/g, '/')} ${clientState.endHour}:00`;
 
         const quoteText = `【旅平險專業試算報價】
 ━━━━━━━━━━━━━━━

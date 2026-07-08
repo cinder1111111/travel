@@ -59,23 +59,24 @@
     }
   </style>
 </head>
-<body class="text-gray-800 antialiased min-h-screen flex flex-col pb-44 lg:pb-6">
+<body class="text-gray-800 antialiased min-h-screen flex flex-col pb-36 lg:pb-6">
 
-  <!-- 系統公告卡片 (依試算表動態控制) - 字體同步加大 -->
-  <div id="announcementBanner" class="hidden bg-amber-50 border-b border-amber-200 py-3.5 px-4 text-center text-amber-900 text-sm md:text-base font-bold flex items-center justify-center gap-2">
+  <!-- 系統公告卡片 (依試算表動態控制) - 降低高度優雅收縮 -->
+  <div id="announcementBanner" class="hidden bg-amber-50 border-b border-amber-200 py-2 px-4 text-center text-amber-900 text-sm md:text-base font-bold flex items-center justify-center gap-2">
     <i data-lucide="megaphone" class="w-5 h-5 text-amber-600 flex-shrink-0"></i>
     <span id="announcementText"></span>
   </div>
 
-  <!-- 頂部導覽列 - 視覺與字體微調加大 -->
-  <header class="bg-white border-b border-gray-100 py-4.5 px-6 sticky top-0 z-40 shadow-sm">
+  <!-- 頂部導覽列 -->
+  <header class="bg-white border-b border-gray-100 py-4 px-6 sticky top-0 z-40 shadow-sm">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       <div class="flex items-center gap-2.5">
         <i data-lucide="shield-check" class="w-7 h-7 text-blue-700"></i>
         <h1 id="siteTitle" class="text-xl md:text-2xl font-bold text-gray-900">旅平險保費試算</h1>
       </div>
       <div class="text-right">
-        <span id="effectiveDate" class="text-xs md:text-sm text-gray-400 bg-gray-50 px-3 py-1.5 rounded-full font-medium">適用載入中...</span>
+        <!-- 降低存在感的日期標籤 -->
+        <span id="effectiveDate" class="text-xs md:text-sm text-gray-400/75 bg-gray-50/40 border border-gray-100/50 px-3 py-1 rounded-full font-medium">適用載入中...</span>
       </div>
     </div>
   </header>
@@ -100,19 +101,19 @@
         <label id="lblTravelArea" class="block text-base md:text-lg font-bold text-slate-900 mb-3">旅遊地區</label>
         <div class="flex bg-gray-100 p-1.5 rounded-xl w-full">
           <div class="flex-1 flex justify-center items-center">
-            <button id="btnAreaOvs" class="w-[85%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer" onclick="AppController.setArea('overseas')">
+            <button id="btnAreaOvs" class="w-[88%] py-3 text-base font-extrabold rounded-lg text-center transition-all focus:outline-none cursor-pointer" onclick="AppController.setArea('overseas')">
               海外旅遊
             </button>
           </div>
           <div class="flex-1 flex justify-center items-center">
-            <button id="btnAreaDom" class="w-[85%] py-3 text-base font-extrabold rounded-lg text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer" onclick="AppController.setArea('domestic')">
+            <button id="btnAreaDom" class="w-[88%] py-3 text-base font-extrabold rounded-lg text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer" onclick="AppController.setArea('domestic')">
               國內旅遊
             </button>
           </div>
         </div>
       </div>
 
-      <!-- 2. 保險期間 (黃金正方形佈局：完美對齊與 custom chevron 下拉外觀) -->
+      <!-- 2. 保險期間 -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
         <div class="grid grid-cols-2 gap-4">
           <!-- 左半邊：保險生效日 -->
@@ -141,13 +142,13 @@
               </div>
             </div>
           </div>
-          <!-- 下方橫條：旅遊天數 -->
-          <div id="daysCardContainer" class="col-span-2 bg-blue-50/50 border border-blue-100 p-3.5 rounded-lg flex flex-col gap-1 transition-all duration-200">
-            <div class="flex justify-between items-center">
+          <!-- 下方橫條：旅遊天數 (基準線完美對齊 items-baseline) -->
+          <div id="daysCardContainer" class="col-span-2 bg-blue-50/50 border border-blue-100 p-3.5 rounded-lg flex flex-col gap-1 transition-all">
+            <div class="flex justify-between items-baseline">
               <span class="text-sm font-extrabold text-blue-800">旅遊天數</span>
-              <div class="flex items-center gap-1">
-                <span id="txtDays" class="text-lg font-extrabold text-blue-900">1</span>
-                <span class="text-xs md:text-sm text-blue-800 font-bold">天</span>
+              <div class="flex items-baseline gap-1">
+                <span id="txtDays" class="text-2xl font-black text-blue-900 md:text-3xl leading-none">1</span>
+                <span class="text-sm md:text-base text-blue-800 font-extrabold leading-none">天</span>
               </div>
             </div>
             <!-- 動態警告訊息容器 -->
@@ -156,17 +157,17 @@
         </div>
       </div>
 
-      <!-- 3. 海外突發疾病 (海外專用，灰色底層 w-full 滿版，藍色立體按鈕加長 1.5 倍) -->
+      <!-- 3. 海外突發疾病 (海外專用，灰色底層 w-full 滿版，藍色立體按鈕尺寸全面調校與旅遊地區 100% 同步) -->
       <div id="diseaseSection" class="bg-white p-5 rounded-xl border border-gray-100 custom-card transition-all">
         <label class="block text-base md:text-lg font-bold text-slate-900 mb-3">海外突發疾病</label>
         <div class="flex bg-gray-100 p-1.5 rounded-xl w-full">
           <div class="flex-1 flex justify-center items-center">
-            <button id="btnDiseaseWith" class="w-[85%] py-2.5 text-sm font-extrabold rounded-md transition-all text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer" onclick="AppController.setDisease(true)">
+            <button id="btnDiseaseWith" class="w-[88%] py-3 text-base font-extrabold rounded-lg text-center focus:outline-none cursor-pointer" onclick="AppController.setDisease(true)">
               含法定傳染病
             </button>
           </div>
           <div class="flex-1 flex justify-center items-center">
-            <button id="btnDiseaseWithout" class="w-[85%] py-2.5 text-sm font-extrabold rounded-md transition-all text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer" onclick="AppController.setDisease(false)">
+            <button id="btnDiseaseWithout" class="w-[88%] py-3 text-base font-extrabold rounded-lg text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer" onclick="AppController.setDisease(false)">
               不含法定傳染病
             </button>
           </div>
@@ -186,7 +187,7 @@
         </div>
       </div>
 
-      <!-- 5. 整合投保人數與保障額度 -->
+      <!-- 5. 整合投保人數與保障額度 (分流大人小孩資料表) -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card space-y-5">
         
         <!-- A. 投保人數區 -->
@@ -214,7 +215,7 @@
           </div>
         </div>
 
-        <!-- B. 保障額度設定區 -->
+        <!-- B. 保障額度設定區 (分流大人小孩資料表) -->
         <div class="space-y-4">
           <div class="text-sm font-semibold text-slate-900 flex items-center gap-1.5">
             <i data-lucide="shield-alert" class="w-4 h-4 text-blue-700"></i>
@@ -324,26 +325,21 @@
     </div>
   </main>
 
-  <!-- 手機版 Sticky Footer (已大幅放大框框內文字 50%，同時維持按鈕原本的比例) -->
-  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white py-8 px-6 flex items-center justify-between border-t border-slate-800 z-40 shadow-xl">
+  <!-- 手機版 Sticky Footer (精緻收縮 10%，維持大氣視覺呼吸與觸控比例) -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white py-6 px-5 flex items-center justify-between border-t border-slate-800 z-40 shadow-xl">
     <div>
-      <!-- 應收總保費標籤：從 text-xs 放大至 text-lg -->
-      <span class="block text-lg text-slate-300 font-extrabold tracking-wider" id="mobileTotalPremiumLabel">應收總保費</span>
+      <span class="block text-base text-slate-300 font-extrabold tracking-wider" id="mobileTotalPremiumLabel">應收總保費</span>
       <div class="flex items-baseline gap-1 mt-0.5">
-        <!-- 錢幣符號：從 text-xs 放大至 text-lg -->
-        <span class="text-lg text-slate-400 font-extrabold">NT$</span>
-        <!-- 總保費金額：從 text-3.5xl 放大至 text-5xl -->
-        <span id="mobileTotalPremium" class="text-5xl font-black text-blue-400">0</span>
+        <span class="text-base text-slate-400 font-extrabold">NT$</span>
+        <span id="mobileTotalPremium" class="text-4xl font-black text-blue-400">0</span>
       </div>
     </div>
     <div class="flex items-center gap-4">
-      <!-- 旅遊天數、人數：從 text-xs 放大至 text-base -->
-      <div class="text-right text-base text-slate-300 font-extrabold mr-1 leading-snug">
+      <div class="text-right text-sm text-slate-300 font-extrabold mr-1 leading-snug">
         <div><span id="mobileSummaryDays">1</span> 天</div>
         <div><span id="mobileSummaryAdults">1</span>大 / <span id="mobileSummaryChildren">0</span>小</div>
       </div>
-      <!-- 複製報價按鈕：高度、寬度、文字與 Icon 完美維持原有高水準比例不變 -->
-      <button onclick="AppController.copyLineQuote()" class="bg-[var(--primary-color)] text-white font-black text-sm py-3.5 px-5 rounded-lg shadow active:scale-95 transition flex items-center gap-1.5 cursor-pointer">
+      <button onclick="AppController.copyLineQuote()" class="bg-[var(--primary-color)] text-white font-black text-xs py-3 px-4 rounded-lg shadow active:scale-95 transition flex items-center gap-1.5 cursor-pointer">
         <i data-lucide="copy" class="w-4 h-4"></i>
         複製報價
       </button>
@@ -358,19 +354,22 @@
 
   <!-- JS 邏輯區 -->
   <script>
-    // 串接使用者部署好的 Google Apps Script 雲端 API 網址
+    // 串接使用者部署好的 Google Apps Script 雲端 API 網址 (大人小孩獨立Sheet分流架構)
     const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCudyI5uo1lDZXVsUfTxZrfzeLrLLzUh70N38HWLcAsn75-22G44cZ5ijzmyH86MJx/exec";
-    const CACHE_KEY = "TRAVEL_INS_CACHE_V3";
-    const CACHE_TIME_KEY = "TRAVEL_INS_CACHE_TIME_V3";
+    const CACHE_KEY = "TRAVEL_INS_CACHE_V4";
+    const CACHE_TIME_KEY = "TRAVEL_INS_CACHE_TIME_V4";
     const CACHE_DURATION_MS = 5 * 60 * 1000; // 5 分鐘快取
 
-    // 全域資料儲存庫
+    // 全域資料儲存庫 - 與後端分流 Schema 完全一致
     let globalDB = {
       control: {},
       products: [],
-      productOptions: [],
-      rates: [],
-      coverages: [],
+      adultProductOptions: [],
+      childProductOptions: [],
+      adultRates: [],
+      childRates: [],
+      adultCoverages: [],
+      childCoverages: [],
       notes: [],
       ui: {},
       texts: {}
@@ -399,16 +398,9 @@
 
     // 系統初始化入口
     window.onload = async function() {
-      // 1. 生成 1~24 小時的下拉選單
       initHourSelectors();
-      
-      // 2. 初始化 Flatpickr 與預設日期
       initCalendarAndDates();
-
-      // 3. 讀取並套用雲端資料庫
       await loadDatabase();
-
-      // 4. 初始化 Lucide 圖標
       lucide.createIcons();
     };
 
@@ -477,6 +469,7 @@
 
     // 載入資料庫：優先使用快取，過期則重新呼叫 API
     async function loadDatabase() {
+      const el = document.getElementById("effectiveDate");
       const cacheData = localStorage.getItem(CACHE_KEY);
       const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
       const now = Date.now();
@@ -491,29 +484,26 @@
         }
       }
 
-      // 無快取或快取過期，向 Google Apps Script 發送 Request
       try {
         const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
-        if (!response.ok) throw new Error("API 回應失敗");
+        if (!response.ok) throw new Error(`HTTP 錯誤: ${response.status}`);
         const data = await response.json();
         
         if (data.error) throw new Error(data.error);
 
-        // 寫入快取與記憶體
         globalDB = data;
         localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         localStorage.setItem(CACHE_TIME_KEY, now.toString());
 
         applyDBData();
+        // 移除原先覆蓋為「系統已載入」的程式碼，保留原本 Google 試算表設定的適用日期
       } catch (err) {
         console.error("雲端 API 連線失敗", err);
-        // 若快取可用則作為降級方案
         if (cacheData) {
           globalDB = JSON.parse(cacheData);
           applyDBData();
           showToast("⚠️ API 讀取失敗，改採離線快取資料");
         } else {
-          // 無法讀取且無快取，顯示維護畫面
           document.getElementById("maintenanceScreen").classList.remove("hidden");
         }
       }
@@ -521,7 +511,6 @@
 
     // 渲染資料庫設定到前台介面上
     function applyDBData() {
-      // 1. 控制台與文案套用
       if (globalDB.control.SiteTitle) {
         document.getElementById("siteTitle").textContent = globalDB.control.SiteTitle;
       }
@@ -529,7 +518,6 @@
         document.getElementById("effectiveDate").textContent = globalDB.control.EffectiveDate;
       }
       
-      // 公告顯示與隱藏
       if (globalDB.control.Announcement && globalDB.control.Announcement.trim() !== "") {
         document.getElementById("announcementBanner").classList.remove("hidden");
         document.getElementById("announcementText").textContent = globalDB.control.Announcement;
@@ -537,7 +525,6 @@
         document.getElementById("announcementBanner").classList.add("hidden");
       }
 
-      // UI 視覺動態設定
       if (globalDB.ui) {
         const root = document.documentElement;
         if (globalDB.ui.PrimaryColor) root.style.setProperty('--primary-color', globalDB.ui.PrimaryColor);
@@ -547,7 +534,6 @@
         if (globalDB.ui.FooterColor) root.style.setProperty('--footer-color', globalDB.ui.FooterColor);
       }
 
-      // 自訂文字欄位文案
       if (globalDB.texts) {
         if (globalDB.texts.TravelArea) document.getElementById("lblTravelArea").textContent = globalDB.texts.TravelArea;
         if (globalDB.texts.Adult) document.getElementById("lblAdult").textContent = globalDB.texts.Adult;
@@ -559,36 +545,32 @@
         if (globalDB.texts.Notice) document.getElementById("lblNotice").textContent = globalDB.texts.Notice;
       }
 
-      // 2. 觸發天數計算
       AppController.calculateDays();
-
-      // 3. 設定預設選擇區域並同步畫面
       AppController.syncAreaUI();
     }
 
-    // 業務控制器（商業邏輯核心）
+    // 業務控制器
     class AppController {
       
-      // 切換國內外
       static setArea(area) {
         clientState.area = area;
         this.syncAreaUI();
         this.calculateDays();
       }
 
-      // 同步區域按鈕與對應輸入區狀態
+      // 同步區域切換樣式與類別 (立體高質感 & py-3 text-base rounded-lg 完美同步)
       static syncAreaUI() {
         const btnOvs = document.getElementById("btnAreaOvs");
         const btnDom = document.getElementById("btnAreaDom");
         const diseaseSec = document.getElementById("diseaseSection");
 
         if (clientState.area === 'overseas') {
-          btnOvs.className = "w-[85%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer";
-          btnDom.className = "w-[85%] py-3 text-base font-extrabold rounded-lg text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer";
+          btnOvs.className = "w-[88%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-[0_4px_6px_-1px_rgba(30,64,175,0.12),_0_2px_4px_-1px_rgba(30,64,175,0.08)] border-b-[3px] border-blue-950 -translate-y-[1px] bg-gradient-to-b from-blue-700 to-blue-800 transition-none focus:outline-none cursor-pointer";
+          btnDom.className = "w-[88%] py-3 text-base font-extrabold rounded-lg text-center text-gray-400 hover:text-gray-700 border-b-[3px] border-transparent transition-none focus:outline-none cursor-pointer";
           diseaseSec.classList.remove("hidden");
         } else {
-          btnOvs.className = "w-[85%] py-3 text-base font-extrabold rounded-lg text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer";
-          btnDom.className = "w-[85%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer";
+          btnOvs.className = "w-[88%] py-3 text-base font-extrabold rounded-lg text-center text-gray-400 hover:text-gray-700 border-b-[3px] border-transparent transition-none focus:outline-none cursor-pointer";
+          btnDom.className = "w-[88%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-[0_4px_6px_-1px_rgba(30,64,175,0.12),_0_2px_4px_-1px_rgba(30,64,175,0.08)] border-b-[3px] border-blue-950 -translate-y-[1px] bg-gradient-to-b from-blue-700 to-blue-800 transition-none focus:outline-none cursor-pointer";
           diseaseSec.classList.add("hidden");
         }
 
@@ -596,65 +578,57 @@
         this.updateProducts();
       }
 
-      // 切換是否含有法定傳染病
       static setDisease(hasOption) {
         clientState.diseaseOption = hasOption;
         this.syncDiseaseUI();
         this.updateProducts();
       }
 
-      // 同步法傳按鈕狀態 (左右按鈕加長 1.5 倍)
+      // 同步海外突發疾病切換樣式與類別 (完美精準調校至與地區按鈕一致)
       static syncDiseaseUI() {
         const btnWith = document.getElementById("btnDiseaseWith");
         const btnWithout = document.getElementById("btnDiseaseWithout");
 
         if (clientState.diseaseOption) {
-          btnWith.className = "w-[85%] py-2.5 text-sm font-extrabold rounded-md text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer";
-          btnWithout.className = "w-[85%] py-2.5 text-sm font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer";
+          btnWith.className = "w-[88%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-[0_4px_6px_-1px_rgba(30,64,175,0.12),_0_2px_4px_-1px_rgba(30,64,175,0.08)] border-b-[3px] border-blue-950 -translate-y-[1px] bg-gradient-to-b from-blue-700 to-blue-800 transition-none focus:outline-none cursor-pointer";
+          btnWithout.className = "w-[88%] py-3 text-base font-extrabold rounded-lg text-center text-gray-400 hover:text-gray-700 border-b-[3px] border-transparent transition-none focus:outline-none cursor-pointer";
         } else {
-          btnWith.className = "w-[85%] py-2.5 text-sm font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer";
-          btnWithout.className = "w-[85%] py-2.5 text-sm font-extrabold rounded-md text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer";
+          btnWith.className = "w-[88%] py-3 text-base font-extrabold rounded-lg text-center text-gray-400 hover:text-gray-700 border-b-[3px] border-transparent transition-none focus:outline-none cursor-pointer";
+          btnWithout.className = "w-[88%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-[0_4px_6px_-1px_rgba(30,64,175,0.12),_0_2px_4px_-1px_rgba(30,64,175,0.08)] border-b-[3px] border-blue-950 -translate-y-[1px] bg-gradient-to-b from-blue-700 to-blue-800 transition-none focus:outline-none cursor-pointer";
         }
       }
 
-      // 依地區與法傳篩選商品 (超高容錯率防呆篩選器)
+      // 依地區與法傳篩選商品
       static updateProducts() {
         const selectEl = document.getElementById("selProduct");
         if (!selectEl) return;
         selectEl.innerHTML = "";
 
-        // 篩選商品
         const filtered = globalDB.products.filter(p => {
           if (!p.Enable) return false;
           if (p.Area !== clientState.area) return false;
           if (clientState.area === 'overseas') {
-            // 超強相容度字串比對，預防資料庫有前後空白、未定義
             const pOpt = (p.DiseaseOption || "").toString().trim();
             if (clientState.diseaseOption) {
-              // 點選「含法傳」：匹配 "含法定傳染病" 且排除 "不含"
               return pOpt.includes("含") && !pOpt.includes("不含");
             } else {
-              // 點選「不含法傳」：匹配 "不含"、空白、或是完全沒設定的預設方案
               return pOpt.includes("不含") || pOpt === "" || pOpt === "無" || !p.DiseaseOption;
             }
           }
           return true;
         });
 
-        // 依排序權重 Sorting
         filtered.sort((a, b) => (a.Sort || 0) - (b.Sort || 0));
 
         if (filtered.length === 0) {
           const opt = document.createElement("option");
-          opt.value = "";
-          opt.textContent = "無符合之方案計畫";
+          opt.value = ""; opt.textContent = "無符合之方案計畫";
           selectEl.appendChild(opt);
           clientState.selectedProductId = "";
           this.updateProductOptions();
           return;
         }
 
-        // 渲染商品下拉選項
         filtered.forEach((prod) => {
           const opt = document.createElement("option");
           opt.value = prod.ProductID;
@@ -663,7 +637,6 @@
           selectEl.appendChild(opt);
         });
 
-        // 預設選取當前已選的 ID，若不在清單中則選第一個
         const hasMatch = filtered.some(p => p.ProductID === clientState.selectedProductId);
         if (!hasMatch && filtered.length > 0) {
           clientState.selectedProductId = filtered[0].ProductID;
@@ -673,7 +646,6 @@
         this.updateProductOptions();
       }
 
-      // 下拉選單方案改變時觸發
       static onProductSelectChange() {
         const selectEl = document.getElementById("selProduct");
         clientState.selectedProductId = selectEl.value;
@@ -699,53 +671,44 @@
           return;
         }
 
-        // 從 商品選項 表過濾該 ProductID
-        const options = globalDB.productOptions.filter(o => o.ProductID === prodId && o.Enable);
-        options.sort((a, b) => (a.Sort || 0) - (b.Sort || 0));
+        // 分別讀取大人小孩分流之商品選項
+        const adultOptions = (globalDB.adultProductOptions || []).filter(o => o.ProductID === prodId && o.Enable);
+        const childOptions = (globalDB.childProductOptions || []).filter(o => o.ProductID === prodId && o.Enable);
 
-        if (options.length === 0) {
-          selAdult.innerHTML = `<option value="">無</option>`;
-          selChild.innerHTML = `<option value="">無</option>`;
-          selMedical.innerHTML = `<option value="">無</option>`;
-          return;
-        }
+        adultOptions.sort((a, b) => (a.Sort || 0) - (b.Sort || 0));
+        childOptions.sort((a, b) => (a.Sort || 0) - (b.Sort || 0));
 
-        // 取不重複的選項填入下拉選單
-        const adults = [...new Set(options.map(o => o.AdultDeath))].filter(Boolean);
-        const children = [...new Set(options.map(o => o.ChildDeath))].filter(Boolean);
-        const medicals = [...new Set(options.map(o => o.Medical))].filter(Boolean);
+        // 大人身故保額與醫療選項
+        const adultDeaths = [...new Set(adultOptions.map(o => o.Death))].filter(Boolean);
+        const medicals = [...new Set(adultOptions.map(o => o.Medical))].filter(Boolean);
 
-        adults.forEach(val => {
-          const opt = document.createElement("option");
-          opt.value = val;
-          opt.textContent = val;
+        // 小孩失能保額選項
+        const childDeaths = [...new Set(childOptions.map(o => o.Death))].filter(Boolean);
+
+        adultDeaths.forEach(val => {
+          const opt = document.createElement("option"); opt.value = val; opt.textContent = val;
           selAdult.appendChild(opt);
         });
 
-        children.forEach(val => {
-          const opt = document.createElement("option");
-          opt.value = val;
-          opt.textContent = val;
+        childDeaths.forEach(val => {
+          const opt = document.createElement("option"); opt.value = val; opt.textContent = val;
           selChild.appendChild(opt);
         });
 
         medicals.forEach(val => {
-          const opt = document.createElement("option");
-          opt.value = val;
-          opt.textContent = val;
+          const opt = document.createElement("option"); opt.value = val; opt.textContent = val;
           selMedical.appendChild(opt);
         });
 
-        // 預設選擇第一個
-        clientState.adultDeath = adults[0] || '';
-        clientState.childDeath = children[0] || '';
+        // 預設狀態選擇
+        clientState.adultDeath = adultDeaths[0] || '';
+        clientState.childDeath = childDeaths[0] || '';
         clientState.medical = medicals[0] || '';
 
         this.syncDynamicSections();
         this.calculatePremium();
       }
 
-      // 當起迄日或時間改變
       static onPeriodChange() {
         clientState.startHour = parseInt(document.getElementById("startHour").value);
         clientState.endHour = parseInt(document.getElementById("endHour").value);
@@ -754,7 +717,7 @@
         this.calculatePremium();
       }
 
-      // 核心天數運算：採 Unix Epoch 時間戳差並使用 Math.ceil 無條件進位
+      // 天數無條件進位運算
       static calculateDays() {
         const startVal = clientState.startDate;
         const endVal = clientState.endDate;
@@ -770,7 +733,6 @@
           return;
         }
 
-        // 將斜線格式的字串 YYYY/MM/DD 在生成 Date 前暫時格式化為橫線以保持 ISO 相容性
         const formatISO = (s) => s.replace(/\//g, '-');
         const startDateTime = new Date(`${formatISO(startVal)}T${String(startH).padStart(2, '0')}:00:00`);
         const endDateTime = new Date(`${formatISO(endVal)}T${String(endH).padStart(2, '0')}:00:00`);
@@ -780,14 +742,12 @@
         if (startDateTime > endDateTime) {
           errorMsg = "保險生效日不可晚於結束日！";
         } else {
-          // 計算總時差並採無條件進位
           const diffMs = endDateTime.getTime() - startDateTime.getTime();
           const diffHours = diffMs / (1000 * 60 * 60);
           let calculatedDays = Math.ceil(diffHours / 24);
 
           if (calculatedDays <= 0) calculatedDays = 1;
 
-          // 國內 / 海外天數限額驗證
           if (clientState.area === 'domestic' && calculatedDays > 14) {
             errorMsg = `國內旅遊投保天數最多 14 天！(目前 ${calculatedDays} 天)`;
           } else if (clientState.area === 'overseas' && calculatedDays > 180) {
@@ -797,7 +757,6 @@
           clientState.days = calculatedDays;
         }
 
-        // 警示 UI 切換渲染
         if (errorMsg) {
           daysCard.className = "col-span-2 bg-red-50 border-2 border-red-500 p-3.5 rounded-lg flex flex-col gap-1 transition-all duration-200 shadow-sm";
           warningContainer.className = "text-xs md:text-sm font-black text-red-600 flex items-center gap-1 mt-1";
@@ -808,7 +767,7 @@
           clientState.days = 0; 
           this.updateDaysUI(true);
         } else {
-          daysCard.className = "col-span-2 bg-blue-50/50 border border-blue-100 p-3.5 rounded-lg flex flex-col gap-1 transition-all duration-200";
+          daysCard.className = "col-span-2 bg-blue-50/50 border border-blue-100 p-3.5 rounded-lg flex flex-col gap-1 transition-all";
           warningContainer.classList.add("hidden");
           warningContainer.innerHTML = "";
 
@@ -823,7 +782,6 @@
         document.getElementById("mobileSummaryDays").textContent = daysVal;
       }
 
-      // 當額度選項變更時
       static onLimitChange() {
         clientState.adultDeath = document.getElementById("selAdultDeath").value;
         clientState.childDeath = document.getElementById("selChildDeath").value;
@@ -832,7 +790,7 @@
         this.calculatePremium();
       }
 
-      // 計算總保費
+      // 計算總保費 (分流大人小孩獨立費率 Sheet)
       static calculatePremium() {
         const prodId = clientState.selectedProductId;
         const days = clientState.days;
@@ -844,34 +802,41 @@
         let childPrice = 0;
 
         if (days > 0 && prodId) {
-          // 搜尋合適費率
-          const rateRecord = globalDB.rates.find(r => 
+          // 1. 查大人獨立費率
+          const adultRateRecord = (globalDB.adultRates || []).find(r => 
             r.ProductID === prodId &&
             parseInt(r.Days) === parseInt(days) &&
-            r.AdultDeath === adDeath &&
-            r.ChildDeath === chDeath &&
+            r.Death === adDeath &&
             r.Medical === med
           );
 
-          if (rateRecord) {
-            adultPrice = parseInt(rateRecord.AdultPremium) || 0;
-            childPrice = parseInt(rateRecord.ChildPremium) || 0;
-            
+          // 2. 查小孩獨立費率
+          const childRateRecord = (globalDB.childRates || []).find(r => 
+            r.ProductID === prodId &&
+            parseInt(r.Days) === parseInt(days) &&
+            r.Death === chDeath
+          );
+
+          if (adultRateRecord) {
+            adultPrice = parseInt(adultRateRecord.Premium) || 0;
             document.getElementById("txtAdultUnitPrice").textContent = `NT$ ${adultPrice.toLocaleString()}`;
+          } else {
+            document.getElementById("txtAdultUnitPrice").textContent = "無費率";
+          }
+
+          if (childRateRecord) {
+            childPrice = parseInt(childRateRecord.Premium) || 0;
             document.getElementById("txtChildUnitPrice").textContent = `NT$ ${childPrice.toLocaleString()}`;
           } else {
-            document.getElementById("txtAdultUnitPrice").textContent = "查無費率";
-            document.getElementById("txtChildUnitPrice").textContent = "查無費率";
+            document.getElementById("txtChildUnitPrice").textContent = "無費率";
           }
         } else {
           document.getElementById("txtAdultUnitPrice").textContent = "$-";
           document.getElementById("txtChildUnitPrice").textContent = "$-";
         }
 
-        // 計算總保費
         const total = (adultPrice * clientState.adultCount) + (childPrice * clientState.childCount);
 
-        // 更新 UI 數據
         const displayTotal = days > 0 ? total.toLocaleString() : "--";
         document.getElementById("desktopTotalPremium").textContent = displayTotal;
         document.getElementById("mobileTotalPremium").textContent = displayTotal;
@@ -887,7 +852,6 @@
         this.updateSummaryPeople();
       }
 
-      // 人數調整器 (Stepper)
       static adjustCount(type, delta) {
         const inputEl = document.getElementById(type === 'adult' ? "txtAdultCount" : "txtChildCount");
         let currentVal = parseInt(inputEl.value) || 0;
@@ -904,7 +868,6 @@
         this.calculatePremium();
       }
 
-      // 人數手動輸入框鍵入更新
       static onCountInputChange(type) {
         const inputEl = document.getElementById(type === 'adult' ? "txtAdultCount" : "txtChildCount");
         let val = inputEl.value;
@@ -922,7 +885,6 @@
         this.calculatePremium();
       }
 
-      // 人數手動輸入框點開/離開防呆還原
       static onCountInputBlur(type) {
         const inputEl = document.getElementById(type === 'adult' ? "txtAdultCount" : "txtChildCount");
         let val = parseInt(inputEl.value);
@@ -940,7 +902,6 @@
         this.calculatePremium();
       }
 
-      // 同步右側摘要卡人數
       static updateSummaryPeople() {
         document.getElementById("summaryAdults").textContent = clientState.adultCount;
         document.getElementById("summaryChildren").textContent = clientState.childCount;
@@ -948,32 +909,41 @@
         document.getElementById("mobileSummaryChildren").textContent = clientState.childCount;
       }
 
-      // 渲染動態保障細項與注意事項
+      // 動態承保條款渲染 (分流大人小孩獨立承保內容 Sheet)
       static syncDynamicSections() {
         const prodId = clientState.selectedProductId;
-
-        // 1. 承保內容項目
         const covList = document.getElementById("coverageList");
         covList.innerHTML = "";
 
         if (!prodId) {
           document.getElementById("coverageSection").classList.add("hidden");
         } else {
-          const items = globalDB.coverages.filter(c => c.ProductID === prodId);
-          items.sort((a, b) => (a.Sort || 0) - (b.Sort || 0));
+          // 合併大人與小孩的承保保障條款，方便橫向對比
+          const adultItems = (globalDB.adultCoverages || []).filter(c => c.ProductID === prodId);
+          const childItems = (globalDB.childCoverages || []).filter(c => c.ProductID === prodId);
 
-          if (items.length === 0) {
+          // 取出所有不重複的保障項目 (Item)
+          const allItemsSet = new Set([
+            ...adultItems.map(i => i.Item),
+            ...childItems.map(i => i.Item)
+          ]);
+
+          if (allItemsSet.size === 0) {
             document.getElementById("coverageSection").classList.add("hidden");
           } else {
             document.getElementById("coverageSection").classList.remove("hidden");
-            items.forEach(c => {
+            
+            allItemsSet.forEach(item => {
+              const aVal = adultItems.find(i => i.Item === item)?.Value || "無";
+              const cVal = childItems.find(i => i.Item === item)?.Value || "無";
+
               const itemDiv = document.createElement("div");
               itemDiv.className = "flex justify-between items-start py-2.5 border-b border-gray-50 text-sm";
               itemDiv.innerHTML = `
-                <span class="font-semibold text-gray-700 max-w-[50%]">${c.Item}</span>
+                <span class="font-semibold text-gray-700 max-w-[50%]">${item}</span>
                 <div class="text-right">
-                  <span class="block text-blue-900 font-extrabold text-sm">15歲以上: ${c.AdultValue || '無'}</span>
-                  <span class="block text-gray-500 font-bold text-xs mt-0.5">未滿15歲: ${c.ChildValue || '無'}</span>
+                  <span class="block text-blue-900 font-extrabold text-sm">15歲以上: ${aVal}</span>
+                  <span class="block text-gray-500 font-bold text-xs mt-0.5">未滿15歲: ${cVal}</span>
                 </div>
               `;
               covList.appendChild(itemDiv);
@@ -981,7 +951,7 @@
           }
         }
 
-        // 2. 注意事項項目
+        // 注意事項項目
         const noteList = document.getElementById("noticeList");
         noteList.innerHTML = "";
 
@@ -1004,7 +974,6 @@
         }
       }
 
-      // 一鍵複製 LINE 報價單
       static copyLineQuote() {
         if (clientState.days <= 0) {
           showToast("❌ 投保天數設定錯誤，無法複製報價單！");
@@ -1037,7 +1006,6 @@
 業務員溫馨提醒：
 出門在外多一分保障，多一分安心！本試算結果為即時保費參考，實際承保內容以投保條款為準。`;
 
-        // 複製至剪貼簿
         const dummy = document.createElement("textarea");
         document.body.appendChild(dummy);
         dummy.value = quoteText;
@@ -1049,7 +1017,6 @@
       }
     }
 
-    // 顯示提示彈窗
     function showToast(msg) {
       const toast = document.getElementById("toast");
       const toastMsg = document.getElementById("toastMsg");

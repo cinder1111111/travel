@@ -59,7 +59,7 @@
     }
   </style>
 </head>
-<body class="text-gray-800 antialiased min-h-screen flex flex-col pb-28 lg:pb-0">
+<body class="text-gray-800 antialiased min-h-screen flex flex-col pb-44 lg:pb-6">
 
   <!-- 系統公告卡片 (依試算表動態控制) - 字體同步加大 -->
   <div id="announcementBanner" class="hidden bg-amber-50 border-b border-amber-200 py-3.5 px-4 text-center text-amber-900 text-sm md:text-base font-bold flex items-center justify-center gap-2">
@@ -95,16 +95,20 @@
     <!-- 左側：輸入表單 (佔 7 格，統一間距 space-y-4) -->
     <div class="lg:col-span-7 space-y-4">
       
-      <!-- 1. 旅遊地區 -->
+      <!-- 1. 旅遊地區 (灰色底層 w-full 滿版，藍色立體按鈕加長 1.5 倍) -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
-        <label id="lblTravelArea" class="block text-base md:text-lg font-bold text-gray-900 mb-3">旅遊地區</label>
-        <div class="grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-lg">
-          <button id="btnAreaOvs" class="py-3 text-base font-extrabold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setArea('overseas')">
-            海外旅遊
-          </button>
-          <button id="btnAreaDom" class="py-3 text-base font-extrabold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setArea('domestic')">
-            國內旅遊
-          </button>
+        <label id="lblTravelArea" class="block text-base md:text-lg font-bold text-slate-900 mb-3">旅遊地區</label>
+        <div class="flex bg-gray-100 p-1.5 rounded-xl w-full">
+          <div class="flex-1 flex justify-center items-center">
+            <button id="btnAreaOvs" class="w-[85%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer" onclick="AppController.setArea('overseas')">
+              海外旅遊
+            </button>
+          </div>
+          <div class="flex-1 flex justify-center items-center">
+            <button id="btnAreaDom" class="w-[85%] py-3 text-base font-extrabold rounded-lg text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer" onclick="AppController.setArea('domestic')">
+              國內旅遊
+            </button>
+          </div>
         </div>
       </div>
 
@@ -113,9 +117,8 @@
         <div class="grid grid-cols-2 gap-4">
           <!-- 左半邊：保險生效日 -->
           <div class="space-y-2">
-            <label class="block text-base font-bold text-gray-900">保險生效日</label>
+            <label class="block text-base font-bold text-slate-900">保險生效日</label>
             <input type="text" id="startDate" class="w-full h-12 px-4 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
-            <!-- 加上 relative 與 appearance-none，並以 Lucide 箭頭點綴，達到像素級完美對齊 -->
             <div class="relative">
               <select id="startHour" class="w-full h-12 pl-4 pr-10 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onPeriodChange()">
                 <!-- 1 ~ 24 時 -->
@@ -127,9 +130,8 @@
           </div>
           <!-- 右半邊：保險結束日 -->
           <div class="space-y-2">
-            <label class="block text-base font-bold text-gray-900">保險結束日</label>
+            <label class="block text-base font-bold text-slate-900">保險結束日</label>
             <input type="text" id="endDate" class="w-full h-12 px-4 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
-            <!-- 加上 relative 與 appearance-none，並以 Lucide 箭頭點綴，達到像素級完美對齊 -->
             <div class="relative">
               <select id="endHour" class="w-full h-12 pl-4 pr-10 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onPeriodChange()">
                 <!-- 1 ~ 24 時 -->
@@ -154,24 +156,28 @@
         </div>
       </div>
 
-      <!-- 3. 海外突發疾病 (海外專用) -->
+      <!-- 3. 海外突發疾病 (海外專用，灰色底層 w-full 滿版，藍色立體按鈕加長 1.5 倍) -->
       <div id="diseaseSection" class="bg-white p-5 rounded-xl border border-gray-100 custom-card transition-all">
-        <label class="block text-base md:text-lg font-bold text-gray-900 mb-3">海外突發疾病</label>
-        <div class="grid grid-cols-2 gap-2 bg-gray-100 p-1 rounded-lg">
-          <button id="btnDiseaseWith" class="py-2.5 text-sm font-extrabold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setDisease(true)">
-            含法定傳染病
-          </button>
-          <button id="btnDiseaseWithout" class="py-2.5 text-sm font-extrabold rounded-md transition-all text-center focus:outline-none" onclick="AppController.setDisease(false)">
-            不含法定傳染病
-          </button>
+        <label class="block text-base md:text-lg font-bold text-slate-900 mb-3">海外突發疾病</label>
+        <div class="flex bg-gray-100 p-1.5 rounded-xl w-full">
+          <div class="flex-1 flex justify-center items-center">
+            <button id="btnDiseaseWith" class="w-[85%] py-2.5 text-sm font-extrabold rounded-md transition-all text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer" onclick="AppController.setDisease(true)">
+              含法定傳染病
+            </button>
+          </div>
+          <div class="flex-1 flex justify-center items-center">
+            <button id="btnDiseaseWithout" class="w-[85%] py-2.5 text-sm font-extrabold rounded-md transition-all text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer" onclick="AppController.setDisease(false)">
+              不含法定傳染病
+            </button>
+          </div>
         </div>
       </div>
 
       <!-- 4. 投保方案 -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
-        <label class="block text-base md:text-lg font-bold text-gray-900 mb-3">投保方案</label>
+        <label class="block text-base md:text-lg font-bold text-slate-900 mb-3">投保方案</label>
         <div class="relative">
-          <select id="selProduct" class="w-full px-4 py-3.5 border border-gray-200 rounded-lg text-base bg-white font-extrabold text-gray-950 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none" onchange="AppController.onProductSelectChange()">
+          <select id="selProduct" class="w-full px-4 py-3.5 border border-gray-200 rounded-lg text-base bg-white font-extrabold text-gray-950 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onProductSelectChange()">
             <!-- 動態載入商品下拉選項 -->
           </select>
           <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3.5 text-gray-500">
@@ -180,10 +186,10 @@
         </div>
       </div>
 
-      <!-- 5. 整合投保人數與保障額度 (依照圖片 2 版面整合 + 人數調整框) -->
+      <!-- 5. 整合投保人數與保障額度 -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card space-y-5">
         
-        <!-- A. 投保人數區 (圖片 2 上半部) -->
+        <!-- A. 投保人數區 -->
         <div class="grid grid-cols-2 gap-4 border-b border-gray-100 pb-5">
           <!-- 左欄：15歲以上人數 (大人) -->
           <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
@@ -208,10 +214,10 @@
           </div>
         </div>
 
-        <!-- B. 保障額度設定區 (圖片 2 下半部) -->
+        <!-- B. 保障額度設定區 -->
         <div class="space-y-4">
-          <div class="text-base font-bold text-gray-900 flex items-center gap-1.5">
-            <i data-lucide="shield-alert" class="w-5 h-5 text-blue-700"></i>
+          <div class="text-sm font-semibold text-slate-900 flex items-center gap-1.5">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-blue-700"></i>
             <span>保障額度</span>
           </div>
           
@@ -287,7 +293,7 @@
             <span class="font-extrabold text-gray-900"><span id="summaryAdults">1</span>大 / <span id="summaryChildren">0</span>小</span>
           </div>
         </div>
-        <button onclick="AppController.copyLineQuote()" class="w-full py-4 px-6 btn-primary text-white font-black text-base shadow-md hover:brightness-105 active:scale-[0.98] transition flex items-center justify-center gap-2">
+        <button onclick="AppController.copyLineQuote()" class="w-full py-4 px-6 btn-primary text-white font-black text-base shadow-md hover:brightness-105 active:scale-[0.98] transition flex items-center justify-center gap-2 cursor-pointer">
           <i data-lucide="copy" class="w-5 h-5"></i>
           複製 LINE 格式報價
         </button>
@@ -297,7 +303,7 @@
       <div id="coverageSection" class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
         <div class="flex items-center gap-2 border-b border-gray-100 pb-3 mb-4">
           <i data-lucide="shield" class="w-5 h-5 text-blue-700"></i>
-          <h3 id="lblCoverage" class="text-base font-black text-gray-900">方案承保內容</h3>
+          <h3 id="lblCoverage" class="text-base font-black text-slate-900">方案承保內容</h3>
         </div>
         <div id="coverageList" class="space-y-3">
           <!-- 動態渲染保障項目 -->
@@ -308,7 +314,7 @@
       <div id="noticeSection" class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
         <div class="flex items-center gap-2 border-b border-gray-100 pb-3 mb-4">
           <i data-lucide="info" class="w-5 h-5 text-amber-500"></i>
-          <h3 id="lblNotice" class="text-base font-black text-gray-900">注意事項</h3>
+          <h3 id="lblNotice" class="text-base font-black text-slate-900">注意事項</h3>
         </div>
         <ul id="noticeList" class="space-y-2 list-disc list-inside text-sm text-gray-500 leading-relaxed font-medium">
           <!-- 動態渲染注意事項 -->
@@ -318,21 +324,26 @@
     </div>
   </main>
 
-  <!-- 手機版 Sticky Footer -->
-  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white py-5 px-6 flex items-center justify-between border-t border-slate-800 z-40 shadow-xl">
+  <!-- 手機版 Sticky Footer (已大幅放大框框內文字 50%，同時維持按鈕原本的比例) -->
+  <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-slate-900 text-white py-8 px-6 flex items-center justify-between border-t border-slate-800 z-40 shadow-xl">
     <div>
-      <span class="block text-xs text-slate-300 font-bold tracking-wider" id="mobileTotalPremiumLabel">應收總保費</span>
+      <!-- 應收總保費標籤：從 text-xs 放大至 text-lg -->
+      <span class="block text-lg text-slate-300 font-extrabold tracking-wider" id="mobileTotalPremiumLabel">應收總保費</span>
       <div class="flex items-baseline gap-1 mt-0.5">
-        <span class="text-xs text-slate-400 font-bold">NT$</span>
-        <span id="mobileTotalPremium" class="text-3xl font-extrabold text-blue-400">0</span>
+        <!-- 錢幣符號：從 text-xs 放大至 text-lg -->
+        <span class="text-lg text-slate-400 font-extrabold">NT$</span>
+        <!-- 總保費金額：從 text-3.5xl 放大至 text-5xl -->
+        <span id="mobileTotalPremium" class="text-5xl font-black text-blue-400">0</span>
       </div>
     </div>
-    <div class="flex items-center gap-3">
-      <div class="text-right text-xs text-slate-300 font-extrabold mr-1">
+    <div class="flex items-center gap-4">
+      <!-- 旅遊天數、人數：從 text-xs 放大至 text-base -->
+      <div class="text-right text-base text-slate-300 font-extrabold mr-1 leading-snug">
         <div><span id="mobileSummaryDays">1</span> 天</div>
         <div><span id="mobileSummaryAdults">1</span>大 / <span id="mobileSummaryChildren">0</span>小</div>
       </div>
-      <button onclick="AppController.copyLineQuote()" class="bg-blue-600 text-white font-black text-sm py-3.5 px-5 rounded-lg shadow active:scale-95 transition flex items-center gap-1.5">
+      <!-- 複製報價按鈕：高度、寬度、文字與 Icon 完美維持原有高水準比例不變 -->
+      <button onclick="AppController.copyLineQuote()" class="bg-[var(--primary-color)] text-white font-black text-sm py-3.5 px-5 rounded-lg shadow active:scale-95 transition flex items-center gap-1.5 cursor-pointer">
         <i data-lucide="copy" class="w-4 h-4"></i>
         複製報價
       </button>
@@ -365,7 +376,7 @@
       texts: {}
     };
 
-    // 前台操作狀態管理
+    // 前台操作狀態 management
     let clientState = {
       area: 'overseas',          // 'domestic' | 'overseas'
       diseaseOption: true,      // true (含法傳) | false (不含)
@@ -430,7 +441,7 @@
         const year = d.getFullYear();
         const month = String(d.getMonth() + 1).padStart(2, '0');
         const day = String(d.getDate()).padStart(2, '0');
-        return `${year}/${month}/${day}`; // 強制以斜線輸出
+        return `${year}/${month}/${day}`;
       };
 
       const todayStr = toDateString(today);
@@ -444,7 +455,7 @@
         locale: "zh_tw",
         dateFormat: "Y/m/d",
         defaultDate: todayStr,
-        disableMobile: "true", // 防止行動裝置喚起原生的 Done 滾輪
+        disableMobile: "true",
         onChange: function(selectedDates, dateStr) {
           clientState.startDate = dateStr;
           AppController.onPeriodChange();
@@ -562,7 +573,6 @@
       static setArea(area) {
         clientState.area = area;
         this.syncAreaUI();
-        // 當切換區域時，立刻重新計算並檢測投保天數限制
         this.calculateDays();
       }
 
@@ -573,12 +583,12 @@
         const diseaseSec = document.getElementById("diseaseSection");
 
         if (clientState.area === 'overseas') {
-          btnOvs.className = "py-3 text-base font-extrabold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
-          btnDom.className = "py-3 text-base font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
+          btnOvs.className = "w-[85%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer";
+          btnDom.className = "w-[85%] py-3 text-base font-extrabold rounded-lg text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer";
           diseaseSec.classList.remove("hidden");
         } else {
-          btnOvs.className = "py-3 text-base font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
-          btnDom.className = "py-3 text-base font-extrabold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
+          btnOvs.className = "w-[85%] py-3 text-base font-extrabold rounded-lg text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer";
+          btnDom.className = "w-[85%] py-3 text-base font-extrabold rounded-lg text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer";
           diseaseSec.classList.add("hidden");
         }
 
@@ -593,23 +603,24 @@
         this.updateProducts();
       }
 
-      // 同步法傳按鈕狀態
+      // 同步法傳按鈕狀態 (左右按鈕加長 1.5 倍)
       static syncDiseaseUI() {
         const btnWith = document.getElementById("btnDiseaseWith");
         const btnWithout = document.getElementById("btnDiseaseWithout");
 
         if (clientState.diseaseOption) {
-          btnWith.className = "py-2.5 text-sm font-extrabold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
-          btnWithout.className = "py-2.5 text-sm font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
+          btnWith.className = "w-[85%] py-2.5 text-sm font-extrabold rounded-md text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer";
+          btnWithout.className = "w-[85%] py-2.5 text-sm font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer";
         } else {
-          btnWith.className = "py-2.5 text-sm font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 focus:outline-none";
-          btnWithout.className = "py-2.5 text-sm font-extrabold rounded-md text-center bg-blue-600 text-white shadow focus:outline-none";
+          btnWith.className = "w-[85%] py-2.5 text-sm font-extrabold rounded-md text-center text-gray-500 hover:text-gray-900 border-b-[3px] border-transparent transition-all focus:outline-none cursor-pointer";
+          btnWithout.className = "w-[85%] py-2.5 text-sm font-extrabold rounded-md text-center bg-[var(--primary-color)] text-white shadow-md border-b-[3px] border-blue-950 -translate-y-[1px] transition-all focus:outline-none cursor-pointer";
         }
       }
 
-      // 依地區與法傳篩選商品 (方案改為下拉選項)
+      // 依地區與法傳篩選商品 (超高容錯率防呆篩選器)
       static updateProducts() {
         const selectEl = document.getElementById("selProduct");
+        if (!selectEl) return;
         selectEl.innerHTML = "";
 
         // 篩選商品
@@ -617,8 +628,15 @@
           if (!p.Enable) return false;
           if (p.Area !== clientState.area) return false;
           if (clientState.area === 'overseas') {
-            // 海外方案需要比對是否符合法傳選項
-            return p.DiseaseOption === (clientState.diseaseOption ? "含法定傳染病" : "不含法定傳染病");
+            // 超強相容度字串比對，預防資料庫有前後空白、未定義
+            const pOpt = (p.DiseaseOption || "").toString().trim();
+            if (clientState.diseaseOption) {
+              // 點選「含法傳」：匹配 "含法定傳染病" 且排除 "不含"
+              return pOpt.includes("含") && !pOpt.includes("不含");
+            } else {
+              // 點選「不含法傳」：匹配 "不含"、空白、或是完全沒設定的預設方案
+              return pOpt.includes("不含") || pOpt === "" || pOpt === "無" || !p.DiseaseOption;
+            }
           }
           return true;
         });
@@ -637,10 +655,9 @@
         }
 
         // 渲染商品下拉選項
-        filtered.forEach((prod, idx) => {
+        filtered.forEach((prod) => {
           const opt = document.createElement("option");
           opt.value = prod.ProductID;
-          // 若海外方案包含法定傳染病提示，合併於文字中方便選取
           const diseaseTag = prod.DiseaseOption ? ` (${prod.DiseaseOption})` : "";
           opt.textContent = `${prod.ProductName}${diseaseTag}`;
           selectEl.appendChild(opt);
@@ -761,7 +778,6 @@
         let errorMsg = "";
 
         if (startDateTime > endDateTime) {
-          // 生效日晚於結束日
           errorMsg = "保險生效日不可晚於結束日！";
         } else {
           // 計算總時差並採無條件進位
@@ -783,18 +799,15 @@
 
         // 警示 UI 切換渲染
         if (errorMsg) {
-          // 改為明顯粗紅框、粉紅底
           daysCard.className = "col-span-2 bg-red-50 border-2 border-red-500 p-3.5 rounded-lg flex flex-col gap-1 transition-all duration-200 shadow-sm";
           warningContainer.className = "text-xs md:text-sm font-black text-red-600 flex items-center gap-1 mt-1";
           warningContainer.innerHTML = `<i data-lucide="alert-triangle" class="w-4 h-4 text-red-600 flex-shrink-0"></i><span>${errorMsg}</span>`;
           warningContainer.classList.remove("hidden");
           lucide.createIcons();
 
-          // 天數鎖定
           clientState.days = 0; 
           this.updateDaysUI(true);
         } else {
-          // 還原預設藍綠色排版
           daysCard.className = "col-span-2 bg-blue-50/50 border border-blue-100 p-3.5 rounded-lg flex flex-col gap-1 transition-all duration-200";
           warningContainer.classList.add("hidden");
           warningContainer.innerHTML = "";
@@ -830,7 +843,6 @@
         let adultPrice = 0;
         let childPrice = 0;
 
-        // 若有天數或日期設定錯誤，停止查費
         if (days > 0 && prodId) {
           // 搜尋合適費率
           const rateRecord = globalDB.rates.find(r => 
@@ -848,7 +860,6 @@
             document.getElementById("txtAdultUnitPrice").textContent = `NT$ ${adultPrice.toLocaleString()}`;
             document.getElementById("txtChildUnitPrice").textContent = `NT$ ${childPrice.toLocaleString()}`;
           } else {
-            // 查無資料
             document.getElementById("txtAdultUnitPrice").textContent = "查無費率";
             document.getElementById("txtChildUnitPrice").textContent = "查無費率";
           }

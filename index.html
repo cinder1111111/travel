@@ -938,10 +938,25 @@
         return `${amount.toLocaleString('zh-TW', { maximumFractionDigits: 2 })}元`;
       }
 
-      // FIXED 直接讀取 Value；LINK 依規則表計算
+      // 固定承保內容僅統一數字的千分位格式，不變更原有單位與文字。
+      static formatFixedCoverageValue(value) {
+        const raw = String(value ?? '').trim();
+        if (!raw) return '未設定';
+        // 支援 1500、1,500、1500元、100萬、100萬元、NT$ 30000 等原始資料。
+        // 只格式化獨立數字，保留既有「萬／元」及其他文字，不擅自換算單位。
+        return raw.replace(/(^|[^\d.,])(-?\d[\d,]*(?:\.\d+)?)(?=($|[^\d.,]))/g,
+          (full, prefix, numberText) => {
+            const normalized = numberText.replace(/,/g, '');
+            const parts = normalized.split('.');
+            parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            return prefix + parts.join('.');
+          });
+      }
+
+      // FIXED 統一格式化；LINK 依規則表計算
       static resolveCoverageValue(coverage, group) {
         const type = String(coverage.Type || 'FIXED').trim().toUpperCase();
-        if (type !== 'LINK') return String(coverage.Value ?? '').trim() || '未設定';
+        if (type !== 'LINK') return this.formatFixedCoverageValue(coverage.Value);
 
         const ruleId = String(coverage.RuleID || '').trim();
         const rule = (globalDB.coverageRules || []).find(r => String(r.RuleID || '').trim() === ruleId);

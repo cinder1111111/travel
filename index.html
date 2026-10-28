@@ -37,6 +37,10 @@
       background-color: var(--primary-color);
       border-radius: var(--border-radius);
     }
+    /* 桌機右側摘要、承保內容與注意事項固定於可視範圍，內部獨立捲動 */
+    @media (min-width: 1024px) {
+      .sidebar-scroll { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
+    }
     /* 隱藏原生 Chrome/Safari 等瀏覽器 input[type=number] 的小箭頭 */
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
@@ -268,10 +272,10 @@
     </div>
 
     <!-- 右側：摘要卡片、保障內容、注意事項 (佔 5 格，統一間距 space-y-4) -->
-    <div class="lg:col-span-5 space-y-4">
+    <div class="lg:col-span-5 space-y-4 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto lg:overscroll-contain sidebar-scroll" >
       
       <!-- 桌機版固定右側總保費卡 -->
-      <div class="hidden lg:block bg-white p-6 rounded-xl border border-gray-100 custom-card sticky top-24 z-30">
+      <div class="hidden lg:block bg-white p-6 rounded-xl border border-gray-100 custom-card">
         <h3 class="text-sm font-extrabold text-gray-400 tracking-wider uppercase mb-2">試算結果摘要</h3>
         <div class="flex justify-between items-baseline mb-4">
           <span class="text-base font-bold text-gray-500">應收總保費</span>
@@ -1002,40 +1006,49 @@
         const childItems = clientState.childCount > 0
           ? (globalDB.childCoverages || []).filter(c => c.ProductID === prodId) : [];
 
-        // 以 Item 合併兩組保障，依 Sort 排序（相同 Item 視為同一項）
-        const itemMap = new Map();
-        for (const [group, records] of [['adult', adultItems], ['child', childItems]]) {
-          for (const record of records) {
+        // 大人與小孩分區顯示，分別依各自的 Sort 排序，不合併相同 Item。
+        const hasCoverages = adultItems.length > 0 || childItems.length > 0;
+        coverageSection.classList.toggle('hidden', !prodId || !hasCoverages);
+
+        const renderGroup = (heading, records, group) => {
+          if (!records.length) return;
+          const section = document.createElement('section');
+          section.className = 'rounded-xl border border-slate-200 bg-slate-50/50 overflow-hidden';
+
+          const header = document.createElement('div');
+          header.className = 'flex items-center gap-2 px-4 py-3 bg-slate-100/80 border-b border-slate-200';
+          const marker = document.createElement('span');
+          marker.className = 'inline-block w-1 h-4 rounded-full bg-blue-700';
+          const label = document.createElement('h4');
+          label.className = 'font-black text-sm text-slate-800';
+          label.textContent = heading;
+          header.append(marker, label);
+          section.appendChild(header);
+
+          const rows = document.createElement('div');
+          rows.className = 'px-4 py-1 bg-white';
+          const sorted = [...records].sort((a, b) => (Number(a.Sort) || 9999) - (Number(b.Sort) || 9999));
+          for (const record of sorted) {
             const item = String(record.Item || '').trim();
             if (!item) continue;
-            if (!itemMap.has(item)) itemMap.set(item, { item, sort: Number(record.Sort) || 9999 });
-            const entry = itemMap.get(item);
-            entry.sort = Math.min(entry.sort, Number(record.Sort) || 9999);
-            entry[group] = record;
+            const row = document.createElement('div');
+            row.className = 'flex justify-between items-start gap-3 py-3 border-b border-gray-100 last:border-b-0 text-sm';
+            const title = document.createElement('span');
+            title.className = 'font-semibold text-gray-700 flex-1 min-w-0';
+            title.textContent = item;
+            const value = document.createElement('span');
+            value.className = 'font-extrabold text-blue-900 text-right shrink-0 max-w-[48%] break-words';
+            value.textContent = this.resolveCoverageValue(record, group);
+            row.append(title, value);
+            rows.appendChild(row);
           }
-        }
-        const items = [...itemMap.values()].sort((a, b) => a.sort - b.sort);
-        coverageSection.classList.toggle('hidden', !prodId || items.length === 0);
+          section.appendChild(rows);
+          covList.appendChild(section);
+        };
 
-        for (const entry of items) {
-          const row = document.createElement('div');
-          row.className = 'flex justify-between items-start gap-3 py-2.5 border-b border-gray-50 text-sm';
-          const title = document.createElement('span');
-          title.className = 'font-semibold text-gray-700 max-w-[50%]';
-          title.textContent = entry.item;
-          const values = document.createElement('div');
-          values.className = 'text-right';
-          const addValue = (label, record, css) => {
-            const el = document.createElement('span');
-            el.className = css;
-            el.textContent = `${label}: ${record ? this.resolveCoverageValue(record, label === '未滿15歲' ? 'child' : 'adult') : '無'}`;
-            values.appendChild(el);
-          };
-          if (clientState.adultCount > 0) addValue('15歲以上', entry.adult, 'block text-blue-900 font-extrabold text-sm');
-          if (clientState.childCount > 0) addValue('未滿15歲', entry.child, 'block text-gray-500 font-bold text-xs mt-0.5');
-          row.append(title, values);
-          covList.appendChild(row);
-        }
+        covList.className = 'space-y-4';
+        if (clientState.adultCount > 0) renderGroup('15歲以上承保內容', adultItems, 'adult');
+        if (clientState.childCount > 0) renderGroup('未滿15歲承保內容', childItems, 'child');
 
         // 注意事項項目
         const noteList = document.getElementById("noticeList");

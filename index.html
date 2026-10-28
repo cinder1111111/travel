@@ -356,8 +356,8 @@
   <script>
     // 串接使用者部署好的 Google Apps Script 雲端 API 網址 (大人小孩獨立Sheet分流架構)
     const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCudyI5uo1lDZXVsUfTxZrfzeLrLLzUh70N38HWLcAsn75-22G44cZ5ijzmyH86MJx/exec";
-    const CACHE_KEY = "TRAVEL_INS_CACHE_V4";
-    const CACHE_TIME_KEY = "TRAVEL_INS_CACHE_TIME_V4";
+    const CACHE_KEY = "TRAVEL_INS_CACHE_V6";
+    const CACHE_TIME_KEY = "TRAVEL_INS_CACHE_TIME_V6";
     const CACHE_DURATION_MS = 5 * 60 * 1000; // 5 分鐘快取
 
     // 全域資料儲存庫 - 與後端分流 Schema 完全一致
@@ -370,6 +370,7 @@
       childRates: [],
       adultCoverages: [],
       childCoverages: [],
+      coverageRules: [],
       notes: [],
       ui: {},
       texts: {}
@@ -705,8 +706,8 @@
         clientState.childDeath = childDeaths[0] || '';
         clientState.medical = medicals[0] || '';
 
-        this.syncDynamicSections();
         this.calculatePremium();
+        this.syncDynamicSections();
       }
 
       static onPeriodChange() {
@@ -788,6 +789,7 @@
         clientState.medical = document.getElementById("selMedical").value;
 
         this.calculatePremium();
+        this.syncDynamicSections();
       }
 
       // 計算總保費 (分流大人小孩獨立費率 Sheet)
@@ -867,6 +869,7 @@
           clientState.childCount = newVal;
         }
         this.calculatePremium();
+        this.syncDynamicSections();
       }
 
       static onCountInputChange(type) {
@@ -884,6 +887,7 @@
           clientState.childCount = numVal;
         }
         this.calculatePremium();
+        this.syncDynamicSections();
       }
 
       static onCountInputBlur(type) {
@@ -901,6 +905,7 @@
           clientState.childCount = val;
         }
         this.calculatePremium();
+        this.syncDynamicSections();
       }
 
       static updateSummaryPeople() {
@@ -910,46 +915,122 @@
         document.getElementById("mobileSummaryChildren").textContent = clientState.childCount;
       }
 
-      // 動態承保條款渲染 (分流大人小孩獨立承保內容 Sheet)
+      // 保額字串轉成「元」：支援 200萬、200萬元、NT$ 2,000,000、2000000
+      static parseAmount(value) {
+        if (typeof value === 'number') return Number.isFinite(value) ? value : NaN;
+        const raw = String(value ?? '').trim().replace(/[，,\s]/g, '').replace(/NT\$|新臺幣|新台幣|元/g, '');
+        const match = raw.match(/^([0-9]+(?:\.[0-9]+)?)(萬|億)?$/);
+        if (!match) return NaN;
+        const factor = match[2] === '億' ? 100000000 : match[2] === '萬' ? 10000 : 1;
+        return Number(match[1]) * factor;
+      }
+
+      static formatCoverageAmount(amount) {
+        if (!Number.isFinite(amount) || amount < 0) return '資料設定錯誤';
+        if (amount >= 10000 && amount % 10000 === 0) return `${(amount / 10000).toLocaleString('zh-TW')}萬元`;
+        return `${amount.toLocaleString('zh-TW', { maximumFractionDigits: 2 })}元`;
+      }
+
+      // FIXED 直接讀取 Value；LINK 依規則表計算
+      static resolveCoverageValue(coverage, group) {
+        const type = String(coverage.Type || 'FIXED').trim().toUpperCase();
+        if (type !== 'LINK') return String(coverage.Value ?? '').trim() || '未設定';
+
+        const ruleId = String(coverage.RuleID || '').trim();
+        const rule = (globalDB.coverageRules || []).find(r => String(r.RuleID || '').trim() === ruleId);
+        if (!rule) return '規則未設定';
+
+        const source = String(rule.Source || '').trim().toUpperCase();
+
+        // 同一張保單共用醫療選項；比例依大人身故／小孩失能保額分別計算。
+        // 0、3萬、150萬屬固定金額；5%、10%屬比例連動。
+        if (source === 'MEDICAL_OPTION') {
+          const option = String(clientState.medical ?? '').trim().replace(/％/g, '%');
+          let amount;
+          if (/^\d+(?:\.\d+)?%$/.test(option)) {
+            const baseText = group === 'child' ? clientState.childDeath : clientState.adultDeath;
+            const base = this.parseAmount(baseText);
+            if (!Number.isFinite(base)) return '醫療計算基準錯誤';
+            amount = base * (Number(option.slice(0, -1)) / 100);
+          } else {
+            amount = this.parseAmount(option);
+            if (!Number.isFinite(amount)) return '醫療選項設定錯誤';
+          }
+          if (String(rule.Cap ?? '').trim() !== '') {
+            const cap = this.parseAmount(rule.Cap);
+            if (!Number.isFinite(cap)) return '上限設定錯誤';
+            amount = Math.min(amount, cap);
+          }
+          return this.formatCoverageAmount(amount);
+        }
+
+        let sourceValue;
+        switch (source) {
+          case 'DEATH': sourceValue = clientState.adultDeath; break;
+          case 'CHILD_DISABILITY': sourceValue = clientState.childDeath; break;
+          case 'MEDICAL': sourceValue = clientState.medical; break;
+          default: return '來源設定錯誤';
+        }
+        const base = this.parseAmount(sourceValue);
+        const multiplier = Number(String(rule.Multiplier ?? '').replace('%', ''));
+        const factor = String(rule.Multiplier ?? '').includes('%') ? multiplier / 100 : multiplier;
+        if (!Number.isFinite(base) || !Number.isFinite(factor) || String(rule.Multiplier ?? '').trim() === '') {
+          return '連動資料不完整';
+        }
+        let amount = base * factor;
+        if (String(rule.Cap ?? '').trim() !== '') {
+          const cap = this.parseAmount(rule.Cap);
+          if (!Number.isFinite(cap)) return '上限設定錯誤';
+          amount = Math.min(amount, cap);
+        }
+        return this.formatCoverageAmount(amount);
+      }
+
+      // 依實際投保人數與商品讀取大人／小孩承保內容
       static syncDynamicSections() {
         const prodId = clientState.selectedProductId;
-        const covList = document.getElementById("coverageList");
-        covList.innerHTML = "";
+        const covList = document.getElementById('coverageList');
+        const coverageSection = document.getElementById('coverageSection');
+        covList.replaceChildren();
 
-        if (!prodId) {
-          document.getElementById("coverageSection").classList.add("hidden");
-        } else {
-          // 合併大人與小孩的承保保障條款，方便橫向對比
-          const adultItems = (globalDB.adultCoverages || []).filter(c => c.ProductID === prodId);
-          const childItems = (globalDB.childCoverages || []).filter(c => c.ProductID === prodId);
+        const adultItems = clientState.adultCount > 0
+          ? (globalDB.adultCoverages || []).filter(c => c.ProductID === prodId) : [];
+        const childItems = clientState.childCount > 0
+          ? (globalDB.childCoverages || []).filter(c => c.ProductID === prodId) : [];
 
-          // 取出所有不重複的保障項目 (Item)
-          const allItemsSet = new Set([
-            ...adultItems.map(i => i.Item),
-            ...childItems.map(i => i.Item)
-          ]);
-
-          if (allItemsSet.size === 0) {
-            document.getElementById("coverageSection").classList.add("hidden");
-          } else {
-            document.getElementById("coverageSection").classList.remove("hidden");
-            
-            allItemsSet.forEach(item => {
-              const aVal = adultItems.find(i => i.Item === item)?.Value || "無";
-              const cVal = childItems.find(i => i.Item === item)?.Value || "無";
-
-              const itemDiv = document.createElement("div");
-              itemDiv.className = "flex justify-between items-start py-2.5 border-b border-gray-50 text-sm";
-              itemDiv.innerHTML = `
-                <span class="font-semibold text-gray-700 max-w-[50%]">${item}</span>
-                <div class="text-right">
-                  <span class="block text-blue-900 font-extrabold text-sm">15歲以上: ${aVal}</span>
-                  <span class="block text-gray-500 font-bold text-xs mt-0.5">未滿15歲: ${cVal}</span>
-                </div>
-              `;
-              covList.appendChild(itemDiv);
-            });
+        // 以 Item 合併兩組保障，依 Sort 排序（相同 Item 視為同一項）
+        const itemMap = new Map();
+        for (const [group, records] of [['adult', adultItems], ['child', childItems]]) {
+          for (const record of records) {
+            const item = String(record.Item || '').trim();
+            if (!item) continue;
+            if (!itemMap.has(item)) itemMap.set(item, { item, sort: Number(record.Sort) || 9999 });
+            const entry = itemMap.get(item);
+            entry.sort = Math.min(entry.sort, Number(record.Sort) || 9999);
+            entry[group] = record;
           }
+        }
+        const items = [...itemMap.values()].sort((a, b) => a.sort - b.sort);
+        coverageSection.classList.toggle('hidden', !prodId || items.length === 0);
+
+        for (const entry of items) {
+          const row = document.createElement('div');
+          row.className = 'flex justify-between items-start gap-3 py-2.5 border-b border-gray-50 text-sm';
+          const title = document.createElement('span');
+          title.className = 'font-semibold text-gray-700 max-w-[50%]';
+          title.textContent = entry.item;
+          const values = document.createElement('div');
+          values.className = 'text-right';
+          const addValue = (label, record, css) => {
+            const el = document.createElement('span');
+            el.className = css;
+            el.textContent = `${label}: ${record ? this.resolveCoverageValue(record, label === '未滿15歲' ? 'child' : 'adult') : '無'}`;
+            values.appendChild(el);
+          };
+          if (clientState.adultCount > 0) addValue('15歲以上', entry.adult, 'block text-blue-900 font-extrabold text-sm');
+          if (clientState.childCount > 0) addValue('未滿15歲', entry.child, 'block text-gray-500 font-bold text-xs mt-0.5');
+          row.append(title, values);
+          covList.appendChild(row);
         }
 
         // 注意事項項目

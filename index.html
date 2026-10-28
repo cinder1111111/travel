@@ -685,7 +685,10 @@
 
         // 大人身故保額與醫療選項
         const adultDeaths = [...new Set(adultOptions.map(o => o.Death))].filter(Boolean);
-        const medicals = [...new Set(adultOptions.map(o => o.Medical))].filter(Boolean);
+        // 保留數字 0，僅排除真正的空白值；選項統一轉成字串供 select 與費率比對使用
+        const medicals = [...new Set(adultOptions.map(o => o.Medical)
+          .filter(v => v !== null && v !== undefined && String(v).trim() !== '')
+          .map(v => String(v).trim()))];
 
         // 小孩失能保額選項：對應 Google Sheet CHILD_DISABILITY 欄位
         const childDisabilities = [...new Set(childOptions.map(o => o.CHILD_DISABILITY))].filter(Boolean);
@@ -708,7 +711,7 @@
         // 預設狀態選擇
         clientState.adultDeath = adultDeaths[0] || '';
         clientState.childDeath = childDisabilities[0] || '';
-        clientState.medical = medicals[0] || '';
+        clientState.medical = medicals[0] ?? '';
 
         this.calculatePremium();
         this.syncDynamicSections();
@@ -813,7 +816,7 @@
             r.ProductID === prodId &&
             parseInt(r.Days) === parseInt(days) &&
             r.Death === adDeath &&
-            r.Medical === med
+            String(r.Medical ?? '').trim() === String(med ?? '').trim()
           );
 
           // 2. 查小孩獨立費率：對應 Google Sheet CHILD_DISABILITY 欄位
@@ -821,7 +824,7 @@
             r.ProductID === prodId &&
             parseInt(r.Days) === parseInt(days) &&
             r.CHILD_DISABILITY === chDeath &&
-            r.Medical === med  // 加入醫療選項比對
+            String(r.Medical ?? '').trim() === String(med ?? '').trim()  // 加入醫療選項比對
           );
 
           if (adultRateRecord) {

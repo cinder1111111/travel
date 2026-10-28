@@ -814,7 +814,8 @@
           const childRateRecord = (globalDB.childRates || []).find(r => 
             r.ProductID === prodId &&
             parseInt(r.Days) === parseInt(days) &&
-            r.Death === chDeath
+            r.Death === chDeath &&
+            r.Medical === med  // 加入醫療選項比對
           );
 
           if (adultRateRecord) {

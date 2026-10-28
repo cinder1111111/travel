@@ -683,15 +683,15 @@
         const adultDeaths = [...new Set(adultOptions.map(o => o.Death))].filter(Boolean);
         const medicals = [...new Set(adultOptions.map(o => o.Medical))].filter(Boolean);
 
-        // 小孩失能保額選項
-        const childDeaths = [...new Set(childOptions.map(o => o.Death))].filter(Boolean);
+        // 小孩失能保額選項：對應 Google Sheet CHILD_DISABILITY 欄位
+        const childDisabilities = [...new Set(childOptions.map(o => o.CHILD_DISABILITY))].filter(Boolean);
 
         adultDeaths.forEach(val => {
           const opt = document.createElement("option"); opt.value = val; opt.textContent = val;
           selAdult.appendChild(opt);
         });
 
-        childDeaths.forEach(val => {
+        childDisabilities.forEach(val => {
           const opt = document.createElement("option"); opt.value = val; opt.textContent = val;
           selChild.appendChild(opt);
         });
@@ -703,7 +703,7 @@
 
         // 預設狀態選擇
         clientState.adultDeath = adultDeaths[0] || '';
-        clientState.childDeath = childDeaths[0] || '';
+        clientState.childDeath = childDisabilities[0] || '';
         clientState.medical = medicals[0] || '';
 
         this.calculatePremium();
@@ -812,11 +812,11 @@
             r.Medical === med
           );
 
-          // 2. 查小孩獨立費率
+          // 2. 查小孩獨立費率：對應 Google Sheet CHILD_DISABILITY 欄位
           const childRateRecord = (globalDB.childRates || []).find(r => 
             r.ProductID === prodId &&
             parseInt(r.Days) === parseInt(days) &&
-            r.Death === chDeath &&
+            r.CHILD_DISABILITY === chDeath &&
             r.Medical === med  // 加入醫療選項比對
           );
 

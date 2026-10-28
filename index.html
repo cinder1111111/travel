@@ -356,8 +356,8 @@
   <script>
     // 串接使用者部署好的 Google Apps Script 雲端 API 網址 (大人小孩獨立Sheet分流架構)
     const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCudyI5uo1lDZXVsUfTxZrfzeLrLLzUh70N38HWLcAsn75-22G44cZ5ijzmyH86MJx/exec";
-    const CACHE_KEY = "TRAVEL_INS_CACHE_V6";
-    const CACHE_TIME_KEY = "TRAVEL_INS_CACHE_TIME_V6";
+    const CACHE_KEY = "TRAVEL_INS_CACHE_V7";
+    const CACHE_TIME_KEY = "TRAVEL_INS_CACHE_TIME_V7";
     const CACHE_DURATION_MS = 5 * 60 * 1000; // 5 分鐘快取
 
     // 全域資料儲存庫 - 與後端分流 Schema 完全一致
@@ -945,13 +945,17 @@
         // 同一張保單共用醫療選項；比例依大人身故／小孩失能保額分別計算。
         // 0、3萬、150萬屬固定金額；5%、10%屬比例連動。
         if (source === 'MEDICAL_OPTION') {
-          const option = String(clientState.medical ?? '').trim().replace(/％/g, '%');
+          // 支援 Google Sheet 的「身故5%」「身故10%」「失能5%」「失能10%」
+          // 以及「5%」「10%」「0」「3萬」「150萬」；不改動原始選項值，避免影響費率比對。
+          const option = String(clientState.medical ?? '')
+            .trim().replace(/％/g, '%').replace(/\s/g, '');
+          const percentMatch = option.match(/^(?:(?:身故|失能)(?:保額)?)?(\d+(?:\.\d+)?)%$/);
           let amount;
-          if (/^\d+(?:\.\d+)?%$/.test(option)) {
+          if (percentMatch) {
             const baseText = group === 'child' ? clientState.childDeath : clientState.adultDeath;
             const base = this.parseAmount(baseText);
             if (!Number.isFinite(base)) return '醫療計算基準錯誤';
-            amount = base * (Number(option.slice(0, -1)) / 100);
+            amount = base * Number(percentMatch[1]) / 100;
           } else {
             amount = this.parseAmount(option);
             if (!Number.isFinite(amount)) return '醫療選項設定錯誤';

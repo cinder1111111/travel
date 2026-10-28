@@ -967,6 +967,19 @@
             amount = this.parseAmount(option);
             if (!Number.isFinite(amount)) return '醫療選項設定錯誤';
           }
+          // 醫療基準金額可再依規則倍率分配：住院 1、門診 0.03、急診 0.1。
+          // 空白倍率視為 1，兼容原本的 R02 規則。
+          const multiplierText = String(rule.Multiplier ?? '').trim().replace(/％/g, '%');
+          if (multiplierText !== '') {
+            const isPercent = multiplierText.endsWith('%');
+            const numericText = isPercent ? multiplierText.slice(0, -1) : multiplierText;
+            const multiplier = Number(numericText);
+            if (numericText.trim() === '' || !Number.isFinite(multiplier) || multiplier < 0) {
+              return '倍率設定錯誤';
+            }
+            amount *= isPercent ? multiplier / 100 : multiplier;
+          }
+          // 先套用倍率，再檢查承保上限。
           if (String(rule.Cap ?? '').trim() !== '') {
             const cap = this.parseAmount(rule.Cap);
             if (!Number.isFinite(cap)) return '上限設定錯誤';

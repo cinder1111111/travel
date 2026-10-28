@@ -490,46 +490,64 @@
       });
     }
 
-    // 載入資料庫：優先使用快取，過期則重新呼叫 API
+    // 載入資料庫：快取失敗不影響 API，API 失敗時才使用可解析的離線快取。
     async function loadDatabase() {
-      const el = document.getElementById("effectiveDate");
-      const cacheData = localStorage.getItem(CACHE_KEY);
-      const cacheTime = localStorage.getItem(CACHE_TIME_KEY);
+      let cacheData = null;
+      let cacheTime = null;
       const now = Date.now();
+      try {
+        cacheData = localStorage.getItem(CACHE_KEY);
+        cacheTime = localStorage.getItem(CACHE_TIME_KEY);
+      } catch (storageError) {
+        console.warn("瀏覽器無法讀取本機快取，將直接連線 API", storageError);
+      }
 
-      if (cacheData && cacheTime && (now - parseInt(cacheTime) < CACHE_DURATION_MS)) {
+      if (cacheData && cacheTime && now - Number(cacheTime) < CACHE_DURATION_MS) {
         try {
-          globalDB = JSON.parse(cacheData);
+          const cached = JSON.parse(cacheData);
+          if (!cached || !cached.control || !Array.isArray(cached.products)) throw new Error('快取資料結構不完整');
+          globalDB = cached;
           applyDBData();
           return;
-        } catch(e) {
-          console.error("解析快取失敗，改用 API 獲取", e);
+        } catch (cacheError) {
+          console.warn("快取資料無效，改從 API 載入", cacheError);
         }
       }
 
+      let data;
       try {
-        const response = await fetch(GOOGLE_APPS_SCRIPT_URL);
+        const response = await fetch(GOOGLE_APPS_SCRIPT_URL, { cache: 'no-store' });
         if (!response.ok) throw new Error(`HTTP 錯誤: ${response.status}`);
-        const data = await response.json();
-        
-        if (data.error) throw new Error(data.error);
-
-        globalDB = data;
-        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-        localStorage.setItem(CACHE_TIME_KEY, now.toString());
-
-        applyDBData();
-        // 移除原先覆蓋為「系統已載入」的程式碼，保留原本 Google 試算表設定的適用日期
-      } catch (err) {
-        console.error("雲端 API 連線失敗", err);
+        data = await response.json();
+        if (data.error) throw new Error(String(data.error));
+        if (!data.control || !Array.isArray(data.products)) throw new Error('API 回傳資料結構不完整');
+      } catch (apiError) {
+        console.error("雲端 API 讀取失敗", apiError);
         if (cacheData) {
-          globalDB = JSON.parse(cacheData);
-          applyDBData();
-          showToast("⚠️ API 讀取失敗，改採離線快取資料");
-        } else {
-          document.getElementById("maintenanceScreen").classList.remove("hidden");
+          try {
+            const cached = JSON.parse(cacheData);
+            if (!cached || !cached.control || !Array.isArray(cached.products)) throw new Error('離線快取資料結構不完整');
+            globalDB = cached;
+            applyDBData();
+            showToast("⚠️ API 讀取失敗，改採離線快取資料");
+            return;
+          } catch (cacheError) {
+            console.error("離線快取無法使用", cacheError);
+          }
         }
+        document.getElementById("maintenanceScreen").classList.remove("hidden");
+        return;
       }
+
+      globalDB = data;
+      // localStorage 可能因手機私密瀏覽、空間不足而拒絕寫入，不應誤判為 API 故障。
+      try {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(CACHE_TIME_KEY, String(now));
+      } catch (storageError) {
+        console.warn("API 已成功載入，但本機快取寫入失敗", storageError);
+      }
+      applyDBData();
     }
 
     // 渲染資料庫設定到前台介面上
@@ -581,8 +599,8 @@
       if (entryAnnouncementOpened) return;
       const enabled = globalDB.control && /^(true|1|yes|on)$/i.test(String(globalDB.control.AnnouncementEnabled ?? '').trim());
       if (!enabled) return;
-      const title = String(globalDB.texts?.AnnouncementTitle ?? '重要公告').trim() || '重要公告';
-      const content = String(globalDB.texts?.AnnouncementContent ?? '').trim();
+      const title = String(globalDB.control?.AnnouncementTitle ?? '重要公告').trim() || '重要公告';
+      const content = String(globalDB.control?.AnnouncementContent ?? '').trim();
       if (!content) return;
       document.getElementById('entryAnnouncementTitle').textContent = title;
       document.getElementById('entryAnnouncementContent').textContent = content;

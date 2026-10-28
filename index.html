@@ -194,32 +194,7 @@
       <!-- 5. 整合投保人數與保障額度 (分流大人小孩資料表) -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card space-y-5">
         
-        <!-- A. 投保人數區 -->
-        <div class="grid grid-cols-2 gap-4 border-b border-gray-100 pb-5">
-          <!-- 左欄：15歲以上人數 (大人) -->
-          <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-            <span class="text-sm font-extrabold text-slate-500 mb-1" id="lblAdult">15歲以上人數</span>
-            <div class="flex items-center gap-2.5 my-2">
-              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', -1)">-</button>
-              <input type="number" id="txtAdultCount" class="w-14 h-10 text-center font-black text-lg text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="1" min="0" oninput="AppController.onCountInputChange('adult')" onblur="AppController.onCountInputBlur('adult')">
-              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', 1)">+</button>
-            </div>
-            <div class="text-xs font-bold text-gray-400 mt-0.5">每人保費: <span id="txtAdultUnitPrice" class="font-bold text-blue-700">$-</span></div>
-          </div>
-
-          <!-- 右欄：未滿15歲人數 (小孩) -->
-          <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-            <span class="text-sm font-extrabold text-slate-500 mb-1" id="lblChild">未滿15歲人數</span>
-            <div class="flex items-center gap-2.5 my-2">
-              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', -1)">-</button>
-              <input type="number" id="txtChildCount" class="w-14 h-10 text-center font-black text-lg text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="0" min="0" oninput="AppController.onCountInputChange('child')" onblur="AppController.onCountInputBlur('child')">
-              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', 1)">+</button>
-            </div>
-            <div class="text-xs font-bold text-gray-400 mt-0.5">每人保費: <span id="txtChildUnitPrice" class="font-bold text-blue-700">$-</span></div>
-          </div>
-        </div>
-
-        <!-- B. 保障額度設定區 (分流大人小孩資料表) -->
+        <!-- A. 保障額度設定區 (分流大人小孩資料表) -->
         <div class="space-y-4">
           <div class="text-sm font-semibold text-slate-900 flex items-center gap-1.5">
             <i data-lucide="shield-alert" class="w-4 h-4 text-blue-700"></i>
@@ -267,6 +242,31 @@
           </div>
         </div>
 
+
+        <!-- B. 投保人數區 -->
+        <div class="grid grid-cols-2 gap-4 border-t border-gray-100 pt-5">
+          <!-- 左欄：15歲以上人數 (大人) -->
+          <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+            <span class="text-sm font-extrabold text-slate-500 mb-1" id="lblAdult">15歲以上人數</span>
+            <div class="flex items-center gap-2.5 my-2">
+              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', -1)">-</button>
+              <input type="number" id="txtAdultCount" class="w-14 h-10 text-center font-black text-lg text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="1" min="0" oninput="AppController.onCountInputChange('adult')" onblur="AppController.onCountInputBlur('adult')">
+              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', 1)">+</button>
+            </div>
+            <div class="text-xs font-bold text-gray-400 mt-0.5">每人保費: <span id="txtAdultUnitPrice" class="font-bold text-blue-700">$-</span></div>
+          </div>
+
+          <!-- 右欄：未滿15歲人數 (小孩) -->
+          <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
+            <span class="text-sm font-extrabold text-slate-500 mb-1" id="lblChild">未滿15歲人數</span>
+            <div class="flex items-center gap-2.5 my-2">
+              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', -1)">-</button>
+              <input type="number" id="txtChildCount" class="w-14 h-10 text-center font-black text-lg text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="0" min="0" oninput="AppController.onCountInputChange('child')" onblur="AppController.onCountInputBlur('child')">
+              <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', 1)">+</button>
+            </div>
+            <div class="text-xs font-bold text-gray-400 mt-0.5">每人保費: <span id="txtChildUnitPrice" class="font-bold text-blue-700">$-</span></div>
+          </div>
+        </div>
       </div>
 
     </div>

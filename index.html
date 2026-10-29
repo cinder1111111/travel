@@ -407,6 +407,71 @@
     html[data-theme="dark"] #themeSelector { background:#35363C; border-color:#62636A; color:#D6BD55; }
     html[data-theme="google"] #themeSelector { background:#202124; border-color:#45474B; color:#E8EAED; }
     @media(max-width:480px) { #themeSelector { max-width:125px; font-size:11px; padding:7px 4px; } }
+
+    /* Google 翻譯參考配色：近黑＋深灰＋Google 深藍選取＋淡藍文字。
+       僅覆寫 google 主題，淺色及柔霧黃主題完全不變。 */
+    html[data-theme="google"] { --primary-color:#2448A4; --footer-color:#131314; }
+    html[data-theme="google"] body { background:#131314 !important; }
+    html[data-theme="google"] header { background:#1F1F1F !important; border-color:#34363A !important; }
+    html[data-theme="google"] .bg-white { background-color:#1F1F1F !important; }
+    html[data-theme="google"] .bg-slate-50\/50,
+    html[data-theme="google"] .bg-gray-100,
+    html[data-theme="google"] .bg-gray-50\/40,
+    html[data-theme="google"] .bg-slate-50,
+    html[data-theme="google"] .bg-gray-50,
+    html[data-theme="google"] .bg-slate-100,
+    html[data-theme="google"] #coverageList .bg-slate-50,
+    html[data-theme="google"] #coverageList .bg-gray-50,
+    html[data-theme="google"] #coverageList .bg-slate-50\/50 { background-color:#28282B !important; }
+    html[data-theme="google"] .bg-blue-50\/50,
+    html[data-theme="google"] .bg-blue-50,
+    html[data-theme="google"] .bg-blue-100 { background-color:#28282B !important; }
+    html[data-theme="google"] input,
+    html[data-theme="google"] select,
+    html[data-theme="google"] textarea { background:#28282B !important; border-color:#505156 !important; color:#E8EAED !important; }
+    html[data-theme="google"] select option { background:#28282B; }
+    html[data-theme="google"] input:focus,
+    html[data-theme="google"] select:focus { border-color:#A8C7FA !important; --tw-ring-color:rgba(168,199,250,.22) !important; }
+    html[data-theme="google"] #btnAreaOvs.bg-gradient-to-b,
+    html[data-theme="google"] #btnAreaDom.bg-gradient-to-b,
+    html[data-theme="google"] #btnDiseaseWith.bg-gradient-to-b,
+    html[data-theme="google"] #btnDiseaseWithout.bg-gradient-to-b { background:#2448A4 !important; color:#FFFFFF !important; border-color:#2448A4 !important; border-bottom-color:#2448A4 !important; }
+    html[data-theme="google"] #btnAreaOvs.bg-gradient-to-b *,
+    html[data-theme="google"] #btnAreaDom.bg-gradient-to-b *,
+    html[data-theme="google"] #btnDiseaseWith.bg-gradient-to-b *,
+    html[data-theme="google"] #btnDiseaseWithout.bg-gradient-to-b * { color:#FFFFFF !important; }
+    html[data-theme="google"] #btnAreaOvs:not(.bg-gradient-to-b),
+    html[data-theme="google"] #btnAreaDom:not(.bg-gradient-to-b),
+    html[data-theme="google"] #btnDiseaseWith:not(.bg-gradient-to-b),
+    html[data-theme="google"] #btnDiseaseWithout:not(.bg-gradient-to-b) { background:#28282B !important; color:#A8C7FA !important; border-color:#505156 !important; }
+    html[data-theme="google"] .btn-primary,
+    html[data-theme="google"] button.bg-\[var\(--primary-color\)\],
+    html[data-theme="google"] .bg-blue-600,
+    html[data-theme="google"] .bg-blue-700 { background:#2448A4 !important; color:#FFFFFF !important; }
+    html[data-theme="google"] .btn-primary .text-white { color:#FFFFFF !important; }
+    html[data-theme="google"] #copyLineQuoteButton,
+    html[data-theme="google"] #entryAnnouncementCloseButton { background:#2448A4 !important; color:#FFFFFF !important; }
+    html[data-theme="google"] #copyLineQuoteButton:hover { background:#3059B8 !important; }
+    html[data-theme="google"] #daysCardContainer { background:#25262A !important; border-color:#44464D !important; }
+    html[data-theme="google"] #productReminderBox { background:#25262A !important; border-color:#44464D !important; }
+    html[data-theme="google"] #productReminderText { color:#C4C7C5 !important; }
+    html[data-theme="google"] #announcementBanner { background:#202329 !important; border-color:#3D4655 !important; color:#A8C7FA !important; }
+    html[data-theme="google"] #entryAnnouncementModal .bg-\[\#fffdfb\] { background:#1F1F1F !important; }
+    html[data-theme="google"] #entryAnnouncementModal #entryAnnouncementContent { color:#C4C7C5 !important; }
+    html[data-theme="google"] #coverageList section > div:first-child,
+    html[data-theme="google"] #coverageList section > .bg-slate-100\/80 { background:#28282B !important; border-color:#505156 !important; }
+    html[data-theme="google"] #coverageList section > div:first-child h4,
+    html[data-theme="google"] #coverageList section > .bg-slate-100\/80 h4 { color:#E8EAED !important; }
+    html[data-theme="google"] #coverageList section > div:first-child button,
+    html[data-theme="google"] #coverageList section > .bg-slate-100\/80 button { color:#A8C7FA !important; }
+    html[data-theme="google"] #coverageList section [id^="coverage-rows-"] .text-blue-900 { color:#C4C7C5 !important; font-weight:700 !important; }
+    html[data-theme="google"] #mobileTotalPremium { color:#A8C7FA !important; }
+    html[data-theme="google"] .lg\:hidden.fixed.bottom-0 { background:#1F1F1F !important; }
+    html[data-theme="google"] .flatpickr-calendar,
+    html[data-theme="google"] .flatpickr-months .flatpickr-month { background:#1F1F1F !important; }
+    html[data-theme="google"] .flatpickr-day.selected,
+    html[data-theme="google"] .flatpickr-day.selected:hover { background:#2448A4 !important; border-color:#2448A4 !important; color:#FFFFFF !important; }
+    html[data-theme="google"] #themeSelector { background:#28282B; border-color:#505156; color:#A8C7FA; }
   </style>
 </head>
 <body class="text-gray-800 antialiased min-h-screen flex flex-col pb-36 lg:pb-6">

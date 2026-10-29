@@ -194,6 +194,21 @@
     html[data-theme="dark"] #coverageList section > div:first-child .bg-blue-700 {
       background: #D6BD55 !important;
     }
+    /* 修正動態建立的承保展開標題：原 bg-slate-100/80 未被深色規則覆蓋 */
+    html[data-theme="dark"] #coverageList section > .bg-slate-100\/80 {
+      background-color: #35363C !important;
+      border-color: #5C5D64 !important;
+    }
+    html[data-theme="dark"] #coverageList section > .bg-slate-100\/80 h4 {
+      color: #F5F5F6 !important;
+    }
+    html[data-theme="dark"] #coverageList section > .bg-slate-100\/80 button {
+      color: #D6BD55 !important;
+    }
+    /* 承保明細金額改為柔白，避免展開後整列黃色過多 */
+    html[data-theme="dark"] #coverageList section [id^="coverage-rows-"] .text-blue-900 {
+      color: #F5F5F6 !important;
+    }
     /* 方案提醒與天數區塊收斂底色，避免黃色面積過大 */
     html[data-theme="dark"] #daysCardContainer { background: #3B3C40 !important; border-color: #77704E !important; }
     html[data-theme="dark"] #productReminderBox { background: #3C3D40 !important; border-color: #756D4B !important; }

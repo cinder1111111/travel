@@ -209,6 +209,19 @@
     html[data-theme="dark"] #coverageList section [id^="coverage-rows-"] .text-blue-900 {
       color: #F5F5F6 !important;
     }
+    /* 僅深色模式：LINE 報價按鈕改為柔和淺黃 */
+    html[data-theme="dark"] #copyLineQuoteButton {
+      background: #E8D98A !important;
+      color: #292A2E !important;
+    }
+    html[data-theme="dark"] #copyLineQuoteButton:hover {
+      background: #EFE1A1 !important;
+    }
+    /* 僅深色模式：動態產生的承保金額使用柔白粗體 */
+    html[data-theme="dark"] #coverageList [id^="coverage-rows-"] > div > span:last-child {
+      color: #F5F5F6 !important;
+      font-weight: 700 !important;
+    }
     /* 方案提醒與天數區塊收斂底色，避免黃色面積過大 */
     html[data-theme="dark"] #daysCardContainer { background: #3B3C40 !important; border-color: #77704E !important; }
     html[data-theme="dark"] #productReminderBox { background: #3C3D40 !important; border-color: #756D4B !important; }
@@ -479,7 +492,7 @@
             <span class="font-extrabold text-gray-900"><span id="summaryAdults">1</span>大 / <span id="summaryChildren">0</span>小</span>
           </div>
         </div>
-        <button onclick="AppController.copyLineQuote()" class="w-full py-4 px-6 btn-primary text-white font-black text-base shadow-md hover:brightness-105 active:scale-[0.98] transition flex items-center justify-center gap-2 cursor-pointer">
+        <button id="copyLineQuoteButton" onclick="AppController.copyLineQuote()" class="w-full py-4 px-6 btn-primary text-white font-black text-base shadow-md hover:brightness-105 active:scale-[0.98] transition flex items-center justify-center gap-2 cursor-pointer">
           <i data-lucide="copy" class="w-5 h-5"></i>
           複製 LINE 格式報價
         </button>

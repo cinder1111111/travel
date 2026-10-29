@@ -63,6 +63,93 @@
     .flatpickr-current-month .flatpickr-monthDropdown-months {
       font-weight: 700 !important;
     }
+
+    /* 深色模式：只在 html[data-theme="dark"] 生效，原淺色版不受影響 */
+    html[data-theme="dark"] { color-scheme: dark; --primary-color: #D9BD83; --footer-color: #151614; }
+    html[data-theme="dark"] body { background: #151614 !important; color: #F0EDE5 !important; }
+    html[data-theme="dark"] header { background: #1B1D19 !important; border-color: #41453D !important; }
+    html[data-theme="dark"] .bg-white { background-color: #222420 !important; }
+    html[data-theme="dark"] .bg-slate-50\/50,
+    html[data-theme="dark"] .bg-gray-100,
+    html[data-theme="dark"] .bg-gray-50\/40 { background-color: #2D302B !important; }
+    html[data-theme="dark"] .bg-blue-50\/50,
+    html[data-theme="dark"] .bg-blue-50,
+    html[data-theme="dark"] .bg-blue-100 { background-color: #343329 !important; }
+    html[data-theme="dark"] .border-gray-100,
+    html[data-theme="dark"] .border-gray-200,
+    html[data-theme="dark"] .border-slate-100,
+    html[data-theme="dark"] .border-blue-100,
+    html[data-theme="dark"] .border-gray-100\/50 { border-color: #41453D !important; }
+    html[data-theme="dark"] .text-slate-900,
+    html[data-theme="dark"] .text-gray-900,
+    html[data-theme="dark"] .text-gray-950,
+    html[data-theme="dark"] .text-gray-800 { color: #F0EDE5 !important; }
+    html[data-theme="dark"] .text-gray-500,
+    html[data-theme="dark"] .text-gray-400,
+    html[data-theme="dark"] .text-gray-400\/75,
+    html[data-theme="dark"] .text-slate-500,
+    html[data-theme="dark"] .text-slate-400 { color: #ADAFA5 !important; }
+    html[data-theme="dark"] .text-blue-700,
+    html[data-theme="dark"] .text-blue-800,
+    html[data-theme="dark"] .text-blue-900,
+    html[data-theme="dark"] .text-blue-400 { color: #D9BD83 !important; }
+    html[data-theme="dark"] input,
+    html[data-theme="dark"] select,
+    html[data-theme="dark"] textarea { background-color: #2D302B !important; border-color: #55594F !important; color: #F0EDE5 !important; }
+    html[data-theme="dark"] select option { background-color: #2D302B; color: #F0EDE5; }
+    html[data-theme="dark"] input::placeholder { color: #ADAFA5; }
+    html[data-theme="dark"] input:focus,
+    html[data-theme="dark"] select:focus { border-color: #D9BD83 !important; --tw-ring-color: rgba(217,189,131,.22) !important; }
+    /* 原有的切換按鈕會由 JS 動態覆蓋 class，依選取狀態統一改為香檳金 */
+    html[data-theme="dark"] #btnAreaOvs.bg-gradient-to-b,
+    html[data-theme="dark"] #btnAreaDom.bg-gradient-to-b,
+    html[data-theme="dark"] #btnDiseaseWith.bg-gradient-to-b,
+    html[data-theme="dark"] #btnDiseaseWithout.bg-gradient-to-b { background: #D9BD83 !important; color: #25241F !important; border-bottom-color: #AA8E58 !important; }
+    html[data-theme="dark"] .btn-primary,
+    html[data-theme="dark"] button.bg-\[var\(--primary-color\)\] { background: #D9BD83 !important; color: #25241F !important; }
+    html[data-theme="dark"] .btn-primary .text-white { color: #25241F !important; }
+    html[data-theme="dark"] #daysCardContainer { background: #343329 !important; border-color: #55503D !important; }
+    html[data-theme="dark"] #daysCardContainer .text-blue-800,
+    html[data-theme="dark"] #daysCardContainer .text-blue-900 { color: #D9BD83 !important; }
+    html[data-theme="dark"] #productReminderBox { background: #302A25 !important; border-color: #6D5540 !important; }
+    html[data-theme="dark"] #productReminderBox > div,
+    html[data-theme="dark"] #productReminderBox > div i { color: #E6B68B !important; }
+    html[data-theme="dark"] #productReminderText { color: #D4CBC0 !important; }
+    html[data-theme="dark"] #announcementBanner { background: #342D22 !important; border-color: #6D5540 !important; color: #E9D1A5 !important; }
+    html[data-theme="dark"] #announcementBanner i { color: #D9BD83 !important; }
+    html[data-theme="dark"] #entryAnnouncementModal .bg-\[\#fffdfb\] { background: #222420 !important; }
+    html[data-theme="dark"] #entryAnnouncementModal #entryAnnouncementContent { color: #D4CBC0 !important; }
+    html[data-theme="dark"] #entryAnnouncementModal #entryAnnouncementCloseButton { background: #D9BD83 !important; color: #25241F !important; }
+    html[data-theme="dark"] #entryAnnouncementModal #entryAnnouncementTitle { color: #F0EDE5 !important; }
+    html[data-theme="dark"] #entryAnnouncementModal .border-slate-100 { border-color: #41453D !important; }
+    html[data-theme="dark"] #noticeList { color: #ADAFA5 !important; }
+    html[data-theme="dark"] #coverageList { color: #F0EDE5; }
+    html[data-theme="dark"] #coverageList .bg-slate-50,
+    html[data-theme="dark"] #coverageList .bg-gray-50,
+    html[data-theme="dark"] #coverageList .bg-slate-50\/50 { background-color: #2D302B !important; }
+    html[data-theme="dark"] #coverageList .border-slate-200,
+    html[data-theme="dark"] #coverageList .border-gray-200 { border-color: #41453D !important; }
+    html[data-theme="dark"] #coverageList .text-slate-700,
+    html[data-theme="dark"] #coverageList .text-gray-700 { color: #D4D0C5 !important; }
+    html[data-theme="dark"] #coverageList .text-blue-600 { color: #D9BD83 !important; }
+    html[data-theme="dark"] .lg\:hidden.fixed.bottom-0 { background: #1B1D19 !important; border-color: #41453D !important; }
+    html[data-theme="dark"] #mobileTotalPremium { color: #D9BD83 !important; }
+    html[data-theme="dark"] .flatpickr-calendar { background: #222420 !important; border-color: #41453D !important; box-shadow: 0 10px 32px #0008 !important; }
+    html[data-theme="dark"] .flatpickr-day,
+    html[data-theme="dark"] .flatpickr-weekday,
+    html[data-theme="dark"] .flatpickr-current-month,
+    html[data-theme="dark"] .flatpickr-months .flatpickr-month { color: #F0EDE5 !important; }
+    html[data-theme="dark"] .flatpickr-day.selected,
+    html[data-theme="dark"] .flatpickr-day.selected:hover { background: #D9BD83 !important; color: #25241F !important; border-color: #D9BD83 !important; }
+    html[data-theme="dark"] .flatpickr-day:hover { background: #3B3E37 !important; }
+    html[data-theme="dark"] .flatpickr-day.prevMonthDay,
+    html[data-theme="dark"] .flatpickr-day.nextMonthDay { color: #74776F !important; }
+    /* 切換鈕只新增於導覽列，淺色模式沿用既有視覺 */
+    #themeToggle { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid #E2E8F0; border-radius: 999px; background: #FFF; color: #334155; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+    #themeToggle:hover { background: #F1F5F9; }
+    html[data-theme="dark"] #themeToggle { background: #2D302B; border-color: #55594F; color: #D9BD83; }
+    html[data-theme="dark"] #themeToggle:hover { background: #393D35; }
+    @media (max-width: 480px) { #themeToggle { padding: 7px; } #themeToggleLabel { display: none; } }
   </style>
 </head>
 <body class="text-gray-800 antialiased min-h-screen flex flex-col pb-36 lg:pb-6">
@@ -80,7 +167,11 @@
         <i data-lucide="shield-check" class="w-7 h-7 text-blue-700"></i>
         <h1 id="siteTitle" class="text-xl md:text-2xl font-bold text-gray-900">旅平險保費試算</h1>
       </div>
-      <div class="text-right">
+      <div class="text-right flex items-center justify-end gap-2">
+        <button id="themeToggle" type="button" onclick="toggleTheme()" aria-label="切換深色模式" aria-pressed="false" title="切換深色／淺色模式">
+          <i id="themeToggleIcon" data-lucide="moon" class="w-4 h-4"></i>
+          <span id="themeToggleLabel">深色模式</span>
+        </button>
         <!-- 降低存在感的日期標籤 -->
         <span id="effectiveDate" class="text-xs md:text-sm text-gray-400/75 bg-gray-50/40 border border-gray-100/50 px-3 py-1 rounded-full font-medium">適用載入中...</span>
       </div>
@@ -386,6 +477,37 @@
 
   <!-- JS 邏輯區 -->
   <script>
+
+    // 使用者深淺色偏好：localStorage 記住上次選擇；無法儲存時仍可在當次頁面切換。
+    const THEME_STORAGE_KEY = 'TRAVEL_INS_THEME_V1';
+    function setTheme(theme, persist = true) {
+      const next = theme === 'dark' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      const label = document.getElementById('themeToggleLabel');
+      const button = document.getElementById('themeToggle');
+      const icon = document.getElementById('themeToggleIcon');
+      if (label) label.textContent = next === 'dark' ? '淺色模式' : '深色模式';
+      if (button) {
+        button.setAttribute('aria-pressed', String(next === 'dark'));
+        button.setAttribute('aria-label', next === 'dark' ? '切換為淺色模式' : '切換為深色模式');
+      }
+      if (icon) icon.setAttribute('data-lucide', next === 'dark' ? 'sun' : 'moon');
+      if (typeof lucide !== 'undefined') lucide.createIcons();
+      if (persist) {
+        try { localStorage.setItem(THEME_STORAGE_KEY, next); }
+        catch (e) { console.warn('瀏覽器未允許儲存主題偏好', e); }
+      }
+    }
+    function toggleTheme() {
+      setTheme(document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    }
+    (function restoreTheme() {
+      let saved = 'light';
+      try { saved = localStorage.getItem(THEME_STORAGE_KEY) || 'light'; }
+      catch (e) { /* 無儲存權限時預設淺色 */ }
+      setTheme(saved, false);
+    })();
+
     // 串接使用者部署好的 Google Apps Script 雲端 API 網址 (大人小孩獨立Sheet分流架構)
     const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCudyI5uo1lDZXVsUfTxZrfzeLrLLzUh70N38HWLcAsn75-22G44cZ5ijzmyH86MJx/exec";
     const CACHE_KEY = "TRAVEL_INS_CACHE_V8";

@@ -225,253 +225,353 @@
     /* 方案提醒與天數區塊收斂底色，避免黃色面積過大 */
     html[data-theme="dark"] #daysCardContainer { background: #3B3C40 !important; border-color: #77704E !important; }
     html[data-theme="dark"] #productReminderBox { background: #3C3D40 !important; border-color: #756D4B !important; }
-    /* 深色模式：只在 html[data-theme="google"] 生效，原淺色版不受影響 */
-    html[data-theme="google"] { color-scheme: dark; --primary-color: #A8C7FA; --footer-color: #121212; }
-    html[data-theme="google"] body { background: #121212 !important; color: #E8EAED !important; }
-    html[data-theme="google"] header { background: #171717 !important; border-color: #383A3D !important; }
-    html[data-theme="google"] .bg-white { background-color: #202124 !important; }
-    html[data-theme="google"] .bg-slate-50\/50,
-    html[data-theme="google"] .bg-gray-100,
-    html[data-theme="google"] .bg-gray-50\/40 { background-color: #17181A !important; }
-    html[data-theme="google"] .bg-blue-50\/50,
-    html[data-theme="google"] .bg-blue-50,
-    html[data-theme="google"] .bg-blue-100 { background-color: #252629 !important; }
-    html[data-theme="google"] .border-gray-100,
-    html[data-theme="google"] .border-gray-200,
-    html[data-theme="google"] .border-slate-100,
-    html[data-theme="google"] .border-blue-100,
-    html[data-theme="google"] .border-gray-100\/50 { border-color: #383A3D !important; }
-    html[data-theme="google"] .text-slate-900,
-    html[data-theme="google"] .text-gray-900,
-    html[data-theme="google"] .text-gray-950,
-    html[data-theme="google"] .text-gray-800 { color: #E8EAED !important; }
-    html[data-theme="google"] .text-gray-500,
-    html[data-theme="google"] .text-gray-400,
-    html[data-theme="google"] .text-gray-400\/75,
-    html[data-theme="google"] .text-slate-500,
-    html[data-theme="google"] .text-slate-400 { color: #BDC1C6 !important; }
-    html[data-theme="google"] .text-blue-700,
-    html[data-theme="google"] .text-blue-800,
-    html[data-theme="google"] .text-blue-900,
-    html[data-theme="google"] .text-blue-400 { color: #A8C7FA !important; }
-    html[data-theme="google"] input,
-    html[data-theme="google"] select,
-    html[data-theme="google"] textarea { background-color: #17181A !important; border-color: #45474B !important; color: #E8EAED !important; }
-    html[data-theme="google"] select option { background-color: #17181A; color: #E8EAED; }
-    html[data-theme="google"] input::placeholder { color: #BDC1C6; }
-    html[data-theme="google"] input:focus,
-    html[data-theme="google"] select:focus { border-color: #A8C7FA !important; --tw-ring-color: rgba(214,189,85,.22) !important; }
+    /* 深色模式：只在 html[data-theme="github"] 生效，原淺色版不受影響 */
+    html[data-theme="github"] { color-scheme: dark; --primary-color: #A8C7FA; --footer-color: #121212; }
+    html[data-theme="github"] body { background: #121212 !important; color: #E8EAED !important; }
+    html[data-theme="github"] header { background: #171717 !important; border-color: #383A3D !important; }
+    html[data-theme="github"] .bg-white { background-color: #202124 !important; }
+    html[data-theme="github"] .bg-slate-50\/50,
+    html[data-theme="github"] .bg-gray-100,
+    html[data-theme="github"] .bg-gray-50\/40 { background-color: #17181A !important; }
+    html[data-theme="github"] .bg-blue-50\/50,
+    html[data-theme="github"] .bg-blue-50,
+    html[data-theme="github"] .bg-blue-100 { background-color: #252629 !important; }
+    html[data-theme="github"] .border-gray-100,
+    html[data-theme="github"] .border-gray-200,
+    html[data-theme="github"] .border-slate-100,
+    html[data-theme="github"] .border-blue-100,
+    html[data-theme="github"] .border-gray-100\/50 { border-color: #383A3D !important; }
+    html[data-theme="github"] .text-slate-900,
+    html[data-theme="github"] .text-gray-900,
+    html[data-theme="github"] .text-gray-950,
+    html[data-theme="github"] .text-gray-800 { color: #E8EAED !important; }
+    html[data-theme="github"] .text-gray-500,
+    html[data-theme="github"] .text-gray-400,
+    html[data-theme="github"] .text-gray-400\/75,
+    html[data-theme="github"] .text-slate-500,
+    html[data-theme="github"] .text-slate-400 { color: #BDC1C6 !important; }
+    html[data-theme="github"] .text-blue-700,
+    html[data-theme="github"] .text-blue-800,
+    html[data-theme="github"] .text-blue-900,
+    html[data-theme="github"] .text-blue-400 { color: #A8C7FA !important; }
+    html[data-theme="github"] input,
+    html[data-theme="github"] select,
+    html[data-theme="github"] textarea { background-color: #17181A !important; border-color: #45474B !important; color: #E8EAED !important; }
+    html[data-theme="github"] select option { background-color: #17181A; color: #E8EAED; }
+    html[data-theme="github"] input::placeholder { color: #BDC1C6; }
+    html[data-theme="github"] input:focus,
+    html[data-theme="github"] select:focus { border-color: #A8C7FA !important; --tw-ring-color: rgba(214,189,85,.22) !important; }
     /* 原有的切換按鈕會由 JS 動態覆蓋 class，依選取狀態統一改為檸檬黃 */
-    html[data-theme="google"] #btnAreaOvs.bg-gradient-to-b,
-    html[data-theme="google"] #btnAreaDom.bg-gradient-to-b,
-    html[data-theme="google"] #btnDiseaseWith.bg-gradient-to-b,
-    html[data-theme="google"] #btnDiseaseWithout.bg-gradient-to-b { background: #A8C7FA !important; color: #172B4D !important; border-bottom-color: #A18B36 !important; }
-    html[data-theme="google"] .btn-primary,
-    html[data-theme="google"] button.bg-\[var\(--primary-color\)\] { background: #A8C7FA !important; color: #172B4D !important; }
-    html[data-theme="google"] .btn-primary .text-white { color: #172B4D !important; }
-    html[data-theme="google"] #daysCardContainer { background: #252629 !important; border-color: #777158 !important; }
-    html[data-theme="google"] #daysCardContainer .text-blue-800,
-    html[data-theme="google"] #daysCardContainer .text-blue-900 { color: #A8C7FA !important; }
-    html[data-theme="google"] #productReminderBox { background: #24262A !important; border-color: #7B7148 !important; }
-    html[data-theme="google"] #productReminderBox > div,
-    html[data-theme="google"] #productReminderBox > div i { color: #A8C7FA !important; }
-    html[data-theme="google"] #productReminderText { color: #E2DED1 !important; }
-    html[data-theme="google"] #announcementBanner { background: #24262A !important; border-color: #7B7148 !important; color: #E1D08D !important; }
-    html[data-theme="google"] #announcementBanner i { color: #A8C7FA !important; }
-    html[data-theme="google"] #entryAnnouncementModal .bg-\[\#fffdfb\] { background: #202124 !important; }
-    html[data-theme="google"] #entryAnnouncementModal #entryAnnouncementContent { color: #E2DED1 !important; }
-    html[data-theme="google"] #entryAnnouncementModal #entryAnnouncementCloseButton { background: #A8C7FA !important; color: #172B4D !important; }
-    html[data-theme="google"] #entryAnnouncementModal #entryAnnouncementTitle { color: #E8EAED !important; }
-    html[data-theme="google"] #entryAnnouncementModal .border-slate-100 { border-color: #383A3D !important; }
-    html[data-theme="google"] #noticeList { color: #BDC1C6 !important; }
-    html[data-theme="google"] #coverageList { color: #E8EAED; }
-    html[data-theme="google"] #coverageList .bg-slate-50,
-    html[data-theme="google"] #coverageList .bg-gray-50,
-    html[data-theme="google"] #coverageList .bg-slate-50\/50 { background-color: #17181A !important; }
-    html[data-theme="google"] #coverageList .border-slate-200,
-    html[data-theme="google"] #coverageList .border-gray-200 { border-color: #383A3D !important; }
-    html[data-theme="google"] #coverageList .text-slate-700,
-    html[data-theme="google"] #coverageList .text-gray-700 { color: #BDC1C6 !important; }
-    html[data-theme="google"] #coverageList .text-blue-600 { color: #A8C7FA !important; }
-    html[data-theme="google"] .lg\:hidden.fixed.bottom-0 { background: #171717 !important; border-color: #383A3D !important; }
-    html[data-theme="google"] #mobileTotalPremium { color: #A8C7FA !important; }
-    html[data-theme="google"] .flatpickr-calendar { background: #202124 !important; border-color: #383A3D !important; box-shadow: 0 10px 32px #0008 !important; }
-    html[data-theme="google"] .flatpickr-day,
-    html[data-theme="google"] .flatpickr-weekday,
-    html[data-theme="google"] .flatpickr-current-month,
-    html[data-theme="google"] .flatpickr-months .flatpickr-month { color: #E8EAED !important; }
-    html[data-theme="google"] .flatpickr-day.selected,
-    html[data-theme="google"] .flatpickr-day.selected:hover { background: #A8C7FA !important; color: #172B4D !important; border-color: #A8C7FA !important; }
-    html[data-theme="google"] .flatpickr-day:hover { background: #383A3D !important; }
-    html[data-theme="google"] .flatpickr-day.prevMonthDay,
-    html[data-theme="google"] .flatpickr-day.nextMonthDay { color: #999AA1 !important; }
+    html[data-theme="github"] #btnAreaOvs.bg-gradient-to-b,
+    html[data-theme="github"] #btnAreaDom.bg-gradient-to-b,
+    html[data-theme="github"] #btnDiseaseWith.bg-gradient-to-b,
+    html[data-theme="github"] #btnDiseaseWithout.bg-gradient-to-b { background: #A8C7FA !important; color: #172B4D !important; border-bottom-color: #A18B36 !important; }
+    html[data-theme="github"] .btn-primary,
+    html[data-theme="github"] button.bg-\[var\(--primary-color\)\] { background: #A8C7FA !important; color: #172B4D !important; }
+    html[data-theme="github"] .btn-primary .text-white { color: #172B4D !important; }
+    html[data-theme="github"] #daysCardContainer { background: #252629 !important; border-color: #777158 !important; }
+    html[data-theme="github"] #daysCardContainer .text-blue-800,
+    html[data-theme="github"] #daysCardContainer .text-blue-900 { color: #A8C7FA !important; }
+    html[data-theme="github"] #productReminderBox { background: #24262A !important; border-color: #7B7148 !important; }
+    html[data-theme="github"] #productReminderBox > div,
+    html[data-theme="github"] #productReminderBox > div i { color: #A8C7FA !important; }
+    html[data-theme="github"] #productReminderText { color: #E2DED1 !important; }
+    html[data-theme="github"] #announcementBanner { background: #24262A !important; border-color: #7B7148 !important; color: #E1D08D !important; }
+    html[data-theme="github"] #announcementBanner i { color: #A8C7FA !important; }
+    html[data-theme="github"] #entryAnnouncementModal .bg-\[\#fffdfb\] { background: #202124 !important; }
+    html[data-theme="github"] #entryAnnouncementModal #entryAnnouncementContent { color: #E2DED1 !important; }
+    html[data-theme="github"] #entryAnnouncementModal #entryAnnouncementCloseButton { background: #A8C7FA !important; color: #172B4D !important; }
+    html[data-theme="github"] #entryAnnouncementModal #entryAnnouncementTitle { color: #E8EAED !important; }
+    html[data-theme="github"] #entryAnnouncementModal .border-slate-100 { border-color: #383A3D !important; }
+    html[data-theme="github"] #noticeList { color: #BDC1C6 !important; }
+    html[data-theme="github"] #coverageList { color: #E8EAED; }
+    html[data-theme="github"] #coverageList .bg-slate-50,
+    html[data-theme="github"] #coverageList .bg-gray-50,
+    html[data-theme="github"] #coverageList .bg-slate-50\/50 { background-color: #17181A !important; }
+    html[data-theme="github"] #coverageList .border-slate-200,
+    html[data-theme="github"] #coverageList .border-gray-200 { border-color: #383A3D !important; }
+    html[data-theme="github"] #coverageList .text-slate-700,
+    html[data-theme="github"] #coverageList .text-gray-700 { color: #BDC1C6 !important; }
+    html[data-theme="github"] #coverageList .text-blue-600 { color: #A8C7FA !important; }
+    html[data-theme="github"] .lg\:hidden.fixed.bottom-0 { background: #171717 !important; border-color: #383A3D !important; }
+    html[data-theme="github"] #mobileTotalPremium { color: #A8C7FA !important; }
+    html[data-theme="github"] .flatpickr-calendar { background: #202124 !important; border-color: #383A3D !important; box-shadow: 0 10px 32px #0008 !important; }
+    html[data-theme="github"] .flatpickr-day,
+    html[data-theme="github"] .flatpickr-weekday,
+    html[data-theme="github"] .flatpickr-current-month,
+    html[data-theme="github"] .flatpickr-months .flatpickr-month { color: #E8EAED !important; }
+    html[data-theme="github"] .flatpickr-day.selected,
+    html[data-theme="github"] .flatpickr-day.selected:hover { background: #A8C7FA !important; color: #172B4D !important; border-color: #A8C7FA !important; }
+    html[data-theme="github"] .flatpickr-day:hover { background: #383A3D !important; }
+    html[data-theme="github"] .flatpickr-day.prevMonthDay,
+    html[data-theme="github"] .flatpickr-day.nextMonthDay { color: #999AA1 !important; }
     /* Jabra 風格：深灰面板、霧面輸入欄位與檸檬黃操作焦點 */
-    html[data-theme="google"] .bg-slate-50,
-    html[data-theme="google"] .bg-gray-50,
-    html[data-theme="google"] .bg-slate-100 { background-color: #17181A !important; }
-    html[data-theme="google"] .border-slate-200,
-    html[data-theme="google"] .border-gray-300,
-    html[data-theme="google"] .border-blue-200 { border-color: #45474B !important; }
-    html[data-theme="google"] .text-slate-700,
-    html[data-theme="google"] .text-gray-700,
-    html[data-theme="google"] .text-gray-600 { color: #BDC1C6 !important; }
-    html[data-theme="google"] .text-blue-600,
-    html[data-theme="google"] .text-blue-500,
-    html[data-theme="google"] .text-blue-800 { color: #A8C7FA !important; }
-    html[data-theme="google"] .bg-blue-600,
-    html[data-theme="google"] .bg-blue-700 { background-color: #A8C7FA !important; color: #172B4D !important; }
-    html[data-theme="google"] #btnAreaOvs:not(.bg-gradient-to-b),
-    html[data-theme="google"] #btnAreaDom:not(.bg-gradient-to-b),
-    html[data-theme="google"] #btnDiseaseWith:not(.bg-gradient-to-b),
-    html[data-theme="google"] #btnDiseaseWithout:not(.bg-gradient-to-b) { background: #17181A !important; color: #D0D0D5 !important; border-color: #45474B !important; }
-    html[data-theme="google"] #btnAreaOvs.bg-gradient-to-b *,
-    html[data-theme="google"] #btnAreaDom.bg-gradient-to-b *,
-    html[data-theme="google"] #btnDiseaseWith.bg-gradient-to-b *,
-    html[data-theme="google"] #btnDiseaseWithout.bg-gradient-to-b * { color: #172B4D !important; }
-    html[data-theme="google"] .flatpickr-months .flatpickr-month { background: #202124 !important; }
-    html[data-theme="google"] .flatpickr-current-month .flatpickr-monthDropdown-months { color: #E8EAED !important; }
-    html[data-theme="google"] .flatpickr-time input { color: #E8EAED !important; }
-    html[data-theme="google"] .flatpickr-day.today:not(.selected) { border-color: #A8C7FA !important; }
+    html[data-theme="github"] .bg-slate-50,
+    html[data-theme="github"] .bg-gray-50,
+    html[data-theme="github"] .bg-slate-100 { background-color: #17181A !important; }
+    html[data-theme="github"] .border-slate-200,
+    html[data-theme="github"] .border-gray-300,
+    html[data-theme="github"] .border-blue-200 { border-color: #45474B !important; }
+    html[data-theme="github"] .text-slate-700,
+    html[data-theme="github"] .text-gray-700,
+    html[data-theme="github"] .text-gray-600 { color: #BDC1C6 !important; }
+    html[data-theme="github"] .text-blue-600,
+    html[data-theme="github"] .text-blue-500,
+    html[data-theme="github"] .text-blue-800 { color: #A8C7FA !important; }
+    html[data-theme="github"] .bg-blue-600,
+    html[data-theme="github"] .bg-blue-700 { background-color: #A8C7FA !important; color: #172B4D !important; }
+    html[data-theme="github"] #btnAreaOvs:not(.bg-gradient-to-b),
+    html[data-theme="github"] #btnAreaDom:not(.bg-gradient-to-b),
+    html[data-theme="github"] #btnDiseaseWith:not(.bg-gradient-to-b),
+    html[data-theme="github"] #btnDiseaseWithout:not(.bg-gradient-to-b) { background: #17181A !important; color: #D0D0D5 !important; border-color: #45474B !important; }
+    html[data-theme="github"] #btnAreaOvs.bg-gradient-to-b *,
+    html[data-theme="github"] #btnAreaDom.bg-gradient-to-b *,
+    html[data-theme="github"] #btnDiseaseWith.bg-gradient-to-b *,
+    html[data-theme="github"] #btnDiseaseWithout.bg-gradient-to-b * { color: #172B4D !important; }
+    html[data-theme="github"] .flatpickr-months .flatpickr-month { background: #202124 !important; }
+    html[data-theme="github"] .flatpickr-current-month .flatpickr-monthDropdown-months { color: #E8EAED !important; }
+    html[data-theme="github"] .flatpickr-time input { color: #E8EAED !important; }
+    html[data-theme="github"] .flatpickr-day.today:not(.selected) { border-color: #A8C7FA !important; }
     /* 切換鈕只新增於導覽列，淺色模式沿用既有視覺 */
     #themeToggle { display: inline-flex; align-items: center; gap: 6px; padding: 7px 10px; border: 1px solid #E2E8F0; border-radius: 999px; background: #FFF; color: #334155; font-size: 12px; font-weight: 700; cursor: pointer; white-space: nowrap; }
     #themeToggle:hover { background: #F1F5F9; }
-    html[data-theme="google"] #themeToggle { background: #17181A; border-color: #45474B; color: #A8C7FA; }
-    html[data-theme="google"] #themeToggle:hover { background: #383A3D; }
+    html[data-theme="github"] #themeToggle { background: #17181A; border-color: #45474B; color: #A8C7FA; }
+    html[data-theme="github"] #themeToggle:hover { background: #383A3D; }
     @media (max-width: 480px) { #themeToggle { padding: 7px; } #themeToggleLabel { display: none; } }
     /* 承保內容展開列：深灰底、白字與柔霧芥末黃操作提示，避免淺灰底黃色字對比不足 */
-    html[data-theme="google"] #coverageList section > div:first-child {
+    html[data-theme="github"] #coverageList section > div:first-child {
       background: #17181A !important;
       border-color: #5C5D64 !important;
     }
-    html[data-theme="google"] #coverageList section > div:first-child h4 {
+    html[data-theme="github"] #coverageList section > div:first-child h4 {
       color: #E8EAED !important;
     }
-    html[data-theme="google"] #coverageList section > div:first-child button {
+    html[data-theme="github"] #coverageList section > div:first-child button {
       color: #A8C7FA !important;
     }
-    html[data-theme="google"] #coverageList section > div:first-child button:hover {
+    html[data-theme="github"] #coverageList section > div:first-child button:hover {
       color: #E5D38C !important;
     }
-    html[data-theme="google"] #coverageList section > div:first-child .bg-blue-700 {
+    html[data-theme="github"] #coverageList section > div:first-child .bg-blue-700 {
       background: #A8C7FA !important;
     }
     /* 修正動態建立的承保展開標題：原 bg-slate-100/80 未被深色規則覆蓋 */
-    html[data-theme="google"] #coverageList section > .bg-slate-100\/80 {
+    html[data-theme="github"] #coverageList section > .bg-slate-100\/80 {
       background-color: #17181A !important;
       border-color: #5C5D64 !important;
     }
-    html[data-theme="google"] #coverageList section > .bg-slate-100\/80 h4 {
+    html[data-theme="github"] #coverageList section > .bg-slate-100\/80 h4 {
       color: #E8EAED !important;
     }
-    html[data-theme="google"] #coverageList section > .bg-slate-100\/80 button {
+    html[data-theme="github"] #coverageList section > .bg-slate-100\/80 button {
       color: #A8C7FA !important;
     }
     /* 承保明細金額與左側險種名稱使用相同灰白色 */
-    html[data-theme="google"] #coverageList section [id^="coverage-rows-"] .text-blue-900 {
+    html[data-theme="github"] #coverageList section [id^="coverage-rows-"] .text-blue-900 {
       color: #BDC1C6 !important;
     }
     /* 僅深色模式：LINE 報價按鈕改為柔和淺黃 */
-    html[data-theme="google"] #copyLineQuoteButton {
+    html[data-theme="github"] #copyLineQuoteButton {
       background: #A8C7FA !important;
       color: #172B4D !important;
     }
-    html[data-theme="google"] #copyLineQuoteButton:hover {
+    html[data-theme="github"] #copyLineQuoteButton:hover {
       background: #C2D7FA !important;
     }
     /* 僅深色模式：承保金額顏色與險種名稱一致，維持粗體 */
-    html[data-theme="google"] #coverageList [id^="coverage-rows-"] > div > span:last-child {
+    html[data-theme="github"] #coverageList [id^="coverage-rows-"] > div > span:last-child {
       color: #BDC1C6 !important;
       font-weight: 700 !important;
     }
     /* 方案提醒與天數區塊收斂底色，避免黃色面積過大 */
-    html[data-theme="google"] #daysCardContainer { background: #202124 !important; border-color: #44474C !important; }
-    html[data-theme="google"] #productReminderBox { background: #202124 !important; border-color: #44474C !important; }
+    html[data-theme="github"] #daysCardContainer { background: #202124 !important; border-color: #44474C !important; }
+    html[data-theme="github"] #productReminderBox { background: #202124 !important; border-color: #44474C !important; }
 
     /* Google 風格：近黑底、灰色層次、克制的霧藍選取色 */
-    html[data-theme="google"] { color-scheme: dark; --primary-color:#A8C7FA; }
-    html[data-theme="google"] body { background:#121212 !important; }
-    html[data-theme="google"] #btnAreaOvs.bg-gradient-to-b,
-    html[data-theme="google"] #btnAreaDom.bg-gradient-to-b,
-    html[data-theme="google"] #btnDiseaseWith.bg-gradient-to-b,
-    html[data-theme="google"] #btnDiseaseWithout.bg-gradient-to-b { background:#A8C7FA !important; color:#172B4D !important; border-color:#A8C7FA !important; }
-    html[data-theme="google"] #coverageList section [id^="coverage-rows-"] .text-blue-900,
-    html[data-theme="google"] #coverageList [id^="coverage-rows-"] > div > span:last-child { color:#BDC1C6 !important; font-weight:700 !important; }
-    html[data-theme="google"] #copyLineQuoteButton { background:#A8C7FA !important; color:#172B4D !important; }
-    html[data-theme="google"] #copyLineQuoteButton:hover { background:#C2D7FA !important; }
-    html[data-theme="google"] .flatpickr-calendar { background:#202124 !important; color:#E8EAED !important; border-color:#45474B !important; }
-    html[data-theme="google"] .flatpickr-day { color:#E8EAED !important; }
-    html[data-theme="google"] .flatpickr-day:hover { background:#383A3D !important; }
-    html[data-theme="google"] .flatpickr-day.selected { color:#172B4D !important; }
-    html[data-theme="google"] .flatpickr-weekday { color:#BDC1C6 !important; }
+    html[data-theme="github"] { color-scheme: dark; --primary-color:#A8C7FA; }
+    html[data-theme="github"] body { background:#121212 !important; }
+    html[data-theme="github"] #btnAreaOvs.bg-gradient-to-b,
+    html[data-theme="github"] #btnAreaDom.bg-gradient-to-b,
+    html[data-theme="github"] #btnDiseaseWith.bg-gradient-to-b,
+    html[data-theme="github"] #btnDiseaseWithout.bg-gradient-to-b { background:#A8C7FA !important; color:#172B4D !important; border-color:#A8C7FA !important; }
+    html[data-theme="github"] #coverageList section [id^="coverage-rows-"] .text-blue-900,
+    html[data-theme="github"] #coverageList [id^="coverage-rows-"] > div > span:last-child { color:#BDC1C6 !important; font-weight:700 !important; }
+    html[data-theme="github"] #copyLineQuoteButton { background:#A8C7FA !important; color:#172B4D !important; }
+    html[data-theme="github"] #copyLineQuoteButton:hover { background:#C2D7FA !important; }
+    html[data-theme="github"] .flatpickr-calendar { background:#202124 !important; color:#E8EAED !important; border-color:#45474B !important; }
+    html[data-theme="github"] .flatpickr-day { color:#E8EAED !important; }
+    html[data-theme="github"] .flatpickr-day:hover { background:#383A3D !important; }
+    html[data-theme="github"] .flatpickr-day.selected { color:#172B4D !important; }
+    html[data-theme="github"] .flatpickr-weekday { color:#BDC1C6 !important; }
     #themeSelector { max-width: 170px; padding:7px 27px 7px 12px; border-radius:999px; border:1px solid #CBD5E1; background:#fff; color:#334155; font-size:12px; font-weight:700; cursor:pointer; }
     html[data-theme="dark"] #themeSelector { background:#35363C; border-color:#62636A; color:#D6BD55; }
-    html[data-theme="google"] #themeSelector { background:#202124; border-color:#45474B; color:#E8EAED; }
+    html[data-theme="github"] #themeSelector { background:#202124; border-color:#45474B; color:#E8EAED; }
     @media(max-width:480px) { #themeSelector { max-width:125px; font-size:11px; padding:7px 4px; } }
 
     /* Google 翻譯參考配色：近黑＋深灰＋Google 深藍選取＋淡藍文字。
        僅覆寫 google 主題，淺色及柔霧黃主題完全不變。 */
-    html[data-theme="google"] { --primary-color:#2448A4; --footer-color:#131314; }
-    html[data-theme="google"] body { background:#131314 !important; }
-    html[data-theme="google"] header { background:#1F1F1F !important; border-color:#34363A !important; }
-    html[data-theme="google"] .bg-white { background-color:#1F1F1F !important; }
-    html[data-theme="google"] .bg-slate-50\/50,
-    html[data-theme="google"] .bg-gray-100,
-    html[data-theme="google"] .bg-gray-50\/40,
-    html[data-theme="google"] .bg-slate-50,
-    html[data-theme="google"] .bg-gray-50,
-    html[data-theme="google"] .bg-slate-100,
-    html[data-theme="google"] #coverageList .bg-slate-50,
-    html[data-theme="google"] #coverageList .bg-gray-50,
-    html[data-theme="google"] #coverageList .bg-slate-50\/50 { background-color:#28282B !important; }
-    html[data-theme="google"] .bg-blue-50\/50,
-    html[data-theme="google"] .bg-blue-50,
-    html[data-theme="google"] .bg-blue-100 { background-color:#28282B !important; }
-    html[data-theme="google"] input,
-    html[data-theme="google"] select,
-    html[data-theme="google"] textarea { background:#28282B !important; border-color:#505156 !important; color:#E8EAED !important; }
-    html[data-theme="google"] select option { background:#28282B; }
-    html[data-theme="google"] input:focus,
-    html[data-theme="google"] select:focus { border-color:#A8C7FA !important; --tw-ring-color:rgba(168,199,250,.22) !important; }
-    html[data-theme="google"] #btnAreaOvs.bg-gradient-to-b,
-    html[data-theme="google"] #btnAreaDom.bg-gradient-to-b,
-    html[data-theme="google"] #btnDiseaseWith.bg-gradient-to-b,
-    html[data-theme="google"] #btnDiseaseWithout.bg-gradient-to-b { background:#2448A4 !important; color:#FFFFFF !important; border-color:#2448A4 !important; border-bottom-color:#2448A4 !important; }
-    html[data-theme="google"] #btnAreaOvs.bg-gradient-to-b *,
-    html[data-theme="google"] #btnAreaDom.bg-gradient-to-b *,
-    html[data-theme="google"] #btnDiseaseWith.bg-gradient-to-b *,
-    html[data-theme="google"] #btnDiseaseWithout.bg-gradient-to-b * { color:#FFFFFF !important; }
-    html[data-theme="google"] #btnAreaOvs:not(.bg-gradient-to-b),
-    html[data-theme="google"] #btnAreaDom:not(.bg-gradient-to-b),
-    html[data-theme="google"] #btnDiseaseWith:not(.bg-gradient-to-b),
-    html[data-theme="google"] #btnDiseaseWithout:not(.bg-gradient-to-b) { background:#28282B !important; color:#A8C7FA !important; border-color:#505156 !important; }
-    html[data-theme="google"] .btn-primary,
-    html[data-theme="google"] button.bg-\[var\(--primary-color\)\],
-    html[data-theme="google"] .bg-blue-600,
-    html[data-theme="google"] .bg-blue-700 { background:#2448A4 !important; color:#FFFFFF !important; }
-    html[data-theme="google"] .btn-primary .text-white { color:#FFFFFF !important; }
-    html[data-theme="google"] #copyLineQuoteButton,
-    html[data-theme="google"] #entryAnnouncementCloseButton { background:#2448A4 !important; color:#FFFFFF !important; }
-    html[data-theme="google"] #copyLineQuoteButton:hover { background:#3059B8 !important; }
-    html[data-theme="google"] #daysCardContainer { background:#25262A !important; border-color:#44464D !important; }
-    html[data-theme="google"] #productReminderBox { background:#25262A !important; border-color:#44464D !important; }
-    html[data-theme="google"] #productReminderText { color:#C4C7C5 !important; }
-    html[data-theme="google"] #announcementBanner { background:#202329 !important; border-color:#3D4655 !important; color:#A8C7FA !important; }
-    html[data-theme="google"] #entryAnnouncementModal .bg-\[\#fffdfb\] { background:#1F1F1F !important; }
-    html[data-theme="google"] #entryAnnouncementModal #entryAnnouncementContent { color:#C4C7C5 !important; }
-    html[data-theme="google"] #coverageList section > div:first-child,
-    html[data-theme="google"] #coverageList section > .bg-slate-100\/80 { background:#28282B !important; border-color:#505156 !important; }
-    html[data-theme="google"] #coverageList section > div:first-child h4,
-    html[data-theme="google"] #coverageList section > .bg-slate-100\/80 h4 { color:#E8EAED !important; }
-    html[data-theme="google"] #coverageList section > div:first-child button,
-    html[data-theme="google"] #coverageList section > .bg-slate-100\/80 button { color:#A8C7FA !important; }
-    html[data-theme="google"] #coverageList section [id^="coverage-rows-"] .text-blue-900 { color:#C4C7C5 !important; font-weight:700 !important; }
-    html[data-theme="google"] #mobileTotalPremium { color:#A8C7FA !important; }
-    html[data-theme="google"] .lg\:hidden.fixed.bottom-0 { background:#1F1F1F !important; }
-    html[data-theme="google"] .flatpickr-calendar,
-    html[data-theme="google"] .flatpickr-months .flatpickr-month { background:#1F1F1F !important; }
-    html[data-theme="google"] .flatpickr-day.selected,
-    html[data-theme="google"] .flatpickr-day.selected:hover { background:#2448A4 !important; border-color:#2448A4 !important; color:#FFFFFF !important; }
-    html[data-theme="google"] #themeSelector { background:#28282B; border-color:#505156; color:#A8C7FA; }
+    html[data-theme="github"] { --primary-color:#2448A4; --footer-color:#131314; }
+    html[data-theme="github"] body { background:#131314 !important; }
+    html[data-theme="github"] header { background:#1F1F1F !important; border-color:#34363A !important; }
+    html[data-theme="github"] .bg-white { background-color:#1F1F1F !important; }
+    html[data-theme="github"] .bg-slate-50\/50,
+    html[data-theme="github"] .bg-gray-100,
+    html[data-theme="github"] .bg-gray-50\/40,
+    html[data-theme="github"] .bg-slate-50,
+    html[data-theme="github"] .bg-gray-50,
+    html[data-theme="github"] .bg-slate-100,
+    html[data-theme="github"] #coverageList .bg-slate-50,
+    html[data-theme="github"] #coverageList .bg-gray-50,
+    html[data-theme="github"] #coverageList .bg-slate-50\/50 { background-color:#28282B !important; }
+    html[data-theme="github"] .bg-blue-50\/50,
+    html[data-theme="github"] .bg-blue-50,
+    html[data-theme="github"] .bg-blue-100 { background-color:#28282B !important; }
+    html[data-theme="github"] input,
+    html[data-theme="github"] select,
+    html[data-theme="github"] textarea { background:#28282B !important; border-color:#505156 !important; color:#E8EAED !important; }
+    html[data-theme="github"] select option { background:#28282B; }
+    html[data-theme="github"] input:focus,
+    html[data-theme="github"] select:focus { border-color:#A8C7FA !important; --tw-ring-color:rgba(168,199,250,.22) !important; }
+    html[data-theme="github"] #btnAreaOvs.bg-gradient-to-b,
+    html[data-theme="github"] #btnAreaDom.bg-gradient-to-b,
+    html[data-theme="github"] #btnDiseaseWith.bg-gradient-to-b,
+    html[data-theme="github"] #btnDiseaseWithout.bg-gradient-to-b { background:#2448A4 !important; color:#FFFFFF !important; border-color:#2448A4 !important; border-bottom-color:#2448A4 !important; }
+    html[data-theme="github"] #btnAreaOvs.bg-gradient-to-b *,
+    html[data-theme="github"] #btnAreaDom.bg-gradient-to-b *,
+    html[data-theme="github"] #btnDiseaseWith.bg-gradient-to-b *,
+    html[data-theme="github"] #btnDiseaseWithout.bg-gradient-to-b * { color:#FFFFFF !important; }
+    html[data-theme="github"] #btnAreaOvs:not(.bg-gradient-to-b),
+    html[data-theme="github"] #btnAreaDom:not(.bg-gradient-to-b),
+    html[data-theme="github"] #btnDiseaseWith:not(.bg-gradient-to-b),
+    html[data-theme="github"] #btnDiseaseWithout:not(.bg-gradient-to-b) { background:#28282B !important; color:#A8C7FA !important; border-color:#505156 !important; }
+    html[data-theme="github"] .btn-primary,
+    html[data-theme="github"] button.bg-\[var\(--primary-color\)\],
+    html[data-theme="github"] .bg-blue-600,
+    html[data-theme="github"] .bg-blue-700 { background:#2448A4 !important; color:#FFFFFF !important; }
+    html[data-theme="github"] .btn-primary .text-white { color:#FFFFFF !important; }
+    html[data-theme="github"] #copyLineQuoteButton,
+    html[data-theme="github"] #entryAnnouncementCloseButton { background:#2448A4 !important; color:#FFFFFF !important; }
+    html[data-theme="github"] #copyLineQuoteButton:hover { background:#3059B8 !important; }
+    html[data-theme="github"] #daysCardContainer { background:#25262A !important; border-color:#44464D !important; }
+    html[data-theme="github"] #productReminderBox { background:#25262A !important; border-color:#44464D !important; }
+    html[data-theme="github"] #productReminderText { color:#C4C7C5 !important; }
+    html[data-theme="github"] #announcementBanner { background:#202329 !important; border-color:#3D4655 !important; color:#A8C7FA !important; }
+    html[data-theme="github"] #entryAnnouncementModal .bg-\[\#fffdfb\] { background:#1F1F1F !important; }
+    html[data-theme="github"] #entryAnnouncementModal #entryAnnouncementContent { color:#C4C7C5 !important; }
+    html[data-theme="github"] #coverageList section > div:first-child,
+    html[data-theme="github"] #coverageList section > .bg-slate-100\/80 { background:#28282B !important; border-color:#505156 !important; }
+    html[data-theme="github"] #coverageList section > div:first-child h4,
+    html[data-theme="github"] #coverageList section > .bg-slate-100\/80 h4 { color:#E8EAED !important; }
+    html[data-theme="github"] #coverageList section > div:first-child button,
+    html[data-theme="github"] #coverageList section > .bg-slate-100\/80 button { color:#A8C7FA !important; }
+    html[data-theme="github"] #coverageList section [id^="coverage-rows-"] .text-blue-900 { color:#C4C7C5 !important; font-weight:700 !important; }
+    html[data-theme="github"] #mobileTotalPremium { color:#A8C7FA !important; }
+    html[data-theme="github"] .lg\:hidden.fixed.bottom-0 { background:#1F1F1F !important; }
+    html[data-theme="github"] .flatpickr-calendar,
+    html[data-theme="github"] .flatpickr-months .flatpickr-month { background:#1F1F1F !important; }
+    html[data-theme="github"] .flatpickr-day.selected,
+    html[data-theme="github"] .flatpickr-day.selected:hover { background:#2448A4 !important; border-color:#2448A4 !important; color:#FFFFFF !important; }
+    html[data-theme="github"] #themeSelector { background:#28282B; border-color:#505156; color:#A8C7FA; }
+
+    /* GitHub Dark: exclusively overrides the third theme; light and yellow unchanged. */
+    html[data-theme="github"] { color-scheme:dark; --primary-color:#4493F8; --footer-color:#0D1117; }
+    html[data-theme="github"] body { background:#0D1117 !important; color:#F0F6FC !important; }
+    html[data-theme="github"] header { background:#151B23 !important; border-color:#3D444D !important; }
+    html[data-theme="github"] .bg-white { background-color:#151B23 !important; }
+    html[data-theme="github"] .bg-slate-50\/50,
+    html[data-theme="github"] .bg-gray-100,
+    html[data-theme="github"] .bg-gray-50\/40,
+    html[data-theme="github"] .bg-slate-50,
+    html[data-theme="github"] .bg-gray-50,
+    html[data-theme="github"] .bg-slate-100,
+    html[data-theme="github"] .bg-slate-100\/80,
+    html[data-theme="github"] #coverageList .bg-slate-50,
+    html[data-theme="github"] #coverageList .bg-gray-50,
+    html[data-theme="github"] #coverageList .bg-slate-50\/50,
+    html[data-theme="github"] .bg-blue-50\/50,
+    html[data-theme="github"] .bg-blue-50,
+    html[data-theme="github"] .bg-blue-100 { background-color:#212830 !important; }
+    html[data-theme="github"] .border-gray-100,
+    html[data-theme="github"] .border-gray-200,
+    html[data-theme="github"] .border-slate-100,
+    html[data-theme="github"] .border-blue-100,
+    html[data-theme="github"] .border-gray-100\/50 { border-color:#3D444D !important; }
+    html[data-theme="github"] .text-slate-900,
+    html[data-theme="github"] .text-gray-900,
+    html[data-theme="github"] .text-gray-950,
+    html[data-theme="github"] .text-gray-800 { color:#F0F6FC !important; }
+    html[data-theme="github"] .text-gray-500,
+    html[data-theme="github"] .text-gray-400,
+    html[data-theme="github"] .text-gray-400\/75,
+    html[data-theme="github"] .text-slate-500,
+    html[data-theme="github"] .text-slate-400 { color:#9198A1 !important; }
+    html[data-theme="github"] .text-blue-700,
+    html[data-theme="github"] .text-blue-800,
+    html[data-theme="github"] .text-blue-900,
+    html[data-theme="github"] .text-blue-400 { color:#79C0FF !important; }
+    html[data-theme="github"] input,
+    html[data-theme="github"] select,
+    html[data-theme="github"] textarea { background:#212830 !important; border-color:#3D444D !important; color:#F0F6FC !important; }
+    html[data-theme="github"] select option { background:#212830 !important; color:#F0F6FC; }
+    html[data-theme="github"] input::placeholder { color:#9198A1; }
+    html[data-theme="github"] input:focus,
+    html[data-theme="github"] select:focus { border-color:#4493F8 !important; --tw-ring-color:rgba(68,147,248,.25) !important; }
+    html[data-theme="github"] #btnAreaOvs.bg-gradient-to-b,
+    html[data-theme="github"] #btnAreaDom.bg-gradient-to-b,
+    html[data-theme="github"] #btnDiseaseWith.bg-gradient-to-b,
+    html[data-theme="github"] #btnDiseaseWithout.bg-gradient-to-b { background:#1F3A5F !important; color:#B6D8FF !important; border:1px solid #4493F8 !important; box-shadow:none !important; }
+    html[data-theme="github"] #btnAreaOvs.bg-gradient-to-b *,
+    html[data-theme="github"] #btnAreaDom.bg-gradient-to-b *,
+    html[data-theme="github"] #btnDiseaseWith.bg-gradient-to-b *,
+    html[data-theme="github"] #btnDiseaseWithout.bg-gradient-to-b * { color:#B6D8FF !important; }
+    html[data-theme="github"] #btnAreaOvs:not(.bg-gradient-to-b),
+    html[data-theme="github"] #btnAreaDom:not(.bg-gradient-to-b),
+    html[data-theme="github"] #btnDiseaseWith:not(.bg-gradient-to-b),
+    html[data-theme="github"] #btnDiseaseWithout:not(.bg-gradient-to-b) { background:#212830 !important; color:#C9D1D9 !important; border:1px solid #3D444D !important; box-shadow:none !important; }
+    html[data-theme="github"] .btn-primary,
+    html[data-theme="github"] button.bg-\[var\(--primary-color\)\],
+    html[data-theme="github"] .bg-blue-600,
+    html[data-theme="github"] .bg-blue-700 { background:#2F81F7 !important; color:#FFFFFF !important; }
+    html[data-theme="github"] .btn-primary .text-white { color:#FFFFFF !important; }
+    html[data-theme="github"] #copyLineQuoteButton,
+    html[data-theme="github"] #entryAnnouncementCloseButton { background:#2F81F7 !important; color:#FFFFFF !important; }
+    html[data-theme="github"] #copyLineQuoteButton:hover { background:#4493F8 !important; }
+    html[data-theme="github"] #daysCardContainer,
+    html[data-theme="github"] #productReminderBox { background:#1A2431 !important; border-color:#344B68 !important; }
+    html[data-theme="github"] #daysCardContainer .text-blue-800,
+    html[data-theme="github"] #daysCardContainer .text-blue-900,
+    html[data-theme="github"] #productReminderBox > div,
+    html[data-theme="github"] #productReminderBox > div i { color:#A5C8F0 !important; }
+    html[data-theme="github"] #productReminderText { color:#C9D1D9 !important; }
+    html[data-theme="github"] #announcementBanner { background:#1A2431 !important; border-color:#344B68 !important; color:#A5C8F0 !important; }
+    html[data-theme="github"] #announcementBanner i { color:#79C0FF !important; }
+    html[data-theme="github"] #entryAnnouncementModal .bg-\[\#fffdfb\] { background:#151B23 !important; }
+    html[data-theme="github"] #entryAnnouncementModal #entryAnnouncementContent { color:#C9D1D9 !important; }
+    html[data-theme="github"] #entryAnnouncementModal #entryAnnouncementTitle { color:#F0F6FC !important; }
+    html[data-theme="github"] #noticeList { color:#C9D1D9 !important; }
+    html[data-theme="github"] #coverageList section > div:first-child,
+    html[data-theme="github"] #coverageList section > .bg-slate-100\/80 { background:#212830 !important; border-color:#3D444D !important; }
+    html[data-theme="github"] #coverageList section > div:first-child h4,
+    html[data-theme="github"] #coverageList section > .bg-slate-100\/80 h4 { color:#F0F6FC !important; }
+    html[data-theme="github"] #coverageList section > div:first-child button,
+    html[data-theme="github"] #coverageList section > .bg-slate-100\/80 button,
+    html[data-theme="github"] #coverageList section > div:first-child button:hover { color:#79C0FF !important; }
+    html[data-theme="github"] #coverageList section > div:first-child .bg-blue-700 { background:#4493F8 !important; }
+    html[data-theme="github"] #coverageList section [id^="coverage-rows-"] .text-blue-900,
+    html[data-theme="github"] #coverageList [id^="coverage-rows-"] > div > span:last-child { color:#C9D1D9 !important; font-weight:700 !important; }
+    html[data-theme="github"] #mobileTotalPremium { color:#79C0FF !important; }
+    html[data-theme="github"] .lg\:hidden.fixed.bottom-0 { background:#151B23 !important; }
+    html[data-theme="github"] .flatpickr-calendar,
+    html[data-theme="github"] .flatpickr-months .flatpickr-month { background:#151B23 !important; color:#F0F6FC !important; border-color:#3D444D !important; }
+    html[data-theme="github"] .flatpickr-day { color:#F0F6FC !important; }
+    html[data-theme="github"] .flatpickr-day:hover { background:#212830 !important; }
+    html[data-theme="github"] .flatpickr-day.today:not(.selected) { border-color:#4493F8 !important; }
+    html[data-theme="github"] .flatpickr-day.selected,
+    html[data-theme="github"] .flatpickr-day.selected:hover { background:#2F81F7 !important; border-color:#2F81F7 !important; color:#FFFFFF !important; }
+    html[data-theme="github"] .flatpickr-weekday { color:#9198A1 !important; }
+    html[data-theme="github"] .flatpickr-current-month .flatpickr-monthDropdown-months,
+    html[data-theme="github"] .flatpickr-time input { color:#F0F6FC !important; }
+    html[data-theme="github"] #themeSelector { background:#212830 !important; border-color:#3D444D !important; color:#C9D1D9 !important; }
   </style>
 </head>
 <body class="text-gray-800 antialiased min-h-screen flex flex-col pb-36 lg:pb-6">
@@ -493,7 +593,7 @@
         <select id="themeSelector" aria-label="網站外觀主題" title="選擇網站主題" onchange="setTheme(this.value)">
           <option value="light">淺色模式</option>
           <option value="dark">石墨灰・柔霧黃</option>
-          <option value="google">Google 深色模式</option>
+          <option value="github">GitHub 深色模式</option>
         </select>
         <!-- 降低存在感的日期標籤 -->
         <span id="effectiveDate" class="text-xs md:text-sm text-gray-400/75 bg-gray-50/40 border border-gray-100/50 px-3 py-1 rounded-full font-medium">適用載入中...</span>
@@ -804,7 +904,7 @@
     // 三主題共用既有偏好儲存鍵，兼容原先 light / dark 記憶值。
     const THEME_STORAGE_KEY = 'TRAVEL_INS_THEME_V1';
     function setTheme(theme, persist = true) {
-      const next = ['light','dark','google'].includes(theme) ? theme : 'light';
+      const next = theme === 'google' ? 'github' : (['light','dark','github'].includes(theme) ? theme : 'light');
       document.documentElement.setAttribute('data-theme', next);
       const selector = document.getElementById('themeSelector');
       if (selector) selector.value = next;

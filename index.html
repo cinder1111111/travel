@@ -37,6 +37,8 @@
       background-color: var(--primary-color);
       border-radius: var(--border-radius);
     }
+    #coverageList [hidden] { display: none !important; }
+
     /* 桌機右側摘要、承保內容與注意事項固定於可視範圍，內部獨立捲動 */
     @media (min-width: 1024px) {
       .sidebar-scroll { scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent; }
@@ -1097,6 +1099,9 @@
         return this.formatCoverageAmount(amount);
       }
 
+      // 承保內容展開狀態：大人、小孩獨立控制；資料重新渲染時保留選擇。
+      static coverageExpanded = { adult: false, child: false };
+
       // 依實際投保人數與商品讀取大人／小孩承保內容
       static syncDynamicSections() {
         const prodId = clientState.selectedProductId;
@@ -1118,18 +1123,43 @@
           const section = document.createElement('section');
           section.className = 'rounded-xl border border-slate-200 bg-slate-50/50 overflow-hidden';
 
+          const expanded = this.coverageExpanded[group] === true;
           const header = document.createElement('div');
-          header.className = 'flex items-center gap-2 px-4 py-3 bg-slate-100/80 border-b border-slate-200';
+          header.className = 'flex items-center justify-between gap-2 px-4 py-3 bg-slate-100/80' + (expanded ? ' border-b border-slate-200' : '');
+          const headingBox = document.createElement('div');
+          headingBox.className = 'flex items-center gap-2 min-w-0';
           const marker = document.createElement('span');
-          marker.className = 'inline-block w-1 h-4 rounded-full bg-blue-700';
+          marker.className = 'inline-block w-1 h-4 rounded-full bg-blue-700 flex-shrink-0';
           const label = document.createElement('h4');
           label.className = 'font-black text-sm text-slate-800';
           label.textContent = heading;
-          header.append(marker, label);
+          headingBox.append(marker, label);
+
+          const toggle = document.createElement('button');
+          toggle.type = 'button';
+          toggle.className = 'flex-shrink-0 text-sm font-bold text-blue-800 hover:text-blue-600 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded px-2 py-1';
+          toggle.textContent = expanded ? '關閉 −' : '展開 +';
+          toggle.setAttribute('aria-expanded', String(expanded));
+          toggle.setAttribute('aria-label', `${heading}${expanded ? '關閉' : '展開'}`);
+          const rowsId = `coverage-rows-${group}`;
+          toggle.setAttribute('aria-controls', rowsId);
+          header.append(headingBox, toggle);
           section.appendChild(header);
 
           const rows = document.createElement('div');
           rows.className = 'px-4 py-1 bg-white';
+          rows.id = rowsId;
+          rows.hidden = !expanded;
+          toggle.addEventListener('click', () => {
+            const isExpanded = !this.coverageExpanded[group];
+            this.coverageExpanded[group] = isExpanded;
+            rows.hidden = !isExpanded;
+            header.classList.toggle('border-b', isExpanded);
+            header.classList.toggle('border-slate-200', isExpanded);
+            toggle.textContent = isExpanded ? '關閉 −' : '展開 +';
+            toggle.setAttribute('aria-expanded', String(isExpanded));
+            toggle.setAttribute('aria-label', `${heading}${isExpanded ? '關閉' : '展開'}`);
+          });
           const sorted = [...records].sort((a, b) => (Number(a.Sort) || 9999) - (Number(b.Sort) || 9999));
           for (const record of sorted) {
             const item = String(record.Item || '').trim();

@@ -209,6 +209,14 @@
             <i data-lucide="chevron-down" class="w-5 h-5"></i>
           </div>
         </div>
+        <!-- 依商品代碼顯示後台「商品」工作表中的 Reminder 欄位 -->
+        <div id="productReminderBox" class="hidden mt-4 rounded-lg border border-orange-200 bg-orange-50 px-4 py-3" role="note" aria-live="polite">
+          <div class="flex items-center gap-2 text-orange-800 font-bold text-sm mb-1">
+            <i data-lucide="info" class="w-4 h-4 shrink-0"></i>
+            <span>方案提醒</span>
+          </div>
+          <p id="productReminderText" class="text-sm leading-6 text-slate-700 whitespace-pre-wrap break-words"></p>
+        </div>
       </div>
 
       <!-- 5. 整合投保人數與保障額度 (分流大人小孩資料表) -->
@@ -380,8 +388,8 @@
   <script>
     // 串接使用者部署好的 Google Apps Script 雲端 API 網址 (大人小孩獨立Sheet分流架構)
     const GOOGLE_APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzCudyI5uo1lDZXVsUfTxZrfzeLrLLzUh70N38HWLcAsn75-22G44cZ5ijzmyH86MJx/exec";
-    const CACHE_KEY = "TRAVEL_INS_CACHE_V7";
-    const CACHE_TIME_KEY = "TRAVEL_INS_CACHE_TIME_V7";
+    const CACHE_KEY = "TRAVEL_INS_CACHE_V8";
+    const CACHE_TIME_KEY = "TRAVEL_INS_CACHE_TIME_V8";
     const CACHE_DURATION_MS = 5 * 60 * 1000; // 5 分鐘快取
 
     // 全域資料儲存庫 - 與後端分流 Schema 完全一致
@@ -725,6 +733,17 @@
         this.updateProductOptions();
       }
 
+      // 方案提醒從「商品」工作表的 Reminder 欄位讀取；沒有文字時隱藏。
+      static updateProductReminder() {
+        const box = document.getElementById('productReminderBox');
+        const textEl = document.getElementById('productReminderText');
+        if (!box || !textEl) return;
+        const product = globalDB.products.find(p => String(p.ProductID).trim() === String(clientState.selectedProductId).trim());
+        const reminder = String(product?.Reminder ?? '').trim();
+        textEl.textContent = reminder; // 純文字，避免試算表內容被當作 HTML 執行
+        box.classList.toggle('hidden', !reminder);
+      }
+
       static onProductSelectChange() {
         const selectEl = document.getElementById("selProduct");
         clientState.selectedProductId = selectEl.value;
@@ -733,6 +752,7 @@
 
       // 更新保額與醫療等選項
       static updateProductOptions() {
+        this.updateProductReminder();
         const prodId = clientState.selectedProductId;
         const selAdult = document.getElementById("selAdultDeath");
         const selChild = document.getElementById("selChildDeath");

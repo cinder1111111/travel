@@ -225,6 +225,35 @@
     /* 方案提醒與天數區塊收斂底色，避免黃色面積過大 */
     html[data-theme="dark"] #daysCardContainer { background: #3B3C40 !important; border-color: #77704E !important; }
     html[data-theme="dark"] #productReminderBox { background: #3C3D40 !important; border-color: #756D4B !important; }
+  
+    /* 方案一：左側主區塊標題，短色線＋下方灰色分隔線；不影響欄位標籤 */
+    .section-heading-v1 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid #E6EAF0;
+      font-size: 1.125rem;
+      line-height: 1.5rem;
+      font-weight: 700;
+      color: #17213A;
+    }
+    .section-heading-v1::before {
+      content: "";
+      display: block;
+      flex: 0 0 4px;
+      width: 4px;
+      height: 19px;
+      border-radius: 999px;
+      background: #3152C8;
+    }
+    html[data-theme="dark"] .section-heading-v1 {
+      color: #F5F5F6;
+      border-bottom-color: #56575E;
+    }
+    html[data-theme="dark"] .section-heading-v1::before { background: #D6BD55; }
+
   </style>
 </head>
 <body class="text-gray-800 antialiased min-h-screen flex flex-col pb-36 lg:pb-6">
@@ -288,7 +317,7 @@
       
       <!-- 1. 旅遊地區 (灰色底層 w-full 滿版，藍色立體按鈕加長 1.5 倍) -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
-        <label id="lblTravelArea" class="block text-base md:text-lg font-bold text-slate-900 mb-3">旅遊地區</label>
+        <label id="lblTravelArea" class="section-heading-v1">旅遊地區</label>
         <div class="flex bg-gray-100 p-1.5 rounded-xl w-full">
           <div class="flex-1 flex justify-center items-center">
             <button id="btnAreaOvs" class="w-[88%] py-3 text-base font-extrabold rounded-lg text-center transition-all focus:outline-none cursor-pointer" onclick="AppController.setArea('overseas')">
@@ -349,7 +378,7 @@
 
       <!-- 3. 海外突發疾病 (海外專用，灰色底層 w-full 滿版，藍色立體按鈕尺寸全面調校與旅遊地區 100% 同步) -->
       <div id="diseaseSection" class="bg-white p-5 rounded-xl border border-gray-100 custom-card transition-all">
-        <label class="block text-base md:text-lg font-bold text-slate-900 mb-3">海外突發疾病</label>
+        <label class="section-heading-v1">海外突發疾病</label>
         <div class="flex bg-gray-100 p-1.5 rounded-xl w-full">
           <div class="flex-1 flex justify-center items-center">
             <button id="btnDiseaseWith" class="w-[88%] py-3 text-base font-extrabold rounded-lg text-center focus:outline-none cursor-pointer" onclick="AppController.setDisease(true)">
@@ -366,7 +395,7 @@
 
       <!-- 4. 投保方案 -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
-        <label class="block text-base md:text-lg font-bold text-slate-900 mb-3">投保方案</label>
+        <label class="section-heading-v1">投保方案</label>
         <div class="relative">
           <select id="selProduct" class="w-full px-4 py-3.5 border border-gray-200 rounded-lg text-base bg-white font-extrabold text-gray-950 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onProductSelectChange()">
             <!-- 動態載入商品下拉選項 -->
@@ -390,7 +419,7 @@
         
         <!-- A. 保障額度設定區 (分流大人小孩資料表) -->
         <div class="space-y-4">
-          <div class="text-base md:text-lg font-bold text-slate-900 mb-3">保障額度</div>
+          <div class="section-heading-v1">保障額度</div>
           
           <div class="grid grid-cols-2 gap-4">
             <!-- 左欄：15歲以上身故保額 -->

@@ -484,7 +484,7 @@
             <span class="font-extrabold text-gray-900"><span id="summaryDays">1</span> 天</span>
           </div>
           <div class="flex justify-between">
-            <span>所選方案:</span>
+            <span>投保方案:</span>
             <span class="font-extrabold text-gray-900" id="summaryProduct">-</span>
           </div>
           <div class="flex justify-between">
@@ -916,8 +916,8 @@
         filtered.forEach((prod) => {
           const opt = document.createElement("option");
           opt.value = prod.ProductID;
-          const diseaseTag = prod.DiseaseOption ? ` (${prod.DiseaseOption})` : "";
-          opt.textContent = `${prod.ProductName}${diseaseTag}`;
+          // 下拉選單只顯示商品方案名稱，法傳資訊由上方獨立選項控制。
+          opt.textContent = prod.ProductName;
           selectEl.appendChild(opt);
         });
 
@@ -1144,10 +1144,15 @@
 
         const curProd = globalDB.products.find(p => p.ProductID === prodId);
         const prodName = curProd ? curProd.ProductName : '-';
+        // 摘要顯示完整方案資訊；海外方案附加法定傳染病選項。
+        const diseaseTag = curProd && clientState.area === 'overseas'
+          ? String(curProd.DiseaseOption || (clientState.diseaseOption ? '含法定傳染病' : '不含法定傳染病')).trim()
+          : '';
+        const summaryName = diseaseTag ? `${prodName}（${diseaseTag}）` : prodName;
         
         const summaryProdEl = document.getElementById("summaryProduct");
         if (summaryProdEl) {
-          summaryProdEl.textContent = prodName;
+          summaryProdEl.textContent = summaryName;
         }
 
         this.updateSummaryPeople();

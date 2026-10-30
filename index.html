@@ -96,6 +96,21 @@
     html[data-theme="dark"] input,
     html[data-theme="dark"] select,
     html[data-theme="dark"] textarea { background-color: #5B5C65 !important; border-color: #85868F !important; color: #F5F5F6 !important; box-shadow: inset 0 1px 2px rgba(0,0,0,.12) !important; }
+    /* 針對 Tailwind bg-white 的較高權重明確覆寫，避免輸入框被卡片背景 #414248 蓋過 */
+    html[data-theme="dark"] input.bg-white,
+    html[data-theme="dark"] select.bg-white,
+    html[data-theme="dark"] textarea.bg-white,
+    html[data-theme="dark"] input#startDate,
+    html[data-theme="dark"] input#endDate,
+    html[data-theme="dark"] select#startHour,
+    html[data-theme="dark"] select#endHour,
+    html[data-theme="dark"] select#selProduct,
+    html[data-theme="dark"] select#selAdultDeath,
+    html[data-theme="dark"] select#selChildDeath,
+    html[data-theme="dark"] select#selMedical {
+      background-color: #5B5C65 !important;
+      border-color: #85868F !important;
+    }
     html[data-theme="dark"] select option { background-color: #35363C; color: #F5F5F6; }
     html[data-theme="dark"] input::placeholder { color: #BFC0C7; }
     html[data-theme="dark"] input:focus,

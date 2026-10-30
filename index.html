@@ -415,7 +415,7 @@
           <div class="grid grid-cols-2 gap-4">
             <!-- 左欄：15歲以上身故保額 -->
             <div>
-              <label class="block text-xs font-extrabold text-gray-500 mb-1.5">15歲以上身故保額</label>
+              <label class="block text-sm font-extrabold text-gray-500 mb-1.5">15歲以上身故保額</label>
               <div class="relative">
                 <select id="selAdultDeath" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 rounded-lg text-base bg-white font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onLimitChange()">
                   <!-- 動態 -->
@@ -427,7 +427,7 @@
             </div>
             <!-- 右欄：未滿15歲失能保額 -->
             <div>
-              <label class="block text-xs font-extrabold text-gray-500 mb-1.5">未滿15歲失能保額</label>
+              <label class="block text-sm font-extrabold text-gray-500 mb-1.5">未滿15歲失能保額</label>
               <div class="relative">
                 <select id="selChildDeath" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 rounded-lg text-base bg-white font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onLimitChange()">
                   <!-- 動態 -->
@@ -441,7 +441,7 @@
 
           <!-- 傷害醫療保額 -->
           <div>
-            <label class="block text-xs font-extrabold text-gray-500 mb-1.5">傷害醫療保額</label>
+            <label class="block text-sm font-extrabold text-gray-500 mb-1.5">傷害醫療保額</label>
             <div class="relative">
               <select id="selMedical" class="w-full pl-4 pr-10 py-2.5 border border-gray-200 rounded-lg text-base bg-white font-bold focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onLimitChange()">
                 <!-- 動態 -->
@@ -458,24 +458,24 @@
         <div class="grid grid-cols-2 gap-4 border-t border-gray-100 pt-5">
           <!-- 左欄：15歲以上人數 (大人) -->
           <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-            <span class="text-sm font-extrabold text-slate-500 mb-1" id="lblAdult">15歲以上人數</span>
+            <span class="text-base font-extrabold text-slate-500 mb-1" id="lblAdult">15歲以上人數</span>
             <div class="flex items-center gap-2.5 my-2">
               <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', -1)">-</button>
               <input type="number" id="txtAdultCount" class="w-14 h-10 text-center font-black text-lg text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="1" min="0" oninput="AppController.onCountInputChange('adult')" onblur="AppController.onCountInputBlur('adult')">
               <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('adult', 1)">+</button>
             </div>
-            <div class="text-xs font-bold text-gray-400 mt-0.5">每人保費: <span id="txtAdultUnitPrice" class="font-bold text-blue-700">$-</span></div>
+            <div class="text-sm font-bold text-gray-400 mt-0.5">每人保費: <span id="txtAdultUnitPrice" class="font-bold text-blue-700">$-</span></div>
           </div>
 
           <!-- 右欄：未滿15歲人數 (小孩) -->
           <div class="flex flex-col items-center p-3 bg-slate-50/50 rounded-xl border border-slate-100">
-            <span class="text-sm font-extrabold text-slate-500 mb-1" id="lblChild">未滿15歲人數</span>
+            <span class="text-base font-extrabold text-slate-500 mb-1" id="lblChild">未滿15歲人數</span>
             <div class="flex items-center gap-2.5 my-2">
               <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', -1)">-</button>
               <input type="number" id="txtChildCount" class="w-14 h-10 text-center font-black text-lg text-gray-900 border border-gray-200 rounded bg-white focus:ring-1 focus:ring-blue-500 focus:outline-none" value="0" min="0" oninput="AppController.onCountInputChange('child')" onblur="AppController.onCountInputBlur('child')">
               <button class="w-10 h-10 bg-white text-gray-600 border border-gray-200 rounded-full text-lg font-bold flex items-center justify-center hover:bg-gray-100 transition focus:outline-none shadow-sm active:scale-95" onclick="AppController.adjustCount('child', 1)">+</button>
             </div>
-            <div class="text-xs font-bold text-gray-400 mt-0.5">每人保費: <span id="txtChildUnitPrice" class="font-bold text-blue-700">$-</span></div>
+            <div class="text-sm font-bold text-gray-400 mt-0.5">每人保費: <span id="txtChildUnitPrice" class="font-bold text-blue-700">$-</span></div>
           </div>
         </div>
       </div>

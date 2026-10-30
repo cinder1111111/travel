@@ -245,6 +245,9 @@
       border-bottom-color: #56575E;
     }
 
+    /* 試算摘要：三列使用一致的左右欄格線，右側數值共用同一個右邊界。 */
+    .quote-summary-row { display: grid; grid-template-columns: max-content minmax(0, 1fr); column-gap: 0.75rem; align-items: start; }
+    .quote-summary-row > :last-child { justify-self: end; text-align: right; min-width: 0; overflow-wrap: anywhere; }
   </style>
 </head>
 <body class="text-gray-800 antialiased min-h-screen flex flex-col pb-36 lg:pb-6">
@@ -496,17 +499,17 @@
           </div>
         </div>
         <div class="space-y-3 text-sm text-gray-500 border-t border-gray-100 pt-4 mb-5">
-          <div class="flex justify-between">
+          <div class="quote-summary-row">
             <span>旅遊天數:</span>
-            <span class="font-extrabold text-gray-900 text-right"><span id="summaryDays">1</span> 天</span>
+            <span class="font-extrabold text-gray-900 text-right justify-self-end"><span id="summaryDays">1</span> 天</span>
           </div>
-          <div class="flex justify-between items-start gap-3">
-            <span class="shrink-0">投保方案:</span>
-            <span class="font-extrabold text-gray-900 text-right min-w-0 flex-1 break-words" id="summaryProduct">-</span>
+          <div class="quote-summary-row">
+            <span>投保方案:</span>
+            <span class="font-extrabold text-gray-900 text-right justify-self-end min-w-0 break-words" id="summaryProduct">-</span>
           </div>
-          <div class="flex justify-between">
+          <div class="quote-summary-row">
             <span>投保人數:</span>
-            <span class="font-extrabold text-gray-900 text-right"><span id="summaryAdults">1</span>大 / <span id="summaryChildren">0</span>小</span>
+            <span class="font-extrabold text-gray-900 text-right justify-self-end"><span id="summaryAdults">1</span>大 / <span id="summaryChildren">0</span>小</span>
           </div>
         </div>
         <button id="copyLineQuoteButton" onclick="AppController.copyLineQuote()" class="w-full py-4 px-6 btn-primary text-white font-black text-base shadow-md hover:brightness-105 active:scale-[0.98] transition flex items-center justify-center gap-2 cursor-pointer">

@@ -237,6 +237,9 @@
       font-weight: 700;
       color: #001C54;
     }
+    /* 保險期間欄位標題與主區塊標題同色，保留原本字級及間距 */
+    html:not([data-theme="dark"]) .period-heading-navy { color: #001C54; }
+    html[data-theme="dark"] .period-heading-navy { color: #E2E5EF !important; }
     html[data-theme="dark"] .section-heading-v2 {
       color: #E2E5EF;
       border-bottom-color: #56575E;
@@ -325,7 +328,7 @@
         <div class="grid grid-cols-2 gap-4">
           <!-- 左半邊：保險生效日 -->
           <div class="space-y-2">
-            <label class="block text-base font-bold text-slate-900">保險生效日</label>
+            <label class="period-heading-navy block text-base font-bold text-slate-900">保險生效日</label>
             <input type="text" id="startDate" class="w-full h-12 px-4 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
             <div class="relative">
               <select id="startHour" class="w-full h-12 pl-4 pr-10 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onPeriodChange()">
@@ -338,7 +341,7 @@
           </div>
           <!-- 右半邊：保險結束日 -->
           <div class="space-y-2">
-            <label class="block text-base font-bold text-slate-900">保險結束日</label>
+            <label class="period-heading-navy block text-base font-bold text-slate-900">保險結束日</label>
             <input type="text" id="endDate" class="w-full h-12 px-4 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition cursor-pointer" placeholder="選擇日期" readonly>
             <div class="relative">
               <select id="endHour" class="w-full h-12 pl-4 pr-10 border border-gray-200 rounded-lg text-base font-bold text-gray-900 bg-white focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onPeriodChange()">

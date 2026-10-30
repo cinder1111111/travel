@@ -209,6 +209,10 @@
     html[data-theme="dark"] #coverageList section [id^="coverage-rows-"] .text-blue-900 {
       color: #D8D8DD !important;
     }
+    /* 僅深色模式：承保明細左側險種名稱與「展開／關閉」文字同色 */
+    html[data-theme="dark"] #coverageList [id^="coverage-rows-"] > div > span:first-child {
+      color: #D6BD55 !important;
+    }
     /* 僅深色模式：LINE 報價按鈕改為柔和淺黃 */
     html[data-theme="dark"] #copyLineQuoteButton {
       background: #E8D98A !important;

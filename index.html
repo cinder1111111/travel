@@ -226,33 +226,21 @@
     html[data-theme="dark"] #daysCardContainer { background: #3B3C40 !important; border-color: #77704E !important; }
     html[data-theme="dark"] #productReminderBox { background: #3C3D40 !important; border-color: #756D4B !important; }
   
-    /* 方案二：線條圖示＋分隔線，維持原版卡片與表單結構 */
+    /* 簡潔標題：無 ICON、無左側色線，僅以灰色底線建立區塊層次 */
     .section-heading-v2 {
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      display: block;
       padding-bottom: 12px;
       margin-bottom: 14px;
-      border-bottom: 1px solid #E6EAF0;
+      border-bottom: 1px solid #E2E6EC;
       font-size: 1.125rem;
       line-height: 1.5rem;
       font-weight: 700;
-      color: #17213A;
-    }
-    .section-heading-v2 svg,
-    .section-heading-v2 i {
-      width: 20px;
-      height: 20px;
-      flex-shrink: 0;
-      color: #3152C8;
-      stroke-width: 2;
+      color: #18263D;
     }
     html[data-theme="dark"] .section-heading-v2 {
-      color: #F5F5F6;
+      color: #E2E5EF;
       border-bottom-color: #56575E;
     }
-    html[data-theme="dark"] .section-heading-v2 svg,
-    html[data-theme="dark"] .section-heading-v2 i { color: #D6BD55; }
 
   </style>
 </head>
@@ -317,7 +305,7 @@
       
       <!-- 1. 旅遊地區 (灰色底層 w-full 滿版，藍色立體按鈕加長 1.5 倍) -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
-        <label id="lblTravelArea" class="section-heading-v2"><i data-lucide="globe-2" aria-hidden="true"></i><span>旅遊地區</span></label>
+        <label id="lblTravelArea" class="section-heading-v2">旅遊地區</label>
         <div class="flex bg-gray-100 p-1.5 rounded-xl w-full">
           <div class="flex-1 flex justify-center items-center">
             <button id="btnAreaOvs" class="w-[88%] py-3 text-base font-extrabold rounded-lg text-center transition-all focus:outline-none cursor-pointer" onclick="AppController.setArea('overseas')">
@@ -378,7 +366,7 @@
 
       <!-- 3. 海外突發疾病 (海外專用，灰色底層 w-full 滿版，藍色立體按鈕尺寸全面調校與旅遊地區 100% 同步) -->
       <div id="diseaseSection" class="bg-white p-5 rounded-xl border border-gray-100 custom-card transition-all">
-        <label class="section-heading-v2"><i data-lucide="heart-pulse" aria-hidden="true"></i><span>海外突發疾病</span></label>
+        <label class="section-heading-v2">海外突發疾病</label>
         <div class="flex bg-gray-100 p-1.5 rounded-xl w-full">
           <div class="flex-1 flex justify-center items-center">
             <button id="btnDiseaseWith" class="w-[88%] py-3 text-base font-extrabold rounded-lg text-center focus:outline-none cursor-pointer" onclick="AppController.setDisease(true)">
@@ -395,7 +383,7 @@
 
       <!-- 4. 投保方案 -->
       <div class="bg-white p-5 rounded-xl border border-gray-100 custom-card">
-        <label class="section-heading-v2"><i data-lucide="clipboard-list" aria-hidden="true"></i><span>投保方案</span></label>
+        <label class="section-heading-v2">投保方案</label>
         <div class="relative">
           <select id="selProduct" class="w-full px-4 py-3.5 border border-gray-200 rounded-lg text-base bg-white font-extrabold text-gray-950 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-600 outline-none transition appearance-none cursor-pointer" onchange="AppController.onProductSelectChange()">
             <!-- 動態載入商品下拉選項 -->
@@ -419,7 +407,7 @@
         
         <!-- A. 保障額度設定區 (分流大人小孩資料表) -->
         <div class="space-y-4">
-          <div class="section-heading-v2"><i data-lucide="shield-check" aria-hidden="true"></i><span>保障額度</span></div>
+          <div class="section-heading-v2">保障額度</div>
           
           <div class="grid grid-cols-2 gap-4">
             <!-- 左欄：15歲以上身故保額 -->
